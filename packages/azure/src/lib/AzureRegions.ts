@@ -77,7 +77,7 @@ export const AZURE_REGIONS = {
   },
   IN_JIO_CENTRAL: { name: 'jioindiacentral', options: ['jioindiacentral'] },
   IN_JIO_WEST: { name: 'jioindiawest', options: ['jioindiawest'] },
-  IN_SOUTH: { name: 'southindia', options: ['southindia'] },
+  IN_SOUTH: { name: 'southindia', options: ['southindia', 'IN South'] },
   IN_WEST: { name: 'westindia', options: ['westindia'] },
 
   // EU regions
