@@ -77,7 +77,7 @@ export const AZURE_REGIONS = {
   },
   IN_JIO_CENTRAL: { name: 'jioindiacentral', options: ['jioindiacentral'] },
   IN_JIO_WEST: { name: 'jioindiawest', options: ['jioindiawest'] },
-  IN_SOUTH: { name: 'southindia', options: ['southindia'] },
+  IN_SOUTH: { name: 'southindia', options: ['southindia','IN South'] },
   IN_WEST: { name: 'westindia', options: ['westindia'] },
 
   // EU regions
@@ -133,12 +133,12 @@ export const AZURE_REGIONS = {
   US_CENTRAL_STAGE: { name: 'centralusstage', options: ['centralusstage'] },
   US_EAST: {
     name: 'EastUS',
-    options: ['EastUS', 'EASTUS', 'USEast', 'useast', 'US East', 'eastus'],
+    options: ['EastUS', 'EASTUS', 'USEast', 'useast', 'US East', 'eastus', 'East US'],
   },
   US_EAST_STAGE: { name: 'eastusstage', options: ['eastusstage'] },
   US_EAST_2: {
     name: 'EastUS2',
-    options: ['EastUS2', 'useast2', 'US East 2', 'eastus2', 'EASTUS2'],
+    options: ['EastUS2', 'useast2', 'US East 2', 'eastus2', 'EASTUS2', 'East US 2'],
   },
   US_EAST_2_EUAP: { name: 'eastus2euap', options: ['eastus2euap'] },
   US_EAST_2_STAGE: { name: 'eastus2stage', options: ['eastus2stage'] },
