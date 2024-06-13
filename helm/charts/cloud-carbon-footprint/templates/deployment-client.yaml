@@ -29,16 +29,16 @@ spec:
           image: "{{ .Values.client.deployment.image.repository }}:{{ .Values.client.deployment.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.client.deployment.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: 8000
-              protocol: TCP
+            - name: {{ .Values.client.service.port.name  }}
+              containerPort: {{ .Values.client.service.port.containerPort }}
+              protocol: {{ .Values.client.service.port.protocol  }}
           resources:
             {{- toYaml .Values.client.deployment.resources | nindent 12 }}
           securityContext:
             {{- toYaml .Values.client.deployment.securityContext | nindent 12 }}
           volumeMounts:
             - name: config-volume
-              mountPath: /etc/nginx/nginx.conf
+              mountPath:  /etc/nginx/nginx.conf
               subPath: nginx.conf
       volumes:
         - name: config-volume
