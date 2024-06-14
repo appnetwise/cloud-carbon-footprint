@@ -1,7 +1,7 @@
 name: PR
 on:
   pull_request:
-    branches: [trunk]
+    branches: [dev]
     types: [opened, synchronize, reopened]
     paths-ignore:
         - 'microsite/**'

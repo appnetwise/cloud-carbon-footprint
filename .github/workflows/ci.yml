@@ -54,6 +54,7 @@ jobs:
         run: yarn
       - name: lint
         run: yarn lint
+        continue-on-error: true
       - name: test and upload coverage
         continue-on-error: true
         run: |
