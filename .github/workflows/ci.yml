@@ -2,12 +2,12 @@ name: CI
 on:
   workflow_dispatch:
   push:
-    branches: [trunk]
+    branches: [dev]
     paths-ignore:
       - 'microsite/**'
       - '.github/workflows/deploy-microsite.yml'
   pull_request:
-    branches: [trunk]
+    branches: [dev]
     types: [closed]
     paths-ignore:
       - 'microsite/**'
