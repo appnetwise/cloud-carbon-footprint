@@ -2,14 +2,24 @@
  * © 2021 Thoughtworks, Inc.
  */
 
-import { AppBar, Toolbar, Typography } from '@material-ui/core'
-import React, { ReactElement } from 'react'
+import { AppBar, Toolbar, Typography, Button } from '@material-ui/core'
+import { ReactElement } from 'react'
 import { NavLink } from 'react-router-dom'
 import clsx from 'clsx'
 import useStyles from './headerBarStyles'
 import logo from './ccf_logo.png'
 
-const HeaderBar = (): ReactElement => {
+interface HeaderBarProps {
+  isAuthenticated: boolean
+  onLogin: () => void
+  onLogout: () => void
+}
+
+const HeaderBar = ({
+  isAuthenticated,
+  onLogin,
+  onLogout,
+}: HeaderBarProps): ReactElement => {
   const classes = useStyles()
 
   return (
@@ -36,6 +46,15 @@ const HeaderBar = (): ReactElement => {
         >
           <Typography component="h2">RECOMMENDATIONS</Typography>
         </NavLink>
+        {isAuthenticated ? (
+          <Button color="inherit" onClick={onLogout}>
+            Logout
+          </Button>
+        ) : (
+          <Button color="inherit" onClick={onLogin}>
+            Login
+          </Button>
+        )}
       </Toolbar>
     </AppBar>
   )
