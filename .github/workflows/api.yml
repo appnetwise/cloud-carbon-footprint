@@ -10,14 +10,14 @@ on:
     branches: [ "dev" ]
 
 jobs:
-  build:
+  test_lint:
 
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [20.x]
-
+    name: Install ${{ matrix.node-version }}
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
@@ -48,15 +48,57 @@ jobs:
           yarn install
       if: steps.cache-modules.outputs.cache-hit != 'true'
       name: Install Dependencies
-    - run: |
-        cd packages/api
-        yarn build
-      name: Build API Package
-    - run: |
-        cd packages/api
+    - name: lint
+      run: yarn lint
+    - name: test and upload coverage
+      run: |
         yarn test
-      name: Run test cases
-    - run: |
-        cd packages/api
-        yarn clean
-      name: Clean Build Artifacts
+        bash <(curl -s https://codecov.io/bash)
+        bash <(curl -s https://codecov.io/bash) -f packages/api/coverage/* -F api
+
+  build:
+    needs: test_lint
+    runs-on: ubuntu-latest
+    strategy: 
+      fail-fast: false
+      matrix:
+        node-version: [20.x]
+    name: Build ${{ matrix.node-version }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      - name: cache api node_modules
+        id: cache-modules
+        uses: actions/cache@v4
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', '**/package.json') }}
+      - name: find location of global yarn cache
+        id: yarn-cache
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: cache global yarn cache
+        uses: actions/cache@v4
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - run: |
+            cd packages/api
+            yarn install
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        name: Install Dependencies
+      - run: |
+          cd packages/api
+          yarn build
+        name: Build API Package
+      - run: |
+          cd packages/api
+          yarn clean
+        name: Clean Build Artifacts
