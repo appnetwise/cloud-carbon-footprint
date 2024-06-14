@@ -23,6 +23,7 @@
     "carbon-footprint"
   ],
   "dependencies": {
+    "@azure/msal-browser": "^3.17.0",
     "@babel/runtime": "^7.14.0",
     "@cloud-carbon-footprint/common": "^1.15.0",
     "@emotion/react": "^11.9.0",
