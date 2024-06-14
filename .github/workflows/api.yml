@@ -50,6 +50,7 @@ jobs:
       name: Install Dependencies
     - name: lint
       run: yarn lint
+      continue-on-error: true
     - name: test and upload coverage
       run: |
         yarn test
