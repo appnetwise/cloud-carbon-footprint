@@ -1,6 +1,15 @@
 name: CI
 on:
   workflow_dispatch:
+    inputs:
+      REGISTRY_URL:
+        description: 'Docker Registry URL'
+        required: true
+        default: 'anwapplication.azurecr.io'
+        type: choice
+        options:
+          - anwapplication.azurecr.io
+      
   push:
     branches: ['*']
     paths-ignore:
@@ -126,9 +135,10 @@ jobs:
         with:
           name: dist-workspace-${{ matrix.node-version}}
           path: dist-workspace.zip
+
   docker-build:
     runs-on: ubuntu-latest
-
+    needs: build
     steps:
     - uses: actions/checkout@v4
     - name: use node.js 18
@@ -165,10 +175,13 @@ jobs:
         cd ../..
     - name: build and save docker images
       run: |
-        docker build -t cloudcarbonfootprint/client:latest packages/client
-        docker build -t cloudcarbonfootprint/api:latest packages/api
-        docker save cloudcarbonfootprint/client:latest | gzip > client-${{ github.ref }}.tar.gz
-        docker save cloudcarbonfootprint/api:latest | gzip > api-${{ github.ref }}.tar.gz
+        api="api-$(date +%Y%m%d%H%M%S)"
+        client="client-$(date +%Y%m%d%H%M%S)"
+        $(date +%Y%m%d%H%M%S)
+        docker build -t ${{ inputs.REGISTRY_URL }}/ccf-client:$client packages/client
+        docker build -t ${{ inputs.REGISTRY_URL }}/ccf-api:$api packages/api
+        docker save ${{ inputs.REGISTRY_URL }}/ccf-client:$client | gzip > client-${{ github.ref }}.tar.gz
+        docker save ${{ inputs.REGISTRY_URL }}/ccf-api:$api | gzip > api-${{ github.ref }}.tar.gz
     - uses: actions/upload-artifact@v4
       name: Upload client docker tar
       with:

@@ -1,6 +1,46 @@
 name: CD
 
 on:
+  workflow_dispatch:
+    inputs:
+      acr_version:
+        description: 'ACR tag tool version'
+        required: true
+        default: 'latest'
+        type: string
+      BUILD_ENV:
+        description: "Build Environment"
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - qa
+          - prod
+      TAG_TYPE:
+        description: 'image version tag type'
+        required: true
+        default: dev
+        type: choice
+        options:
+          - dev
+          - qa
+          - patch
+          - minor
+          - major
+      REGISTRY_URL:
+        description: 'Docker Registry URL'
+        required: true
+        default: 'anwapplication.azurecr.io'
+        type: choice
+        options:
+          - anwapplication.azurecr.io
+      RELEASE:
+        description: 'Release Version'
+        required: true
+        default: latest
+        type: string
+
   workflow_run:
     workflows: ["CI"]
     types: [completed]
@@ -22,13 +62,27 @@ jobs:
         workflow_conclusion: success
         branch: dev
         check_artifacts:  false
-    - name: Load Docker Images
+    - name: Install ACR-Tag Utility
       run: |
-        cd artifacts
-        for targz in $(find . -type f -name "*.tar.gz")
-        do
-          gunzip $targz
-          docker load -q -i ${targz:0:-3}
-        done
-        docker push cloudcarbonfootprint/client:latest
-        docker push cloudcarbonfootprint/api:latest
+        bash scripts/install_acr_tag.sh -v ${{ inputs.acr_version }} -d ./tools -t ./temp
+    - name: Get Next Tag
+      id: get_next_tag
+      run: |
+        api=$(bash scripts/get_next_tag.sh -t ${{ inputs.TAG_TYPE }} -e ${{ inputs.BUILD_ENV }} -r ccf-api -s ${{ inputs.REGISTRY_URL }} -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} -v ${{ inputs.RELEASE }})
+        client=$(bash scripts/get_next_tag.sh -t ${{ inputs.TAG_TYPE }} -e ${{ inputs.BUILD_ENV }} -r ccf-client -s ${{ inputs.REGISTRY_URL }} -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} -v ${{ inputs.RELEASE }})
+        echo "::set-output name=api_docker_tag::$api"
+        echo "::set-output name=client_docker_tag::$client"
+    - name: Load and Push Docker Images
+      run: |
+        bash scripts/load_push_images.sh -i ccf-api -e ${{ inputs.BUILD_ENV }} -t ${{ steps.get_next_tag.outputs.api_docker_tag }}
+        bash scripts/load_push_images.sh -i ccf-client -e ${{ inputs.BUILD_ENV }} -t ${{ steps.get_next_tag.outputs.client_docker_tag }}
+    - name: Create a release tag
+      id: create_tag
+      run: node scripts/create-release-tag.js
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create latest release tag
+      id: create_latest_tag
+      uses: EndBug/latest-tag@latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
