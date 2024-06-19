@@ -11,6 +11,7 @@ import { EstimationResult } from '@cloud-carbon-footprint/common'
 import { useAxiosErrorHandling } from '../../layout/ErrorPage'
 import { ServiceResult } from '../../Types'
 import moment from 'moment'
+import { useAuth } from 'src/AuthContext'
 
 export interface UseRemoteFootprintServiceParams {
   baseUrl: string | null
@@ -34,10 +35,17 @@ const useRemoteFootprintService = (
 
   const start: string = params.startDate.format('YYYY-MM-DD').toString()
   const end: string = params.endDate.format('YYYY-MM-DD').toString()
+  const { accessToken } = useAuth()
+
+  useEffect(() => {
+    if (accessToken) {
+      console.log('Access Token:', accessToken)
+    }
+  }, [accessToken])
 
   useEffect(() => {
     const fetchEstimates = async () => {
-      if (!params.baseUrl) {
+      if (!params.baseUrl || !accessToken) {
         setLoading(false)
         return
       }
@@ -60,6 +68,9 @@ const useRemoteFootprintService = (
               groupBy: params.groupBy,
               limit: params.limit,
               skip,
+            },
+            headers: {
+              Authorization: 'Bearer ' + accessToken, //the token is a variable which holds the token
             },
           })
           lastDataLength = checkForLoopExit(
@@ -95,6 +106,7 @@ const useRemoteFootprintService = (
     params.baseUrl,
     params.groupBy,
     params.limit,
+    accessToken,
   ])
 
   return { data, loading, error }

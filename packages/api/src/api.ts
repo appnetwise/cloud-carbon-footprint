@@ -121,7 +121,7 @@ export const createRouter = (config?: CCFConfig) => {
    *       500:
    *         description: Internal Server Error
    */
-  router.get('/footprint', FootprintApiMiddleware)
+  router.get('/footprint', auth, FootprintApiMiddleware)
 
   /**
    * @openapi

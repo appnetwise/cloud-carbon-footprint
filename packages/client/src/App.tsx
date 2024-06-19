@@ -59,10 +59,10 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
     try {
       // Ensure MSAL is initialized before calling loginPopup()
       await msalInstance.initialize()
-
       const loginResult = await msalInstance.loginPopup()
       if (loginResult) {
         setIsAuthenticated(true)
+        window.location.reload()
       }
     } catch (error) {
       console.error('Login error:', error)
@@ -73,9 +73,9 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
     try {
       // Ensure MSAL is initialized before calling logoutPopup()
       await msalInstance.initialize()
-
       await msalInstance.logoutPopup()
       setIsAuthenticated(false)
+      window.location.reload()
     } catch (error) {
       console.error('Logout error:', error)
     }
@@ -149,35 +149,41 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
         onLogin={handleLogin}
         onLogout={handleLogout}
       />
-      {isAuthenticated ? <ProfileContent /> : null}
-      <Container maxWidth={false} className={classes.appContainer}>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <EmissionsMetricsPage
-                config={config}
-                onApiError={onApiError}
-                footprint={footprint}
+      {/* <AuthenticatedTemplate> */}
+      {isAuthenticated ? (
+        <>
+          <ProfileContent />
+          <Container maxWidth={false} className={classes.appContainer}>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <EmissionsMetricsPage
+                    config={config}
+                    onApiError={onApiError}
+                    footprint={footprint}
+                  />
+                }
               />
-            }
-          />
-          <Route
-            path="/recommendations"
-            element={
-              <RecommendationsPage
-                config={config}
-                onApiError={onApiError}
-                footprint={footprint}
+              <Route
+                path="/recommendations"
+                element={
+                  <RecommendationsPage
+                    config={config}
+                    onApiError={onApiError}
+                    footprint={footprint}
+                  />
+                }
               />
-            }
-          />
-          <Route
-            path="/error"
-            element={<ErrorPage errorMessage={errorMessage} />}
-          />
-        </Routes>
-      </Container>
+              <Route
+                path="/error"
+                element={<ErrorPage errorMessage={errorMessage} />}
+              />
+            </Routes>
+          </Container>
+        </>
+      ) : null}
+      {/* </AuthenticatedTemplate> */}
     </>
   )
 }
