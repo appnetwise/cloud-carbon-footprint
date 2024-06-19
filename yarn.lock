@@ -2965,6 +2965,7 @@ __metadata:
   dependencies:
     "@cloud-carbon-footprint/app": ^1.8.0
     "@cloud-carbon-footprint/common": ^1.15.0
+    "@microsoft/microsoft-graph-client": ^3.0.7
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.12
     "@types/jest": ^27.4.0
@@ -2983,6 +2984,7 @@ __metadata:
     eslint-plugin-unused-imports: ^2.0.0
     express: ^4.17.1
     helmet: ^5.0.1
+    isomorphic-fetch: ^3.0.0
     jest: ^27.4.7
     jest-when: ^3.5.0
     lint-staged: ^12.1.7
@@ -5516,6 +5518,25 @@ __metadata:
     react: ^16.8.0 || ^17.0.0
     react-dom: ^16.8.0 || ^17.0.0
   checksum: 05ff67c982b33d3b4260cfaeaf566f3ccaecaebb231907ed626bcc30322d89d705bfe79b8805c0dda2f1dc2cfa98ca9d731ec8ae12868da7a98568a41c7dc231
+  languageName: node
+  linkType: hard
+
+"@microsoft/microsoft-graph-client@npm:^3.0.7":
+  version: 3.0.7
+  resolution: "@microsoft/microsoft-graph-client@npm:3.0.7"
+  dependencies:
+    "@babel/runtime": ^7.12.5
+    tslib: ^2.2.0
+  peerDependenciesMeta:
+    "@azure/identity":
+      optional: true
+    "@azure/msal-browser":
+      optional: true
+    buffer:
+      optional: true
+    stream-browserify:
+      optional: true
+  checksum: 3daee3fc4faa56e22cc0c0a9bcd3887ff0cbd53ec09c792438f0f40b8cafb8654e5d8dcc24d0fd60fda9348ca185fa6c8b50762b72f5c9212e54003d32626ece
   languageName: node
   linkType: hard
 
@@ -15612,6 +15633,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"isomorphic-fetch@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "isomorphic-fetch@npm:3.0.0"
+  dependencies:
+    node-fetch: ^2.6.1
+    whatwg-fetch: ^3.4.1
+  checksum: e5ab79a56ce5af6ddd21265f59312ad9a4bc5a72cebc98b54797b42cb30441d5c5f8d17c5cd84a99e18101c8af6f90c081ecb8d12fd79e332be1778d58486d75
+  languageName: node
+  linkType: hard
+
 "isstream@npm:~0.1.2":
   version: 0.1.2
   resolution: "isstream@npm:0.1.2"
@@ -25580,7 +25611,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"whatwg-fetch@npm:^3.6.2":
+"whatwg-fetch@npm:^3.4.1, whatwg-fetch@npm:^3.6.2":
   version: 3.6.20
   resolution: "whatwg-fetch@npm:3.6.20"
   checksum: c58851ea2c4efe5c2235f13450f426824cf0253c1d45da28f45900290ae602a20aff2ab43346f16ec58917d5562e159cd691efa368354b2e82918c2146a519c5

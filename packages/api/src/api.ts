@@ -8,7 +8,9 @@ import {
   FootprintApiMiddleware,
   EmissionsApiMiddleware,
   RecommendationsApiMiddleware,
+  ProfileDataApiMiddleware,
 } from './middleware'
+import auth from './utils/auth'
 
 export const createRouter = (config?: CCFConfig) => {
   setConfig(config)
@@ -180,7 +182,8 @@ export const createRouter = (config?: CCFConfig) => {
    */
   router.get('/healthz', (req: express.Request, res: express.Response) => {
     res.status(200).send('OK')
-  })
+  }),
+    router.get('/profile', auth, ProfileDataApiMiddleware)
 
   return router
 }

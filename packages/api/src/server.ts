@@ -26,6 +26,16 @@ if (process.env.NODE_ENV === 'production') {
 
 httpApp.use(helmet())
 
+// Enable CORS for all routes
+const corsOptions = {
+  origin: '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  preflightContinue: false,
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+httpApp.use(cors(corsOptions))
+
 // Establish Mongo Connection if cache method selected
 if (configLoader()?.CACHE_MODE === 'MONGODB') {
   MongoDbCacheManager.createDbConnection()

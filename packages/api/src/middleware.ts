@@ -19,6 +19,7 @@ import {
   PartialDataError,
   RecommendationsRequestValidationError,
 } from '@cloud-carbon-footprint/common'
+import getGraphClient from './utils/graphClient'
 
 const apiLogger = new Logger('api')
 
@@ -128,5 +129,24 @@ export const RecommendationsApiMiddleware = async function (
     } else {
       res.status(500).send('Internal Server Error')
     }
+  }
+}
+
+export const ProfileDataApiMiddleware = async function (
+  req: express.Request,
+  res: express.Response,
+): Promise<void> {
+  apiLogger.info(`Profile API request started`)
+
+  try {
+    const accessToken = req.headers.authorization.split(' ')[1]
+    const graphData = await getGraphClient(accessToken)
+      .api('/me')
+      // .responseType('json')
+      .get()
+    res.json(graphData)
+  } catch (e) {
+    apiLogger.error(`Unable to process profile data request.`, e)
+    res.status(500).send('Internal Server Error')
   }
 }

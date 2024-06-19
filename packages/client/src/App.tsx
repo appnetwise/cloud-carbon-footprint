@@ -14,6 +14,7 @@ import { ClientConfig } from './Config'
 import loadConfig from './ConfigLoader'
 import { useFootprintData } from './utils/hooks'
 import { getEmissionDateRange } from './utils/helpers/handleDates'
+import ProfileContent from './common/ProfileContent/ProfileContent'
 
 interface AppProps {
   config?: ClientConfig
@@ -148,6 +149,7 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
         onLogin={handleLogin}
         onLogout={handleLogout}
       />
+      {isAuthenticated ? <ProfileContent /> : null}
       <Container maxWidth={false} className={classes.appContainer}>
         <Routes>
           <Route
