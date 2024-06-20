@@ -22,6 +22,7 @@ import {
 import getGraphClient from './utils/graphClient'
 
 const apiLogger = new Logger('api')
+const X_TENANT_ID = 'x-tenant-id'
 
 /**
  * Handles the fetching and calculations of cloud footprint estimates for a given date range.
@@ -48,6 +49,7 @@ export const FootprintApiMiddleware = async function (
     services: req.query.services as string[],
     regions: req.query.regions as string[],
     tags: req.query.tags as Tags,
+    tenantId:req.headers[X_TENANT_ID]?.toString(),   
   }
   apiLogger.info(`Footprint API request started.`)
   if (!rawRequest.groupBy) {
@@ -110,6 +112,7 @@ export const RecommendationsApiMiddleware = async function (
 ): Promise<void> {
   const rawRequest: RecommendationsRawRequest = {
     awsRecommendationTarget: req.query.awsRecommendationTarget?.toString(),
+    tenantId: req.headers[X_TENANT_ID].toString()
   }
   apiLogger.info(`Recommendations API request started`)
   const footprintApp = new App()

@@ -63,6 +63,15 @@ export default class AzureAccount extends CloudProviderAccount {
     }
   }
 
+  public async initializeAccountForTenant(tenantId: string): Promise<void> {
+    try {
+      this.credentials = await AzureCredentialsProvider.createCredentialForTenant(tenantId);
+      this.subscriptionClient = new SubscriptionClient(this.credentials)
+    } catch (e) {
+      throw new Error(`Azure initializeAccount failed for tenant: ${tenantId}. Reason: ${e.message}`)
+    }
+  }
+
   public async getDataFromAdvisorManagement(
     subscriptionIds: string[],
   ): Promise<RecommendationResult[]> {
@@ -89,9 +98,10 @@ export default class AzureAccount extends CloudProviderAccount {
     endDate: Date,
     grouping: GroupBy,
     subscriptionIds: string[],
+    tenantId?: string,  
   ): Promise<EstimationResult[]> {
     const AZURE = configLoader().AZURE
-    const subscriptions = await this.getSubscriptions(subscriptionIds)
+    const subscriptions = await this.getSubscriptions(subscriptionIds, tenantId)
     const requests = this.createSubscriptionRequests(
       subscriptions,
       startDate,
@@ -119,11 +129,12 @@ export default class AzureAccount extends CloudProviderAccount {
 
   private async getSubscriptions(
     subscriptionIds: string[] = [],
+    tenantId?: string,
   ): Promise<Subscription[]> {
     const AZURE = configLoader().AZURE
     const defaultAzureSubscriptionIds = subscriptionIds.length
       ? subscriptionIds
-      : AZURE.SUBSCRIPTIONS
+      : tenantId ? AzureCredentialsProvider.getDefaultSubscriptionIdsForTenant(tenantId) : AZURE.SUBSCRIPTIONS
 
     const getSubscriptions = async (): Promise<Subscription[]> => {
       const subscriptions = []

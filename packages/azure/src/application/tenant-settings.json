@@ -1,0 +1,20 @@
+{
+  "30004a29-bd77-41c7-b860-68e2dad43e08": {
+    "AZURE_USE_BILLING_DATA": true,
+    "AZURE_INCLUDE_ESTIMATES": true,
+    "AZURE_AUTH_MODE": "default",
+    "AZURE_RESOURCE_TAG_NAMES": ["resourceGroup"],
+    "AZURE_CONSUMPTION_CHUNKS_DAYS": 0,
+    "AZURE_SUBSCRIPTION_CHUNKS": 0,
+    "AZURE_AUTH_CERT_PATH": "/path/to/cert.pem"
+  },
+  "a88fc306-040b-4873-8e02-9624f097a9fa": {
+    "AZURE_USE_BILLING_DATA": true,
+    "AZURE_INCLUDE_ESTIMATES": true,
+    "AZURE_AUTH_MODE": "default",
+    "AZURE_RESOURCE_TAG_NAMES": ["resourceGroup"],
+    "AZURE_CONSUMPTION_CHUNKS_DAYS": 0,
+    "AZURE_SUBSCRIPTION_CHUNKS": 0,
+    "AZURE_AUTH_CERT_PATH": "/path/to/cert.pem"
+  }
+}

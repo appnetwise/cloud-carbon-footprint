@@ -29,11 +29,13 @@ export interface EstimationRequest {
   services?: string[]
   regions?: string[]
   tags?: Tags
+  tenantId?: string
 }
 
 export interface RecommendationRequest {
   awsRecommendationTarget?: AWS_RECOMMENDATIONS_TARGETS
   accounts?: string[]
+  tenantId?: string
 }
 
 interface FormattedEstimationRequest {
@@ -215,6 +217,7 @@ const rawRequestToRecommendationsRequest = (
 
   return {
     awsRecommendationTarget,
+    tenantId: request.tenantId
   }
 }
 
@@ -280,6 +283,7 @@ export const createValidFootprintRequest = (
     startDate: startDate.toDate(),
     endDate: endDate.toDate(),
     ignoreCache: request.ignoreCache === 'true',
+    tenantId: request.tenantId,
   }
 }
 

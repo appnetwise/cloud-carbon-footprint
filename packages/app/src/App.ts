@@ -47,6 +47,7 @@ export default class App {
     const { startDate, endDate, accounts, cloudProviderToSeed } = request
     const grouping = request.groupBy as GroupBy
     const config = configLoader()
+    const tenantId = request.tenantId
     includeCloudProviders(cloudProviderToSeed, config)
     const { AWS, GCP, AZURE, ALI } = config
     if (configLoader().ELECTRICITY_MAPS_TOKEN)
@@ -113,12 +114,17 @@ export default class App {
     if (AZURE?.INCLUDE_ESTIMATES && AZURE?.USE_BILLING_DATA) {
       appLogger.info('Starting Azure Estimations')
       const azureAccount = new AzureAccount()
-      await azureAccount.initializeAccount()
+      if(tenantId) {
+        await azureAccount.initializeAccountForTenant(tenantId)
+      } else {
+        await azureAccount.initializeAccount()
+      }
       const estimates = await azureAccount.getDataFromConsumptionManagement(
         startDate,
         endDate,
         grouping,
         accounts,
+        tenantId,
       )
       AzureEstimatesByRegion.push(estimates)
       appLogger.info('Finished Azure Estimations')
@@ -184,6 +190,7 @@ export default class App {
     const GCP = config.GCP
     const AZURE = config.AZURE
     const allRecommendations: RecommendationResult[][] = []
+    const tenantId = request.tenantId
 
     const AWSRecommendations: RecommendationResult[][] = []
     if (AWS.USE_BILLING_DATA) {
@@ -233,7 +240,11 @@ export default class App {
     const AzureRecommendations: RecommendationResult[][] = []
     if (AZURE?.USE_BILLING_DATA) {
       const azureAccount = new AzureAccount()
-      await azureAccount.initializeAccount()
+      if(tenantId) {
+        await azureAccount.initializeAccountForTenant(tenantId)
+      } else {
+        await azureAccount.initializeAccount()
+      }
       const recommendations = await azureAccount.getDataFromAdvisorManagement(
         request.accounts,
       )
