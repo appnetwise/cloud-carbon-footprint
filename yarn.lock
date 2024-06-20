@@ -952,6 +952,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@azure/msal-react@npm:^2.0.19":
+  version: 2.0.19
+  resolution: "@azure/msal-react@npm:2.0.19"
+  peerDependencies:
+    "@azure/msal-browser": ^3.17.0
+    react: ^16.8.0 || ^17 || ^18
+  checksum: 73142a5bfc15b79f357a86c3969ed8cb208177ebd4b16cae2c1feeeef9cd58506506d91ef3076aac54d53381725cd5b5985ea8522098c45cd54044a909286cec
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.10.4, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.16.0, @babel/code-frame@npm:^7.16.7, @babel/code-frame@npm:^7.24.7, @babel/code-frame@npm:^7.8.3":
   version: 7.24.7
   resolution: "@babel/code-frame@npm:7.24.7"
@@ -3162,6 +3172,7 @@ __metadata:
   resolution: "@cloud-carbon-footprint/client@workspace:packages/client"
   dependencies:
     "@azure/msal-browser": ^3.17.0
+    "@azure/msal-react": ^2.0.19
     "@babel/runtime": ^7.14.0
     "@cloud-carbon-footprint/common": ^1.15.0
     "@emotion/react": ^11.9.0

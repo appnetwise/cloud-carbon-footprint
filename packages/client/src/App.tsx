@@ -15,6 +15,7 @@ import loadConfig from './ConfigLoader'
 import { useFootprintData } from './utils/hooks'
 import { getEmissionDateRange } from './utils/helpers/handleDates'
 import ProfileContent from './common/ProfileContent/ProfileContent'
+import { msalConfig } from './authConfig'
 
 interface AppProps {
   config?: ClientConfig
@@ -28,13 +29,7 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
   )
   const navigate = useNavigate()
 
-  const msalInstance = new PublicClientApplication({
-    auth: {
-      authority: process.env.AZURE_AUTHORITY,
-      clientId: process.env.AZURE_CLIENT_ID,
-      redirectUri: process.env.AZURE_REDIRECT_URI,
-    },
-  })
+  const msalInstance = new PublicClientApplication(msalConfig)
 
   useEffect(() => {
     const initializeMsal = async () => {
