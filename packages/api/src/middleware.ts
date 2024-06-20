@@ -2,7 +2,7 @@
  * © 2023 Thoughtworks, Inc.
  */
 
-import express from 'express'
+import express, { raw } from 'express'
 
 import {
   App,
@@ -21,6 +21,7 @@ import {
 } from '@cloud-carbon-footprint/common'
 import getGraphClient from './utils/graphClient'
 
+const jwt = require('jsonwebtoken')
 const apiLogger = new Logger('api')
 const X_TENANT_ID = 'x-tenant-id'
 
@@ -51,6 +52,11 @@ export const FootprintApiMiddleware = async function (
     tags: req.query.tags as Tags,
     tenantId:req.headers[X_TENANT_ID]?.toString(),   
   }
+  const token = req.headers.authorization?.split(' ')[1];
+  if(token && !rawRequest.tenantId) {
+    rawRequest.tenantId = jwt.decode(token).tid;
+  }
+
   apiLogger.info(`Footprint API request started.`)
   if (!rawRequest.groupBy) {
     apiLogger.warn('GroupBy parameter not specified, adopting default "day"')
@@ -114,6 +120,12 @@ export const RecommendationsApiMiddleware = async function (
     awsRecommendationTarget: req.query.awsRecommendationTarget?.toString(),
     tenantId: req.headers[X_TENANT_ID].toString()
   }
+  
+  const token = req.headers.authorization?.split(' ')[1];
+  if(token && !rawRequest.tenantId) {
+    rawRequest.tenantId = jwt.decode(token).tid;
+  }
+
   apiLogger.info(`Recommendations API request started`)
   const footprintApp = new App()
   try {
