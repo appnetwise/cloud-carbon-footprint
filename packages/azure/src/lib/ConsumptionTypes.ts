@@ -44,6 +44,7 @@ export const UNKNOWN_USAGE_TYPES: string[] = [
   'Server - Free',
   'Requests',
   'Custom Domain',
+  'Self-hosted CI',
 ]
 
 export const UNSUPPORTED_USAGE_TYPES: string[] = [
