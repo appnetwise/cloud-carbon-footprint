@@ -30,9 +30,9 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
 
   const msalInstance = new PublicClientApplication({
     auth: {
-      authority: 'https://login.microsoftonline.com/common',
-      clientId: 'ab0328dd-3d7f-4f7e-b2a2-5c07d4ac9821',
-      redirectUri: '/redirect',
+      authority: process.env.AZURE_AUTHORITY,
+      clientId: process.env.AZURE_CLIENT_ID,
+      redirectUri: process.env.AZURE_REDIRECT_URI,
     },
   })
 
