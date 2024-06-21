@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useMsal } from '@azure/msal-react'
 import { InteractionRequiredAuthError } from '@azure/msal-browser'
+import { loginRequest } from './authConfig'
 
 const AuthContext = createContext(null)
 
@@ -12,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     const acquireToken = async () => {
       if (accounts.length > 0) {
         const request = {
-          scopes: ['User.Read'],
+          ...loginRequest,
           account: accounts[0],
         }
 
