@@ -35,32 +35,9 @@ jobs:
         node-version: [20.x]
     name: Install ${{ matrix.node-version }}
     steps:
-      - uses: actions/checkout@v4
-      - name: setup node ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - uses: ./.github/workflows/install.yml
         with:
           node-version: ${{ matrix.node-version }}
-      - name: cache all node_modules
-        id: cache-modules
-        uses: actions/cache@v4
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', '**/package.json') }}
-      - name: find location of global yarn cache
-        id: yarn-cache
-        if: steps.cache-modules.outputs.cache-hit != 'true'
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: cache global yarn cache
-        uses: actions/cache@v4
-        if: steps.cache-modules.outputs.cache-hit != 'true'
-        with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - name: yarn install
-        if: steps.cache-modules.outputs.cache-hit != 'true'
-        run: yarn
       - name: lint
         run: yarn lint
         continue-on-error: true
@@ -89,33 +66,9 @@ jobs:
         node-version: [20.x]
     name: Build ${{ matrix.node-version }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: ./.github/workflows/install.yml
         with:
           node-version: ${{ matrix.node-version }}
-      - name: cache all node_modules
-        id: cache-modules
-        uses: actions/cache@v4
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', '**/package.json') }}
-      - name: find location of global yarn cache
-        id: yarn-cache
-        if: steps.cache-modules.outputs.cache-hit != 'true'
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: cache global yarn cache
-        uses: actions/cache@v4
-        if: steps.cache-modules.outputs.cache-hit != 'true'
-        with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - name: yarn install
-        if: steps.cache-modules.outputs.cache-hit != 'true'
-        run: yarn install
       - name: build-packages
         run: |
           yarn lerna run build --ignore @cloud-carbon-footprint/client --ignore @cloud-carbon-footprint/cli --ignore @cloud-carbon-footprint/create-app --ignore @cloud-carbon-footprint/integration-tests
@@ -140,32 +93,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-    - uses: actions/checkout@v4
-    - name: use node.js 18
-      uses: actions/setup-node@v4
+    - uses: ./.github/workflows/install.yml
       with:
-        node-version: '20'
-    - name: cache all node_modules
-      id: cache-modules
-      uses: actions/cache@v4
-      with:
-        path: '**/node_modules'
-        key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', '**/package.json') }}
-    - name: find location of global yarn cache
-      id: yarn-cache
-      if: steps.cache-modules.outputs.cache-hit != 'true'
-      run: echo "::set-output name=dir::$(yarn cache dir)"
-    - name: cache global yarn cache
-      uses: actions/cache@v4
-      if: steps.cache-modules.outputs.cache-hit != 'true'
-      with:
-        path: ${{ steps.yarn-cache.outputs.dir }}
-        key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
-    - name: yarn install
-      if: steps.cache-modules.outputs.cache-hit != 'true'
-      run: yarn install --immutable
+        node-version: ${{ matrix.node-version }}
     - name: build packages
       run: |
         yarn lerna run build
@@ -174,7 +104,6 @@ jobs:
         yarn build:app
         cd ../..
     - name: Login to DockerHub
-      if: github.event.pull_request.head.ref == 'changeset-release/trunk'
       uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -183,7 +112,6 @@ jobs:
       run: |
         api="api-$(date +%Y%m%d%H%M%S)"
         client="client-$(date +%Y%m%d%H%M%S)"
-        $(date +%Y%m%d%H%M%S)
         docker build -t ${{ inputs.REGISTRY_URL }}/ccf-client:$client packages/client
         docker build -t ${{ inputs.REGISTRY_URL }}/ccf-api:$api packages/api
         docker save ${{ inputs.REGISTRY_URL }}/ccf-client:$client | gzip > client-${{ github.ref }}.tar.gz
