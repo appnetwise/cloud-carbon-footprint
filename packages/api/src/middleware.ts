@@ -118,7 +118,7 @@ export const RecommendationsApiMiddleware = async function (
 ): Promise<void> {
   const rawRequest: RecommendationsRawRequest = {
     awsRecommendationTarget: req.query.awsRecommendationTarget?.toString(),
-    tenantId: req.headers[X_TENANT_ID].toString()
+    tenantId: req.headers[X_TENANT_ID]?.toString()
   }
   
   const token = req.headers.authorization?.split(' ')[1];
