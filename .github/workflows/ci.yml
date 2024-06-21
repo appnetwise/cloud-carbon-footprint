@@ -68,6 +68,10 @@ jobs:
     name: Build ${{ matrix.node-version }}
     steps:
       - uses: actions/checkout@v4
+      - run: | 
+          ls
+          ls .github
+          ls .github/workflows
       - uses: ./.github/workflows/install.yml
         with:
           node-version: ${{ matrix.node-version }}
