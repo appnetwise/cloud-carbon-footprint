@@ -15,15 +15,15 @@ import auth from './utils/auth'
 export const createRouter = (config?: CCFConfig) => {
   setConfig(config)
 
-/**
- * @openapi
- * components:
- *   securitySchemes:
- *     bearerAuth:
- *       type: http
- *       scheme: bearer
- *       bearerFormat: JWT
- */
+  /**
+   * @openapi
+   * components:
+   *   securitySchemes:
+   *     bearerAuth:
+   *       type: http
+   *       scheme: bearer
+   *       bearerFormat: JWT
+   */
   const router = express.Router()
 
   /**
@@ -204,34 +204,33 @@ export const createRouter = (config?: CCFConfig) => {
   router.get('/healthz', (req: express.Request, res: express.Response) => {
     res.status(200).send('OK')
   }),
-
-  /**
-   * @openapi
-   * /api/profile:
-   * 
-   *  get:
-   *     tags:
-   *     - Profile
-   *     description: Return the user profile data
-   *     security:
-   *     - bearerAuth: []
-   *     produces:
-   *       - application/json
-   *     responses:
-   *       200:
-   *         description: Success
-   *         content:
-   *           application/json:
-   *            schema:
-   *              type: object
-   *              items:
-   *                $ref: '#/components/schemas/ProfileResponse'
-   *       401:
-   *         description: Unauthorized
-   *       500:
-   *        description: Internal Server Error
-  */
-  router.get('/profile', auth, ProfileDataApiMiddleware)
+    /**
+     * @openapi
+     * /api/profile:
+     *
+     *  get:
+     *     tags:
+     *     - Profile
+     *     description: Return the user profile data
+     *     security:
+     *     - bearerAuth: []
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Success
+     *         content:
+     *           application/json:
+     *            schema:
+     *              type: object
+     *              items:
+     *                $ref: '#/components/schemas/ProfileResponse'
+     *       401:
+     *         description: Unauthorized
+     *       500:
+     *        description: Internal Server Error
+     */
+    router.get('/profile', auth, ProfileDataApiMiddleware)
 
   return router
 }
