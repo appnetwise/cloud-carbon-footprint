@@ -15,6 +15,15 @@ import auth from './utils/auth'
 export const createRouter = (config?: CCFConfig) => {
   setConfig(config)
 
+/**
+ * @openapi
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
   const router = express.Router()
 
   /**
@@ -24,6 +33,8 @@ export const createRouter = (config?: CCFConfig) => {
    *     tags:
    *     - Footprint
    *     summary: Gets calculated energy and carbon estimates for a given date range
+   *     security:
+   *     - bearerAuth: []
    *     produces:
    *       - application/json
    *     parameters:
@@ -116,6 +127,8 @@ export const createRouter = (config?: CCFConfig) => {
    *                  $ref: '#/components/schemas/FootprintResponse'
    *       400:
    *         description: Bad request
+   *       401:
+   *         description: Unauthorized
    *       416:
    *         description: Partial Data Error
    *       500:
@@ -130,6 +143,8 @@ export const createRouter = (config?: CCFConfig) => {
    *     tags:
    *     - Emissions Factors
    *     description: Gets the carbon intensity (co2e/kWh) of all cloud provider regions
+   *     produces:
+   *       - application/json
    *     responses:
    *       200:
    *         description: Success
@@ -139,6 +154,8 @@ export const createRouter = (config?: CCFConfig) => {
    *              type: array
    *              items:
    *                $ref: '#/components/schemas/EmissionResponse'
+   *       401:
+   *         description: Unauthorized
    */
   router.get('/regions/emissions-factors', EmissionsApiMiddleware)
 
@@ -149,6 +166,8 @@ export const createRouter = (config?: CCFConfig) => {
    *     tags:
    *     - Recommendations
    *     description: Gets recommendations from cloud providers and their estimated carbon and energy impact
+   *     produces:
+   *       - application/json
    *     parameters:
    *      - name: awsRecommendationTarget
    *        in: query
@@ -166,6 +185,8 @@ export const createRouter = (config?: CCFConfig) => {
    *              type: array
    *              items:
    *                $ref: '#/components/schemas/RecommendationsResponse'
+   *       401:
+   *         description: Unauthorized
    */
   router.get('/recommendations', RecommendationsApiMiddleware)
 
@@ -183,7 +204,34 @@ export const createRouter = (config?: CCFConfig) => {
   router.get('/healthz', (req: express.Request, res: express.Response) => {
     res.status(200).send('OK')
   }),
-    router.get('/profile', auth, ProfileDataApiMiddleware)
+
+  /**
+   * @openapi
+   * /api/profile:
+   * 
+   *  get:
+   *     tags:
+   *     - Profile
+   *     description: Return the user profile data
+   *     security:
+   *     - bearerAuth: []
+   *     produces:
+   *       - application/json
+   *     responses:
+   *       200:
+   *         description: Success
+   *         content:
+   *           application/json:
+   *            schema:
+   *              type: object
+   *              items:
+   *                $ref: '#/components/schemas/ProfileResponse'
+   *       401:
+   *         description: Unauthorized
+   *       500:
+   *        description: Internal Server Error
+  */
+  router.get('/profile', auth, ProfileDataApiMiddleware)
 
   return router
 }

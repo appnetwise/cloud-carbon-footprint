@@ -83,3 +83,18 @@ components:
           type: number
         recommendationOptions?:
           type: object
+    ProfileResponse:
+      type: object
+      properties:
+        displayName:
+          type: string
+        givenName:
+          type: string
+        mail:
+          type: string
+        surname:
+          type: string          
+        userPrincipalName:
+          type: string          
+        id:
+          type: string
