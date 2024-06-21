@@ -37,8 +37,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: | 
+          echo "pwd: $PWD"
           ls
+          echo "pwd: $PWD"
           ls .github
+          echo "pwd: $PWD"
           ls .github/workflows
       - uses: ./.github/workflows/install.yml
         with:
