@@ -3,7 +3,7 @@
   "version": "1.15.0",
   "license": "Apache-2.0",
   "description": "Common functionality to be shared among other cloud carbon footprint packages",
-  "main": "dist/index.js",
+  "main": "src/index.ts",
   "publishConfig": {
     "main": "dist/index.js"
   },
@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",
-    "@types/node": "*",
+    "@types/node": "^17.0.8",
     "@typescript-eslint/eslint-plugin": "^5.9.0",
     "@typescript-eslint/parser": "^5.9.0",
     "eslint": "^8.6.0",
@@ -58,11 +58,11 @@
     "typescript": "^4.6.2"
   },
   "dependencies": {
-    "@google-cloud/logging-winston": "^6.0.0",
+    "@google-cloud/logging-winston": "^4.1.1",
     "dotenv": "^16.0.0",
     "moment": "^2.29.1",
     "node-fetch": "^2.6.1",
-    "winston": "^3.13.0"
+    "winston": "^3.3.3"
   },
   "lint-staged": {
     "*.{js,ts}": [
