@@ -21,3 +21,11 @@ docker tag $TEMP_IMAGE $TARGET_REPO:$IMAGE_TAG
 docker push $TARGET_REPO:$IMAGE_TAG
 docker tag $TEMP_IMAGE $TARGET_REPO:latest-$BUILD_ENV
 docker push $TARGET_REPO:latest-$BUILD_ENV
+
+if [[ $BUILD_ENV == "prod" ]]; then
+    echo "Re-tagging images due to Prod release."
+    docker tag $TEMP_IMAGE $TARGET_REPO:$IMAGE_TAG-dev.0
+    docker tag $TEMP_IMAGE $TARGET_REPO:$IMAGE_TAG-qa.0
+    docker push $TARGET_REPO:$IMAGE_TAG-dev.0
+    docker push $TARGET_REPO:$IMAGE_TAG-qa.0
+fi

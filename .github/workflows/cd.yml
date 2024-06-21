@@ -72,6 +72,12 @@ jobs:
         client=$(bash scripts/get_next_tag.sh -t ${{ inputs.TAG_TYPE }} -e ${{ inputs.BUILD_ENV }} -r ccf-client -s ${{ inputs.REGISTRY_URL }} -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} -v ${{ inputs.RELEASE }})
         echo "::set-output name=api_docker_tag::$api"
         echo "::set-output name=client_docker_tag::$client"
+    - name: Login to DockerHub
+      if: github.event.pull_request.head.ref == 'changeset-release/trunk'
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Load and Push Docker Images
       run: |
         bash scripts/load_push_images.sh -i ccf-api -e ${{ inputs.BUILD_ENV }} -t ${{ steps.get_next_tag.outputs.api_docker_tag }}
