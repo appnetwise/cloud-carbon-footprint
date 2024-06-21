@@ -36,7 +36,7 @@ jobs:
     name: Install ${{ matrix.node-version }}
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/workflows/install.yml
+      - uses: ./.github/actions/install.yml
         with:
           node-version: ${{ matrix.node-version }}
       - name: lint
