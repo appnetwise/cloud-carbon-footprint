@@ -11,6 +11,7 @@ import {
   ClientSecretCredential,
   WorkloadIdentityCredential,
   DefaultAzureCredential,
+  TokenCredential,
 } from '@azure/identity'
 import { ConsumptionManagementClient } from '@azure/arm-consumption'
 import { AdvisorManagementClient } from '@azure/arm-advisor'
@@ -45,6 +46,7 @@ export default class AzureAccount extends CloudProviderAccount {
     | ClientSecretCredential
     | WorkloadIdentityCredential
     | DefaultAzureCredential
+    | TokenCredential
   private subscriptionClient: SubscriptionClient
   private logger: Logger
 
@@ -63,9 +65,9 @@ export default class AzureAccount extends CloudProviderAccount {
     }
   }
 
-  public async initializeAccountForTenant(tenantId: string): Promise<void> {
+  public async initializeAccountForTenant(tenantId: string, accessToken?: string): Promise<void> {
     try {
-      this.credentials = await AzureCredentialsProvider.createCredentialForTenant(tenantId);
+      this.credentials = await AzureCredentialsProvider.createCredentialForTenant(tenantId, accessToken);
       this.subscriptionClient = new SubscriptionClient(this.credentials)
     } catch (e) {
       throw new Error(`Azure initializeAccount failed for tenant: ${tenantId}. Reason: ${e.message}`)

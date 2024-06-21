@@ -48,6 +48,7 @@ export default class App {
     const grouping = request.groupBy as GroupBy
     const config = configLoader()
     const tenantId = request.tenantId
+    const accessToken = request.accessToken
     includeCloudProviders(cloudProviderToSeed, config)
     const { AWS, GCP, AZURE, ALI } = config
     if (configLoader().ELECTRICITY_MAPS_TOKEN)
@@ -115,7 +116,7 @@ export default class App {
       appLogger.info('Starting Azure Estimations')
       const azureAccount = new AzureAccount()
       if(tenantId) {
-        await azureAccount.initializeAccountForTenant(tenantId)
+        await azureAccount.initializeAccountForTenant(tenantId, accessToken)
       } else {
         await azureAccount.initializeAccount()
       }

@@ -30,6 +30,7 @@ export interface EstimationRequest {
   regions?: string[]
   tags?: Tags
   tenantId?: string
+  accessToken?: string
 }
 
 export interface RecommendationRequest {
@@ -284,6 +285,7 @@ export const createValidFootprintRequest = (
     endDate: endDate.toDate(),
     ignoreCache: request.ignoreCache === 'true',
     tenantId: request.tenantId,
+    accessToken: request.accessToken,
   }
 }
 

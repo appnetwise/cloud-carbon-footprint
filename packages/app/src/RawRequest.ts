@@ -16,6 +16,7 @@ export interface FootprintEstimatesRawRequest {
   regions?: string[]
   tags?: Tags
   tenantId?: string
+  accessToken?: string
 }
 
 export interface RecommendationsRawRequest {

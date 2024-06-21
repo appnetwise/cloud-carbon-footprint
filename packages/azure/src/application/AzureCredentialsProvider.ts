@@ -6,6 +6,7 @@ import {
   ClientCertificateCredential,
   ClientSecretCredential,
   DefaultAzureCredential,
+  TokenCredential,
   WorkloadIdentityCredential,
 } from '@azure/identity'
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager'
@@ -61,19 +62,21 @@ export default class AzureCredentialsProvider {
 
   static async createCredentialForTenant(
     tenantId: string,
+    accessToken?: string,
   ): Promise<
     | ClientCertificateCredential
     | ClientSecretCredential
     | WorkloadIdentityCredential
     | DefaultAzureCredential
+    | TokenCredential
   > {
     const config = mappping[tenantId]
     // Note: Client Id and Secret are same and hence will be shared across tenants
     const clientId = configLoader().AZURE.authentication.clientId
     const clientSecret = configLoader().AZURE.authentication.clientSecret
     const certificatePath = config.AZURE_AUTH_CERT_PATH
-
-    switch (config.AZURE_AUTH_MODE) {
+    const authMode = accessToken ? "ACCESS_TOKEN": config.AZURE_AUTH_MODE;
+    switch (authMode) {
       case 'GCP':
         const clientIdFromGoogle = await this.getGoogleSecret(clientId)
         const clientSecretFromGoogle = await this.getGoogleSecret(clientSecret)
@@ -96,6 +99,10 @@ export default class AzureCredentialsProvider {
         )
       case 'MANAGED_IDENTITY':
         return new DefaultAzureCredential()
+      case 'ACCESS_TOKEN':
+          return {
+            getToken: async () => ({ token: accessToken, expiresOnTimestamp: Date.now() + 60 * 60 * 1000 })
+          };
       default:
         return new ClientSecretCredential(tenantId, clientId, clientSecret)
     }
