@@ -35,7 +35,8 @@ jobs:
         node-version: [20.x]
     name: Install ${{ matrix.node-version }}
     steps:
-      - uses: ./build
+      - uses: actions/checkout@v4
+      - uses: ./.github/build
         with:
           node-version: ${{ matrix.node-version }}
       - name: lint
