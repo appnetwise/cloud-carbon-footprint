@@ -57,6 +57,10 @@ const useStyles = makeStyles((theme: Theme) =>
         transform: 'translate3d(0, 0, 0)',
       },
     },
+    welcomeMessage: {
+      fontSize: '0.875rem', // Adjust the font size to be smaller
+      marginLeft: theme.spacing(2), // Add some spacing between the logo/title and the welcome message
+    },
   }),
 )
 

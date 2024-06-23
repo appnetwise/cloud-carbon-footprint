@@ -31,7 +31,6 @@ const ProfileContent = ({ config = loadConfig() }: ProfileContentProps) => {
 
   return (
     <>
-      <h5 className="profileContent">Welcome {accounts[0]?.name}</h5>
       {graphData ? (
         <ProfileData graphData={graphData} />
       ) : (

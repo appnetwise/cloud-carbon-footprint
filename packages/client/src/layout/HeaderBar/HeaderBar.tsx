@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom'
 import clsx from 'clsx'
 import useStyles from './headerBarStyles'
 import logo from './ccf_logo.png'
+import { useMsal } from '@azure/msal-react'
 
 interface HeaderBarProps {
   isAuthenticated: boolean
@@ -17,6 +18,7 @@ const HeaderBar = ({
   onLogout,
 }: HeaderBarProps): ReactElement => {
   const classes = useStyles()
+  const { accounts } = useMsal()
 
   return (
     <AppBar
@@ -35,6 +37,13 @@ const HeaderBar = ({
           <Typography component="h1" variant="h5">
             Cloud Carbon Footprint
           </Typography>
+          <Typography
+            component="h2"
+            variant="h5"
+            className={classes.welcomeMessage}
+          >
+            Welcome {accounts[0]?.name}
+          </Typography>
         </NavLink>
         <div className={classes.navLinks}>
           {isAuthenticated ? (
@@ -47,6 +56,7 @@ const HeaderBar = ({
               >
                 <Typography component="h2">RECOMMENDATIONS</Typography>
               </NavLink>
+
               <Button color="inherit" onClick={onLogout}>
                 Logout
               </Button>
