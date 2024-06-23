@@ -1,7 +1,3 @@
-/*
- * © 2021 Thoughtworks, Inc.
- */
-
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -15,16 +11,23 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     navContainer: {
       justifyContent: 'space-between',
+      alignItems: 'center', // Ensure items are centered vertically
     },
     title: {
       display: 'flex',
-      gap: 15,
+      alignItems: 'center', // Ensure the logo and title are centered vertically
+      gap: theme.spacing(2),
       color: 'inherit',
       textDecoration: 'inherit',
     },
+    navLinks: {
+      display: 'flex',
+      alignItems: 'center', // Ensure nav links and button are centered vertically
+      gap: theme.spacing(2), // Add spacing between nav links and button
+    },
     navLink: {
       fontSize: theme.typography.fontSize,
-      marginRight: theme.spacing(5),
+      marginRight: theme.spacing(3), // Adjust spacing as needed
       position: 'relative',
       overflow: 'hidden',
       color: 'inherit',

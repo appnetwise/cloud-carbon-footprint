@@ -1,7 +1,3 @@
-/*
- * © 2021 Thoughtworks, Inc.
- */
-
 import { AppBar, Toolbar, Typography, Button } from '@material-ui/core'
 import { ReactElement } from 'react'
 import { NavLink } from 'react-router-dom'
@@ -40,21 +36,27 @@ const HeaderBar = ({
             Cloud Carbon Footprint
           </Typography>
         </NavLink>
-        <NavLink
-          to="/recommendations"
-          className={clsx(classes.navLink, { isActive: classes.activeNavLink })}
-        >
-          <Typography component="h2">RECOMMENDATIONS</Typography>
-        </NavLink>
-        {isAuthenticated ? (
-          <Button color="inherit" onClick={onLogout}>
-            Logout
-          </Button>
-        ) : (
-          <Button color="inherit" onClick={onLogin}>
-            Login
-          </Button>
-        )}
+        <div className={classes.navLinks}>
+          {isAuthenticated ? (
+            <>
+              <NavLink
+                to="/recommendations"
+                className={clsx(classes.navLink, {
+                  isActive: classes.activeNavLink,
+                })}
+              >
+                <Typography component="h2">RECOMMENDATIONS</Typography>
+              </NavLink>
+              <Button color="inherit" onClick={onLogout}>
+                Logout
+              </Button>
+            </>
+          ) : (
+            <Button color="inherit" onClick={onLogin}>
+              Login
+            </Button>
+          )}
+        </div>
       </Toolbar>
     </AppBar>
   )
