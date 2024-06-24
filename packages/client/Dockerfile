@@ -5,6 +5,6 @@ COPY ./build /app/build
 
 RUN yarn install --immutable
 
-FROM nginxinc/nginx-unprivileged:1.25
+FROM nginxinc/nginx-unprivileged:1.26
 COPY --from=build /app/build /var/www
 CMD ["nginx", "-g", "daemon off;"]
