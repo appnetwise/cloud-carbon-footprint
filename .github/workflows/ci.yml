@@ -97,6 +97,11 @@ jobs:
     # needs: build
     steps:
     - uses: actions/checkout@v4
+    - name: Set default value
+      id: acr
+      run: |
+        acr=${{ github.event.inputs.REGISTRY_URL }}
+        echo "::set-output name=acr_url::${acr:-"anwapplication.azurecr.io"}"
     # - uses: ./.github/build
     #   with:
     #     node-version: ${{ matrix.node-version }}
@@ -113,16 +118,16 @@ jobs:
       with:
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
-        login-server: ${{ github.event.inputs.REGISTRY_URL }}
+        login-server: ${{ steps.acr.outputs.acr_url}}
               
     - name: build and save docker images
       run: |
         api="api-$(date +%Y%m%d%H%M%S)"
         client="client-$(date +%Y%m%d%H%M%S)"
-        docker build -t ${{ inputs.REGISTRY_URL }}/ccf-client:$client packages/client
-        docker build -t ${{ inputs.REGISTRY_URL }}/ccf-api:$api packages/api
-        docker save ${{ inputs.REGISTRY_URL }}/ccf-client:$client | gzip > client-${{ github.ref }}.tar.gz
-        docker save ${{ inputs.REGISTRY_URL }}/ccf-api:$api | gzip > api-${{ github.ref }}.tar.gz
+        docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-client:$client packages/client
+        docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-api:$api packages/api
+        docker save ${{ steps.acr.outputs.acr_url}}/ccf-client:$client | gzip > client-${{ github.ref }}.tar.gz
+        docker save ${{ steps.acr.outputs.acr_url}}/ccf-api:$api | gzip > api-${{ github.ref }}.tar.gz
     - uses: actions/upload-artifact@v4
       name: Upload client docker tar
       with:
