@@ -77,6 +77,7 @@ jobs:
       - name: build-client
         run: |
           cd packages/client
+          chmod +x create_client_env_file.sh
           ./create_client_env_file.sh
           yarn build:app
           cd ../..
@@ -102,6 +103,7 @@ jobs:
       run: |
         yarn lerna run build
         cd packages/client
+        chmod +x create_client_env_file.sh
         ./create_client_env_file.sh
         yarn build:app
         cd ../..
