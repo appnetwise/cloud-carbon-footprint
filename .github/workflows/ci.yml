@@ -126,8 +126,10 @@ jobs:
         client="client-$(date +%Y%m%d%H%M%S)"
         docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-client:$client packages/client
         docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-api:$api packages/api
-        docker save ${{ steps.acr.outputs.acr_url}}/ccf-client:$client -o client-${{ github.sha }}.tar
-        docker save ${{ steps.acr.outputs.acr_url}}/ccf-client:$api -o api-${{ github.sha }}.tar
+        ccf-client=$(docker image ls --format {{.Repository}}:{{.Tag}} | grep ccf-client)
+        ccf-api=$(docker image ls --format {{.Repository}}:{{.Tag}} | grep ccf-api)
+        docker save $ccf-client -o client-${{ github.sha }}.tar
+        docker save $ccf-api -o api-${{ github.sha }}.tar
         gzip -v client-${{ github.sha }}.tar
         gzip -v api-${{ github.sha }}.tar
     - uses: actions/upload-artifact@v4
