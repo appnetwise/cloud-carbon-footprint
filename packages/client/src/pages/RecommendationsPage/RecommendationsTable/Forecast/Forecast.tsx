@@ -44,8 +44,7 @@ export const ForecastError = {
   MISSING_DAYS: 'DAYS',
 } as const
 
-export type ForecastErrorType =
-  (typeof ForecastError)[keyof typeof ForecastError]
+export type ForecastErrorType = typeof ForecastError[keyof typeof ForecastError]
 
 const Forecast: FunctionComponent<ForecastProps> = ({
   emissionsData,
