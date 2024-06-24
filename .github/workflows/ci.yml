@@ -94,29 +94,26 @@ jobs:
 
   docker-build:
     runs-on: ubuntu-latest
-    needs: build
+    # needs: build
     steps:
     - uses: actions/checkout@v4
-    - uses: ./.github/build
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: build packages
-      run: |
-        yarn lerna run build
-        cd packages/client
-        chmod +x create_client_env_file.sh
-        ./create_client_env_file.sh
-        yarn build:app
-        cd ../..
-    - name: Docker Login
-      uses: docker/login-action@v3.2.0
+    # - uses: ./.github/build
+    #   with:
+    #     node-version: ${{ matrix.node-version }}
+    # - name: build packages
+    #   run: |
+    #     yarn lerna run build
+    #     cd packages/client
+    #     chmod +x create_client_env_file.sh
+    #     ./create_client_env_file.sh
+    #     yarn build:app
+    #     cd ../..
+    - name: Login to ACR
+      uses: docker/login-action@v3
       with:
         registry: ${{ inputs.REGISTRY_URL }}
         username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-        ecr: false
-        logout: true
-          
+        password: ${{ secrets.DOCKERHUB_TOKEN }}    
     - name: build and save docker images
       run: |
         api="api-$(date +%Y%m%d%H%M%S)"
