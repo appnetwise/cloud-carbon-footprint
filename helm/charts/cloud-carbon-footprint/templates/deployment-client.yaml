@@ -32,6 +32,9 @@ spec:
             - name: {{ .Values.client.service.port.name  }}
               containerPort: {{ .Values.client.service.port.containerPort }}
               protocol: {{ .Values.client.service.port.protocol  }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "cloud-carbon-footprint.fullname" . }}-client-config
           resources:
             {{- toYaml .Values.client.deployment.resources | nindent 12 }}
           securityContext:
