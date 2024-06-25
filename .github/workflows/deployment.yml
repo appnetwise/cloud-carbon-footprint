@@ -62,12 +62,14 @@ jobs:
       - name: Get Next Tag
         id: get_next_tag
         run: |
-          api=$(bash scripts/get_next_tag.sh -t ${{ secrets.TAG_TYPE }} -e $${{ inputs.target-env }} -r ccf-api -s ${{ steps.acr.outputs.acr_url}} -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }} -v ${{ steps.acr.outputs.release_version}})
-          client=$(bash scripts/get_next_tag.sh -t ${{ secrets.TAG_TYPE }} -e ${{ inputs.target-env }} -r ccf-client -s ${{ steps.acr.outputs.acr_url}} -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }} -v ${{ steps.acr.outputs.release_version}})
+          api=$(bash scripts/get_next_tag.sh -t $tag_type -e ${{ inputs.target-env }} -r ccf-api -s ${{ steps.acr.outputs.acr_url}} -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }} -v ${{ steps.acr.outputs.release_version}})
+          client=$(bash scripts/get_next_tag.sh -t $tag_type -e ${{ inputs.target-env }} -r ccf-client -s ${{ steps.acr.outputs.acr_url}} -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }} -v ${{ steps.acr.outputs.release_version}})
           echo "$api"
           echo "$client"
           echo "::set-output name=api_docker_tag::$api"
           echo "::set-output name=client_docker_tag::$client"
+        env:
+          tag_type: ${{ vars.TAG_TYPE }}
       
       - name: Load and Push Docker Images
         run: |
