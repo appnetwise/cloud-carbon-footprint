@@ -135,7 +135,7 @@ jobs:
         mkdir -p /tmp/_images
         cp *.tar.gz /tmp/_images
     - uses: actions/upload-artifact@v4
-      name: Upload client docker tar
+      name: Upload docker images
       with:
         name: docker_images
         path: /tmp/_images
