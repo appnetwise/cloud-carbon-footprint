@@ -94,7 +94,7 @@ jobs:
 
   docker-build:
     runs-on: ubuntu-latest
-    needs: build
+    # needs: build
     steps:
     - uses: actions/checkout@v4
     - name: Set default value
@@ -126,8 +126,8 @@ jobs:
         client="client-$(date +%Y%m%d%H%M%S)"
         docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-client:$client packages/client
         docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-api:$api packages/api
-        ccf-client=$(docker image ls --format {{.Repository}}:{{.Tag}} | grep ccf-client)
-        ccf-api=$(docker image ls --format {{.Repository}}:{{.Tag}} | grep ccf-api)
+        ccf-client="$(docker image ls --format {{.Repository}}:{{.Tag}} | grep ccf-client)"
+        ccf-api="$(docker image ls --format {{.Repository}}:{{.Tag}} | grep ccf-api)"
         docker save $ccf-client -o client-${{ github.sha }}.tar
         docker save $ccf-api -o api-${{ github.sha }}.tar
         gzip -v client-${{ github.sha }}.tar
