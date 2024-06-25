@@ -36,7 +36,7 @@ jobs:
     uses: ./.github/workflows/deployment.yml
     with:
       target-env: ${ { matrix.target } }
-      REGISTRY_URL: ${{ input.REGISTRY_URL }}
-      RELEASE: ${{ input.RELEASE }}
-      ACR_VERSION: ${{ input.acr_version }}
+      REGISTRY_URL: ${{ inputs.REGISTRY_URL }}
+      RELEASE: ${{ inputs.RELEASE }}
+      ACR_VERSION: ${{ inputs.acr_version }}
     secrets: inherit
