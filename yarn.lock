@@ -2053,6 +2053,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.23.9":
+  version: 7.24.7
+  resolution: "@babel/runtime@npm:7.24.7"
+  dependencies:
+    regenerator-runtime: ^0.14.0
+  checksum: d17f29eed6f848ac15cdf4202a910b741facfb0419a9d79e5c7fa37df6362fc3227f1cc2e248cc6db5e53ddffb4caa6686c488e6e80ce3d29c36a4e74c8734ea
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.16.7, @babel/template@npm:^7.18.6, @babel/template@npm:^7.3.3":
   version: 7.18.6
   resolution: "@babel/template@npm:7.18.6"
@@ -2635,6 +2644,7 @@ __metadata:
     "@material-ui/core": ^4.11.4
     "@material-ui/icons": ^4.11.2
     "@material-ui/lab": ^4.0.0-alpha.57
+    "@mui/icons-material": ^5.15.20
     "@mui/material": ^5.11.1
     "@mui/x-data-grid": 5.9.0
     "@testing-library/dom": ^8.20.0
@@ -4957,6 +4967,22 @@ __metadata:
   version: 5.11.1
   resolution: "@mui/core-downloads-tracker@npm:5.11.1"
   checksum: 6faae7ffec3d85b7368df3695cad57aae12b81ffc178f53b667ffa64f0cc672e3a01f5302985352033a8896c2687ec349ac8f69e469576f002fb7ef2509f887f
+  languageName: node
+  linkType: hard
+
+"@mui/icons-material@npm:^5.15.20":
+  version: 5.15.20
+  resolution: "@mui/icons-material@npm:5.15.20"
+  dependencies:
+    "@babel/runtime": ^7.23.9
+  peerDependencies:
+    "@mui/material": ^5.0.0
+    "@types/react": ^17.0.0 || ^18.0.0
+    react: ^17.0.0 || ^18.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: bdc4841e83e6628237e468965a726a8a099e57bd1075e5f70f2d5fd5715309bdf13d8dcbb66056c34109fd2a5932ab5eebf4820f3a2cb0cbe4bc17492f881e04
   languageName: node
   linkType: hard
 
@@ -20447,6 +20473,13 @@ __metadata:
   version: 0.13.9
   resolution: "regenerator-runtime@npm:0.13.9"
   checksum: 65ed455fe5afd799e2897baf691ca21c2772e1a969d19bb0c4695757c2d96249eb74ee3553ea34a91062b2a676beedf630b4c1551cc6299afb937be1426ec55e
+  languageName: node
+  linkType: hard
+
+"regenerator-runtime@npm:^0.14.0":
+  version: 0.14.1
+  resolution: "regenerator-runtime@npm:0.14.1"
+  checksum: 9f57c93277b5585d3c83b0cf76be47b473ae8c6d9142a46ce8b0291a04bb2cf902059f0f8445dcabb3fb7378e5fe4bb4ea1e008876343d42e46d3b484534ce38
   languageName: node
   linkType: hard
 
