@@ -34,14 +34,6 @@ jobs:
           echo "::set-output name=release_version::${release:-"latest"}"
           acr_tag=${{ github.event.inputs.ACR_VERSION }}
           echo "::set-output name=acr_version::${acr_tag:-"latest"}"
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
-        with:
-          github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: ci.yml
-          workflow_conclusion: success
-          branch: dev
-          check_artifacts:  false
 
       - name: Safe download workflow artifact
         uses: Legit-Labs/action-download-artifact@v2.18.0
@@ -50,9 +42,20 @@ jobs:
           workflow: CI
           workflow_conclusion: success
           branch: dev
-          name: *.tar.gz
+          name: api.tar.gz
           path: ./artifacts
-          check_artifacts: true        
+          check_artifacts: true  
+
+      - name: Safe download workflow artifact
+        uses: Legit-Labs/action-download-artifact@v2.18.0
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: CI
+          workflow_conclusion: success
+          branch: dev
+          name: client.tar.gz
+          path: ./artifacts
+          check_artifacts: true   
 
       - name: Azure Container Registry Login
         uses: Azure/docker-login@v1
