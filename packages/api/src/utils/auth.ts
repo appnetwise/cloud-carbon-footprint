@@ -14,7 +14,12 @@ export default async function (
   next: express.NextFunction,
 ): Promise<void> {
   try {
-    authLogger.info('Authentication successful')
+    if(!req.headers.authorization) {
+      throw new Error('Authorization header is required.');
+    }
+    const token = req.headers.authorization.split(' ')[1];
+    authLogger.info('Authentication token received')
+    // authLogger.info('Authentication successful')
     next()
   } catch (e) {
     authLogger.error(`Authentication failed. Error: ${e.message}`, e)

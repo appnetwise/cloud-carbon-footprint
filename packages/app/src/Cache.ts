@@ -83,7 +83,7 @@ export default function cache(): any {
           )
           cacheLogger.info('Setting new estimates to cache...')
           if (estimatesToPersist.length > 0) {
-            await cacheManager.setEstimates(estimatesToPersist, grouping)
+            await cacheManager.setEstimates(estimatesToPersist, grouping, request.tenantId)
           }
         }
       }

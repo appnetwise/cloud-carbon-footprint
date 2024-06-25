@@ -2,7 +2,7 @@
  * © 2023 Thoughtworks, Inc.
  */
 
-import express from 'express'
+import express, { raw } from 'express'
 
 import {
   App,
@@ -19,8 +19,11 @@ import {
   PartialDataError,
   RecommendationsRequestValidationError,
 } from '@cloud-carbon-footprint/common'
+import getGraphClient from './utils/graphClient'
 
+const jwt = require('jsonwebtoken')
 const apiLogger = new Logger('api')
+const X_TENANT_ID = 'x-tenant-id'
 
 /**
  * Handles the fetching and calculations of cloud footprint estimates for a given date range.
@@ -35,6 +38,7 @@ export const FootprintApiMiddleware = async function (
 ): Promise<void> {
   // Set the request time out to 10 minutes to allow the request enough time to complete.
   req.socket.setTimeout(1000 * 60 * 10)
+  const token = req.headers.authorization?.split(' ')[1];
   const rawRequest: FootprintEstimatesRawRequest = {
     startDate: req.query.start?.toString(),
     endDate: req.query.end?.toString(),
@@ -47,7 +51,13 @@ export const FootprintApiMiddleware = async function (
     services: req.query.services as string[],
     regions: req.query.regions as string[],
     tags: req.query.tags as Tags,
+    tenantId: req.headers[X_TENANT_ID]?.toString(),
+    accessToken: token   
   }
+  if(token && !rawRequest.tenantId) {
+    rawRequest.tenantId = jwt.decode(token).tid;
+  }
+
   apiLogger.info(`Footprint API request started.`)
   if (!rawRequest.groupBy) {
     apiLogger.warn('GroupBy parameter not specified, adopting default "day"')
@@ -109,7 +119,14 @@ export const RecommendationsApiMiddleware = async function (
 ): Promise<void> {
   const rawRequest: RecommendationsRawRequest = {
     awsRecommendationTarget: req.query.awsRecommendationTarget?.toString(),
+    tenantId: req.headers[X_TENANT_ID]?.toString()
   }
+  
+  const token = req.headers.authorization?.split(' ')[1];
+  if(token && !rawRequest.tenantId) {
+    rawRequest.tenantId = jwt.decode(token).tid;
+  }
+
   apiLogger.info(`Recommendations API request started`)
   const footprintApp = new App()
   try {
@@ -128,5 +145,24 @@ export const RecommendationsApiMiddleware = async function (
     } else {
       res.status(500).send('Internal Server Error')
     }
+  }
+}
+
+export const ProfileDataApiMiddleware = async function (
+  req: express.Request,
+  res: express.Response,
+): Promise<void> {
+  apiLogger.info(`Profile API request started`)
+
+  try {
+    const accessToken = req.headers.authorization.split(' ')[1]
+    const graphData = await getGraphClient(accessToken)
+      .api('/me')
+      // .responseType('json')
+      .get()
+    res.json(graphData)
+  } catch (e) {
+    apiLogger.error(`Unable to process profile data request.`, e)
+    res.status(500).send('Internal Server Error')
   }
 }

@@ -802,9 +802,9 @@ export default class ConsumptionManagementService {
     ) {
       // Extract disk type according to pattern of Managed SSD names
       const matchingDiskType =
-        consumptionDetailRow.usageType.match(/(P|E)\d{1,2}/)[0]
+        consumptionDetailRow.usageType.match(/(P|E)\d{1,2}/)?.[0]
       return convertGigaBytesToTerabyteHours(
-        SSD_MANAGED_DISKS_STORAGE_GB[matchingDiskType],
+        SSD_MANAGED_DISKS_STORAGE_GB[matchingDiskType] || 0,
       )
     }
 

@@ -9,8 +9,8 @@ spec:
   type: {{ .Values.client.service.type }}
   ports:
     - port: {{ .Values.client.service.port.number }}
-      targetPort: http
-      protocol: TCP
+      targetPort: {{ .Values.client.service.port.name }}
+      protocol: {{ .Values.client.service.port.protocol }}
       name: {{ .Values.client.service.port.name }}
   selector:
     {{- include "cloud-carbon-footprint.selectorLabels" . | nindent 4 }}
@@ -24,12 +24,12 @@ metadata:
     {{- include "cloud-carbon-footprint.labels" . | nindent 4 }}
     app.kubernetes.io/component: api
 spec:
-  type: {{ .Values.client.service.type }}
+  type: {{ .Values.api.service.type }}
   ports:
-    - port: {{ .Values.client.service.port.number }}
-      targetPort: http
-      protocol: TCP
-      name: {{ .Values.client.service.port.name }}
+    - port: {{ .Values.api.service.port.number }}
+      targetPort: {{ .Values.api.service.port.name }}
+      protocol: {{ .Values.api.service.port.protocol }}
+      name: {{ .Values.api.service.port.name }}
   selector:
     {{- include "cloud-carbon-footprint.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: api

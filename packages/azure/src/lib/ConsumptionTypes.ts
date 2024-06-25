@@ -37,12 +37,14 @@ export const UNKNOWN_SERVICES: string[] = [
   'API Management',
   'Advanced Data Security',
   'Virtual Machines Licenses',
+  'Self-hosted CI',
 ]
 
 export const UNKNOWN_USAGE_TYPES: string[] = [
   'Server - Free',
   'Requests',
   'Custom Domain',
+  'Self-hosted CI',
 ]
 
 export const UNSUPPORTED_USAGE_TYPES: string[] = [
@@ -117,6 +119,7 @@ export const STORAGE_USAGE_TYPES: string[] = [
   'Basic User',
   'Standard Nodes',
   'Microsoft-hosted CI',
+  // 'Self-hosted CI', ///added new storage usage type- azure devops
   'Data Processing Unit',
   'Pay as you go Warm Storage',
   'Standard Unit',

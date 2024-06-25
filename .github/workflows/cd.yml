@@ -1,0 +1,42 @@
+name: CD
+
+on:
+  workflow_dispatch:
+    inputs:
+      acr_version:
+        description: 'ACR tag tool version'
+        required: true
+        default: 'latest'
+        type: string
+      REGISTRY_URL:
+        description: 'Docker Registry URL'
+        required: true
+        default: 'anwapplication.azurecr.io'
+        type: choice
+        options:
+          - anwapplication.azurecr.io
+      RELEASE:
+        description: 'Release Version'
+        required: true
+        default: latest
+        type: string
+
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches:
+      - 'dev'
+
+jobs:
+  Deployment:
+    strategy:
+      fail-fast: true
+      matrix:
+        target: [dev, qa, prod ]
+    uses: ./.github/workflows/deployment.yml
+    with:
+      target-env: ${ { matrix.target } }
+      REGISTRY_URL: ${{ input.REGISTRY_URL }}
+      RELEASE: ${{ input.RELEASE }}
+      ACR_VERSION: ${{ input.acr_version }}
+    secrets: inherit

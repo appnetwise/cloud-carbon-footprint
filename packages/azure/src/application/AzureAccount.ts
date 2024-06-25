@@ -11,6 +11,7 @@ import {
   ClientSecretCredential,
   WorkloadIdentityCredential,
   DefaultAzureCredential,
+  TokenCredential,
 } from '@azure/identity'
 import { ConsumptionManagementClient } from '@azure/arm-consumption'
 import { AdvisorManagementClient } from '@azure/arm-advisor'
@@ -45,6 +46,7 @@ export default class AzureAccount extends CloudProviderAccount {
     | ClientSecretCredential
     | WorkloadIdentityCredential
     | DefaultAzureCredential
+    | TokenCredential
   private subscriptionClient: SubscriptionClient
   private logger: Logger
 
@@ -60,6 +62,15 @@ export default class AzureAccount extends CloudProviderAccount {
       this.subscriptionClient = new SubscriptionClient(this.credentials)
     } catch (e) {
       throw new Error(`Azure initializeAccount failed. Reason: ${e.message}`)
+    }
+  }
+
+  public async initializeAccountForTenant(tenantId: string, accessToken?: string): Promise<void> {
+    try {
+      this.credentials = await AzureCredentialsProvider.createCredentialForTenant(tenantId, accessToken);
+      this.subscriptionClient = new SubscriptionClient(this.credentials)
+    } catch (e) {
+      throw new Error(`Azure initializeAccount failed for tenant: ${tenantId}. Reason: ${e.message}`)
     }
   }
 
@@ -89,9 +100,10 @@ export default class AzureAccount extends CloudProviderAccount {
     endDate: Date,
     grouping: GroupBy,
     subscriptionIds: string[],
+    tenantId?: string,  
   ): Promise<EstimationResult[]> {
     const AZURE = configLoader().AZURE
-    const subscriptions = await this.getSubscriptions(subscriptionIds)
+    const subscriptions = await this.getSubscriptions(subscriptionIds, tenantId)
     const requests = this.createSubscriptionRequests(
       subscriptions,
       startDate,
@@ -119,11 +131,12 @@ export default class AzureAccount extends CloudProviderAccount {
 
   private async getSubscriptions(
     subscriptionIds: string[] = [],
+    tenantId?: string,
   ): Promise<Subscription[]> {
     const AZURE = configLoader().AZURE
     const defaultAzureSubscriptionIds = subscriptionIds.length
       ? subscriptionIds
-      : AZURE.SUBSCRIPTIONS
+      : tenantId ? AzureCredentialsProvider.getDefaultSubscriptionIdsForTenant(tenantId) : AZURE.SUBSCRIPTIONS
 
     const getSubscriptions = async (): Promise<Subscription[]> => {
       const subscriptions = []
