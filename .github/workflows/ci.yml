@@ -132,14 +132,16 @@ jobs:
         docker save $ccf_api -o api_${{ github.sha }}.tar
         gzip -v client_${{ github.sha }}.tar
         gzip -v api_${{ github.sha }}.tar
+        mkdir -p /tmp/_images
+        cp *.tar.gz /tmp/_images
     - uses: actions/upload-artifact@v4
       name: Upload client docker tar
       with:
-        name: client_${{ github.sha }}.tar.gz
-        path: client.tar.gz
+        name: client.tar.gz
+        path: /tmp/_images/client_${{ github.sha }}.tar.gz
     - uses: actions/upload-artifact@v4
       name: Upload api docker tar
       with:
-        name: api_${{ github.sha }}.tar.gz
-        path: api.tar.gz
+        name: api.tar.gz
+        path: /tmp/_images/api_${{ github.sha }}.tar.gz
     
