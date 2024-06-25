@@ -1,11 +1,16 @@
 import { Button, Typography } from '@material-ui/core'
 import MicrosoftIcon from '@mui/icons-material/Microsoft'
 import useStyles from './loginPageStyles'
-interface LoginPageProps {
-  onLogin: () => void
-}
-const LoginPage = ({ onLogin }: LoginPageProps) => {
+
+import { Navigate } from 'react-router'
+import { useAuth } from 'src/auth/AuthContext'
+
+const LoginPage = () => {
   const classes = useStyles()
+  const { isAuthenticated, login } = useAuth()
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />
+  }
 
   return (
     <div className={classes.root}>
@@ -18,7 +23,7 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
           variant="contained"
           color="primary"
           className={classes.loginButton}
-          onClick={onLogin}
+          onClick={login}
         >
           <MicrosoftIcon className={classes.icon} />
           Sign in with Microsoft
