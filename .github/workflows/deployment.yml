@@ -42,20 +42,8 @@ jobs:
           workflow: CI
           workflow_conclusion: success
           branch: dev
-          name: api.tar.gz.zip
           path: ./artifacts
           check_artifacts: true  
-
-      - name: Safe download workflow artifact
-        uses: Legit-Labs/action-download-artifact@v2.18.0
-        with:
-          github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: CI
-          workflow_conclusion: success
-          branch: dev
-          name: client.tar.gz.zip
-          path: ./artifacts
-          check_artifacts: true   
 
       - name: Azure Container Registry Login
         uses: Azure/docker-login@v1
