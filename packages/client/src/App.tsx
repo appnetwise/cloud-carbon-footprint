@@ -16,6 +16,7 @@ import { useFootprintData } from './utils/hooks'
 import { getEmissionDateRange } from './utils/helpers/handleDates'
 import ProfileContent from './common/ProfileContent/ProfileContent'
 import { msalConfig } from './authConfig'
+import ProtectedRoute from './protected/ProtectedRoute'
 
 interface AppProps {
   config?: ClientConfig
@@ -144,14 +145,14 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
         onLogin={handleLogin}
         onLogout={handleLogout}
       />
-      {/* <AuthenticatedTemplate> */}
-      {isAuthenticated ? (
-        <>
-          <ProfileContent />
-          <Container maxWidth={false} className={classes.appContainer}>
-            <Routes>
-              <Route
-                path="/"
+      {isAuthenticated && <ProfileContent />}
+      <Container maxWidth={false} className={classes.appContainer}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute
+                isAuthenticated={isAuthenticated}
                 element={
                   <EmissionsMetricsPage
                     config={config}
@@ -160,8 +161,13 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
                   />
                 }
               />
-              <Route
-                path="/recommendations"
+            }
+          />
+          <Route
+            path="/recommendations"
+            element={
+              <ProtectedRoute
+                isAuthenticated={isAuthenticated}
                 element={
                   <RecommendationsPage
                     config={config}
@@ -170,15 +176,14 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
                   />
                 }
               />
-              <Route
-                path="/error"
-                element={<ErrorPage errorMessage={errorMessage} />}
-              />
-            </Routes>
-          </Container>
-        </>
-      ) : null}
-      {/* </AuthenticatedTemplate> */}
+            }
+          />
+          <Route
+            path="/error"
+            element={<ErrorPage errorMessage={errorMessage} />}
+          />
+        </Routes>
+      </Container>
     </>
   )
 }
