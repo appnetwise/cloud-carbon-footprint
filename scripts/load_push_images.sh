@@ -17,6 +17,9 @@ done
 TEMP_IMAGE=$(docker image ls --format {{.Repository}}:{{.Tag}} | grep $IMAGE) || true
 TARGET_REPO=$(docker image ls --format {{.Repository}} | grep $IMAGE) || true
 
+echo $TEMP_IMAGE
+echo $TARGET_REPO
+echo $IMAGE_TAG
 docker tag $TEMP_IMAGE $TARGET_REPO:$IMAGE_TAG
 docker push $TARGET_REPO:$IMAGE_TAG
 docker tag $TEMP_IMAGE $TARGET_REPO:latest-$BUILD_ENV
