@@ -32,10 +32,10 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        target: [dev, qa, prod ]
+        target: [ dev, qa, prod ]
     uses: ./.github/workflows/deployment.yml
     with:
-      target-env: ${ { matrix.target } }
+      target-env: ${{ matrix.target }}
       REGISTRY_URL: ${{ inputs.REGISTRY_URL }}
       RELEASE: ${{ inputs.RELEASE }}
       ACR_VERSION: ${{ inputs.acr_version }}
