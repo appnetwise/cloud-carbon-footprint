@@ -8,13 +8,11 @@ import { useMsal } from '@azure/msal-react'
 
 interface HeaderBarProps {
   isAuthenticated: boolean
-  onLogin: () => void
   onLogout: () => void
 }
 
 const HeaderBar = ({
   isAuthenticated,
-  onLogin,
   onLogout,
 }: HeaderBarProps): ReactElement => {
   const classes = useStyles()
@@ -62,9 +60,7 @@ const HeaderBar = ({
               </Button>
             </>
           ) : (
-            <Button color="inherit" onClick={onLogin}>
-              Login
-            </Button>
+            <></>
           )}
         </div>
       </Toolbar>

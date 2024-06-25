@@ -17,6 +17,7 @@ import { getEmissionDateRange } from './utils/helpers/handleDates'
 import ProfileContent from './common/ProfileContent/ProfileContent'
 import { msalConfig } from './authConfig'
 import ProtectedRoute from './protected/ProtectedRoute'
+import LoginPage from './pages/LoginPage/LoginPage'
 
 interface AppProps {
   config?: ClientConfig
@@ -58,7 +59,7 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
       const loginResult = await msalInstance.loginPopup()
       if (loginResult) {
         setIsAuthenticated(true)
-        window.location.reload()
+        navigate('/')
       }
     } catch (error) {
       console.error('Login error:', error)
@@ -115,11 +116,7 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
   if (mobileWarningEnabled) {
     return (
       <Container maxWidth="xl" className={classes.appContainer}>
-        <HeaderBar
-          isAuthenticated={isAuthenticated}
-          onLogin={handleLogin}
-          onLogout={handleLogout}
-        />
+        <HeaderBar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
         <MobileWarning handleClose={handleWarningClose} />
       </Container>
     )
@@ -128,11 +125,7 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
   if (footprint.loading) {
     return (
       <>
-        <HeaderBar
-          isAuthenticated={isAuthenticated}
-          onLogin={handleLogin}
-          onLogout={handleLogout}
-        />
+        <HeaderBar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
         <LoadingMessage message="Loading cloud data. This may take a while..." />
       </>
     )
@@ -140,11 +133,7 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
 
   return (
     <>
-      <HeaderBar
-        isAuthenticated={isAuthenticated}
-        onLogin={handleLogin}
-        onLogout={handleLogout}
-      />
+      <HeaderBar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
       {isAuthenticated && <ProfileContent />}
       <Container maxWidth={false} className={classes.appContainer}>
         <Routes>
@@ -182,6 +171,7 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
             path="/error"
             element={<ErrorPage errorMessage={errorMessage} />}
           />
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
         </Routes>
       </Container>
     </>
