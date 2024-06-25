@@ -34,7 +34,7 @@ jobs:
           echo "::set-output name=release_version::${release:-"latest"}"
           acr_tag=${{ github.event.inputs.ACR_VERSION }}
           echo "::set-output name=acr_version::${acr_tag:-"latest"}"
-          
+
       - name: Safe download workflow artifact
         uses: Legit-Labs/action-download-artifact@v2.18.0
         with:
@@ -42,7 +42,8 @@ jobs:
           workflow: CI
           workflow_conclusion: success
           branch: dev
-          path: ${{ github.workspace }}/**
+          name: docker_images
+          path: ./artifacts
           check_artifacts: true  
 
       - name: Azure Container Registry Login

@@ -137,11 +137,6 @@ jobs:
     - uses: actions/upload-artifact@v4
       name: Upload client docker tar
       with:
-        name: client.tar.gz
-        path: /tmp/_images/client_${{ github.sha }}.tar.gz
-    - uses: actions/upload-artifact@v4
-      name: Upload api docker tar
-      with:
-        name: api.tar.gz
-        path: /tmp/_images/api_${{ github.sha }}.tar.gz
+        name: docker_images
+        path: /tmp/_images
     
