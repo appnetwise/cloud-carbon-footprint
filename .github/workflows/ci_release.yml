@@ -1,4 +1,4 @@
-name: CI
+name: ci_release
 on:
    workflow_dispatch:
   # push:
