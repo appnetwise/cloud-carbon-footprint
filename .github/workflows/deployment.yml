@@ -24,6 +24,7 @@ jobs:
 
     steps:
       - run: echo "🎉 target evn ${{ inputs.target-env}}"
+      - uses: actions/checkout@v4
       - name: Set default values
         id: acr
         run: |
@@ -41,7 +42,18 @@ jobs:
           workflow_conclusion: success
           branch: dev
           check_artifacts:  false
-          
+
+      - name: Safe download workflow artifact
+        uses: Legit-Labs/action-download-artifact@v2.18.0
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: CI
+          workflow_conclusion: success
+          branch: dev
+          name: *.tar.gz
+          path: ./artifacts
+          check_artifacts: true        
+
       - name: Azure Container Registry Login
         uses: Azure/docker-login@v1
         with:
