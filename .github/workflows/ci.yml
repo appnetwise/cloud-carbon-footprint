@@ -126,20 +126,20 @@ jobs:
         client="client-$(date +%Y%m%d%H%M%S)"
         docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-client:$client packages/client
         docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-api:$api packages/api
-        ccf-client="$(docker image ls --format {{.Repository}}:{{.Tag}} | grep ccf-client)"
-        ccf-api="$(docker image ls --format {{.Repository}}:{{.Tag}} | grep ccf-api)"
-        docker save $ccf-client -o client-${{ github.sha }}.tar
-        docker save $ccf-api -o api-${{ github.sha }}.tar
-        gzip -v client-${{ github.sha }}.tar
-        gzip -v api-${{ github.sha }}.tar
+        ccf_client="$(docker image ls --format {{.Repository}}:{{.Tag}} | grep ccf-client)"
+        ccf_api="$(docker image ls --format {{.Repository}}:{{.Tag}} | grep ccf-api)"
+        docker save $ccf_client -o client_${{ github.sha }}.tar
+        docker save $ccf_api -o api_${{ github.sha }}.tar
+        gzip -v client_${{ github.sha }}.tar
+        gzip -v api_${{ github.sha }}.tar
     - uses: actions/upload-artifact@v4
       name: Upload client docker tar
       with:
-        name: client-${{ github.sha }}.tar.gz
+        name: client_${{ github.sha }}.tar.gz
         path: client.tar.gz
     - uses: actions/upload-artifact@v4
       name: Upload api docker tar
       with:
-        name: api-${{ github.sha }}.tar.gz
+        name: api_${{ github.sha }}.tar.gz
         path: api.tar.gz
     
