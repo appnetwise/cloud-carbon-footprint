@@ -15,6 +15,9 @@ on:
       ACR_VERSION:
         required: true
         type: string
+      run-id:
+        required: true
+        type: string
 
 permissions: 
   actions: read
@@ -26,7 +29,7 @@ jobs:
     environment: ${{ inputs.target-env }}
 
     steps:
-      - run: echo "🎉 target evn ${{ inputs.target-env}}"
+      - run: echo "🎉 target evn ${{ inputs.target-env }}"
       - uses: actions/checkout@v4
       - name: Set default values
         id: acr
@@ -43,7 +46,7 @@ jobs:
         with:
           name: docker_images
           github-token: ${{secrets.GITHUB_TOKEN}}
-          run-id: ${{ github.event.workflow_run.id }}
+          run-id: ${{ inputs.run-id }}
 
       - name: Azure Container Registry Login
         uses: Azure/docker-login@v1

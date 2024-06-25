@@ -24,8 +24,7 @@ on:
   workflow_run:
     workflows: ["CI"]
     types: [completed]
-    branches:
-      - 'dev'
+    branches: [dev]
 
 jobs:
   Deployment:
@@ -39,4 +38,5 @@ jobs:
       REGISTRY_URL: ${{ inputs.REGISTRY_URL }}
       RELEASE: ${{ inputs.RELEASE }}
       ACR_VERSION: ${{ inputs.acr_version }}
+      run-id: ${{ github.event.workflow_run.id }}
     secrets: inherit
