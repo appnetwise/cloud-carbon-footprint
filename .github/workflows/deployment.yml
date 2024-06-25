@@ -42,7 +42,7 @@ jobs:
           workflow: CI
           workflow_conclusion: success
           branch: dev
-          name: api.tar.gz
+          name: api.tar.gz.zip
           path: ./artifacts
           check_artifacts: true  
 
@@ -53,7 +53,7 @@ jobs:
           workflow: CI
           workflow_conclusion: success
           branch: dev
-          name: client.tar.gz
+          name: client.tar.gz.zip
           path: ./artifacts
           check_artifacts: true   
 
