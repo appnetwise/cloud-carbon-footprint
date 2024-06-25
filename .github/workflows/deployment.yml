@@ -41,15 +41,13 @@ jobs:
           workflow_conclusion: success
           branch: dev
           check_artifacts:  false
-
-      - name: Docker Login
-        uses: docker/login-action@v3.2.0
+          
+      - name: Azure Container Registry Login
+        uses: Azure/docker-login@v1
         with:
-          registry: ${{ steps.acr.outputs.acr_url}}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
-          ecr: false
-          logout: true
+          login-server: ${{ steps.acr.outputs.acr_url}}
       
       - name: Install ACR-Tag Utility
         run: |
