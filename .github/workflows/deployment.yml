@@ -34,9 +34,7 @@ jobs:
           echo "::set-output name=release_version::${release:-"latest"}"
           acr_tag=${{ github.event.inputs.ACR_VERSION }}
           echo "::set-output name=acr_version::${acr_tag:-"latest"}"
-          ls 
-          ls artifacts
-
+          
       - name: Safe download workflow artifact
         uses: Legit-Labs/action-download-artifact@v2.18.0
         with:
