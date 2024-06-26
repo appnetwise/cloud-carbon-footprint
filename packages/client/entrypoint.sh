@@ -18,7 +18,8 @@ replace_var() {
 if [ "$@" = 'nginx-fe' ]; then
 
     # go through all JS files and replace %VAR_NAME% with VAR_NAME value from env variables
-    find /var/www/ -type f -name "*.js" | while read filename; do
+
+    find /var/www/ -type f -name "*main.*.js" | while read filename; do
         replace_var REACT_APP_MSAL_AUTHORITY $filename
         replace_var REACT_APP_MSAL_CLIENT_ID $filename
         replace_var REACT_APP_MSAL_REDIRECT_URI $filename
