@@ -7,6 +7,7 @@ COPY ./entrypoint.sh /app/entrypoint.sh
 RUN yarn install --immutable
 
 FROM nginxinc/nginx-unprivileged:1.26
+WORKDIR /var/www/
 COPY --from=build /app/build /var/www
 COPY --from=build /app/entrypoint.sh /opt/entrypoint.sh
 ENTRYPOINT ["sh", "/opt/entrypoint.sh"]

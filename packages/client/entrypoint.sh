@@ -11,7 +11,8 @@ replace_var() {
         sed -i "s,%$1%,,g" $2
     else
         echo "Setting variable $1"
-        sed -i "s,%$1%,$value,g" $2
+        sed -i "s,%$1%,$value,g" $2 > tmp; cat tmp > $2; rm tmp
+        echo "deleted tmp"
     fi
 }
 
