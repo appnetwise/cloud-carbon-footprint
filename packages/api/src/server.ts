@@ -24,7 +24,7 @@ httpApp.use(express.json());
 const serverLogger = new Logger('Server')
 
 if (process.env.NODE_ENV === 'production') {
-  httpApp.use(auth)
+  // httpApp.use(auth)
 }
 
 httpApp.use(helmet())
