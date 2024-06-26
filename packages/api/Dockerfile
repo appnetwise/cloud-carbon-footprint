@@ -5,4 +5,4 @@ COPY ./package.json .
 RUN yarn install --immutable
 RUN rm -rf core
 
-CMD [ "yarn", "start:web"]
+CMD [ "yarn", "start"]
