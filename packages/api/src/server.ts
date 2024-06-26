@@ -11,6 +11,7 @@ import helmet from 'helmet'
 import cors, { CorsOptions } from 'cors'
 
 import { createRouter } from './api'
+import { userRouter } from "./users/user.router";
 import { Logger, configLoader } from '@cloud-carbon-footprint/common'
 import { MongoDbCacheManager } from '@cloud-carbon-footprint/app'
 import swaggerDocs from './utils/swagger'
@@ -18,6 +19,8 @@ import auth from './utils/auth'
 
 const port = process.env.PORT || 4000
 const httpApp = express()
+httpApp.use(express.json());
+
 const serverLogger = new Logger('Server')
 
 if (process.env.NODE_ENV === 'production') {
@@ -56,7 +59,9 @@ if (process.env.ENABLE_CORS) {
   httpApp.use(cors(corsOptions))
 }
 
+// controllers(routers)
 httpApp.use('/api', createRouter())
+httpApp.use('/api/users', userRouter)
 
 httpApp.listen(port, () => {
   serverLogger.info(

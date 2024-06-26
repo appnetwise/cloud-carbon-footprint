@@ -155,7 +155,7 @@ export const ProfileDataApiMiddleware = async function (
   apiLogger.info(`Profile API request started`)
 
   try {
-    const accessToken = req.headers.authorization.split(' ')[1]
+    const accessToken = req.headers.authorization?.split(' ')[1]
     const graphData = await getGraphClient(accessToken)
       .api('/me')
       // .responseType('json')
