@@ -15,7 +15,7 @@ replace_var() {
     fi
 }
 
-if [[ "$@" = 'nginx-fe' ]]; then
+if [ "$@" = 'nginx-fe' ]; then
 
     # go through all JS files and replace %VAR_NAME% with VAR_NAME value from env variables
     find /var/www/ -type f -name "*.js" | while read filename; do
@@ -26,5 +26,3 @@ if [[ "$@" = 'nginx-fe' ]]; then
 
     exec nginx -g "daemon off;"
 fi
-
-exec "$@"
