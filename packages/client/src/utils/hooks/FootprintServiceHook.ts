@@ -35,17 +35,11 @@ const useRemoteFootprintService = (
 
   const start: string = params.startDate.format('YYYY-MM-DD').toString()
   const end: string = params.endDate.format('YYYY-MM-DD').toString()
-  const { accessToken } = useAuth()
-
-  useEffect(() => {
-    if (accessToken) {
-      console.log('Access Token:', accessToken)
-    }
-  }, [accessToken])
+  const { token } = useAuth()
 
   useEffect(() => {
     const fetchEstimates = async () => {
-      if (!params.baseUrl || !accessToken) {
+      if (!params.baseUrl || !token) {
         setLoading(false)
         return
       }
@@ -70,7 +64,7 @@ const useRemoteFootprintService = (
               skip,
             },
             headers: {
-              Authorization: 'Bearer ' + accessToken, //the token is a variable which holds the token
+              Authorization: 'Bearer ' + token, //the token is a variable which holds the token
             },
           })
           lastDataLength = checkForLoopExit(
@@ -106,7 +100,7 @@ const useRemoteFootprintService = (
     params.baseUrl,
     params.groupBy,
     params.limit,
-    accessToken,
+    token,
   ])
 
   return { data, loading, error }

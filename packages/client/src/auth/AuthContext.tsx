@@ -1,12 +1,58 @@
-import { createContext, useContext, useMemo } from 'react'
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react'
 import { useMsal, useIsAuthenticated } from '@azure/msal-react'
 import { loginRequest } from './authConfig'
 
-const AuthContext = createContext(null)
+interface AuthContextType {
+  isAuthenticated: boolean
+  login: () => Promise<void>
+  logout: () => void
+  token: string | null
+  account: any | null
+}
 
-export const AuthProvider = ({ children }) => {
+const AuthContext = createContext<AuthContextType | null>(null)
+
+interface AuthProviderProps {
+  children: ReactNode
+}
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { instance, accounts } = useMsal()
   const isAuthenticated = useIsAuthenticated()
+  const [token, setToken] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      if (isAuthenticated && accounts.length > 0) {
+        try {
+          const response = await instance.acquireTokenSilent({
+            ...loginRequest,
+            account: accounts[0],
+          })
+          setToken(response.accessToken)
+        } catch (error) {
+          console.error('Silent token acquisition failed', error)
+          if (error.name === 'InteractionRequiredAuthError') {
+            try {
+              const response = await instance.acquireTokenPopup(loginRequest)
+              setToken(response.accessToken)
+            } catch (error) {
+              console.error('Interactive token acquisition failed', error)
+            }
+          }
+        }
+      }
+    }
+
+    fetchToken()
+  }, [isAuthenticated, accounts, instance])
 
   const login = async () => {
     try {
@@ -18,31 +64,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     instance.logoutPopup()
-  }
-
-  const getToken = async () => {
-    if (!accounts[0]) {
-      throw new Error('No active account')
-    }
-    try {
-      const response = await instance.acquireTokenSilent({
-        ...loginRequest,
-        account: accounts[0],
-      })
-      return response.accessToken
-    } catch (error) {
-      console.error('Silent token acquisition failed', error)
-      if (error.name === 'InteractionRequiredAuthError') {
-        try {
-          const response = await instance.acquireTokenPopup(loginRequest)
-          return response.accessToken
-        } catch (error) {
-          console.error('Interactive token acquisition failed', error)
-          throw error
-        }
-      }
-      throw error
-    }
+    setToken(null)
   }
 
   const contextValue = useMemo(
@@ -50,10 +72,10 @@ export const AuthProvider = ({ children }) => {
       isAuthenticated,
       login,
       logout,
-      getToken,
+      token,
       account: accounts[0] || null,
     }),
-    [isAuthenticated, accounts],
+    [isAuthenticated, accounts, token],
   )
 
   return (
@@ -61,7 +83,7 @@ export const AuthProvider = ({ children }) => {
   )
 }
 
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext)
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider')
