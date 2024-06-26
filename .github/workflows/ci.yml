@@ -115,6 +115,7 @@ jobs:
         cd packages/client
         chmod +x create_client_env_file.sh
         ./create_client_env_file.sh
+        cat .env
         yarn build:app
         cd ../..
       env:
