@@ -81,6 +81,10 @@ jobs:
           ./create_client_env_file.sh
           yarn build:app
           cd ../..
+        env:
+          REACT_APP_MSAL_AUTHORITY: "%REACT_APP_MSAL_AUTHORITY%"
+          REACT_APP_MSAL_CLIENT_ID: "%REACT_APP_MSAL_CLIENT_ID%"
+          REACT_APP_MSAL_REDIRECT_URI: "%REACT_APP_MSAL_REDIRECT_URI%" 
       - name: build-workspace
         run: |
           yarn lerna run build:workspace
@@ -113,6 +117,10 @@ jobs:
         ./create_client_env_file.sh
         yarn build:app
         cd ../..
+      env:
+        REACT_APP_MSAL_AUTHORITY: "%REACT_APP_MSAL_AUTHORITY%"
+        REACT_APP_MSAL_CLIENT_ID: "%REACT_APP_MSAL_CLIENT_ID%"
+        REACT_APP_MSAL_REDIRECT_URI: "%REACT_APP_MSAL_REDIRECT_URI%" 
     - name: Azure Container Registry Login
       uses: Azure/docker-login@v1
       with:
