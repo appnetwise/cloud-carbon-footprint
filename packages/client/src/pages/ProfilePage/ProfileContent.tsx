@@ -1,12 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMsal } from '@azure/msal-react'
 
-import { Button } from '@material-ui/core'
-
-import { ProfileData } from '../ProfileData/ProfileData'
 import { callMsGraph } from 'src/graph'
 import { ClientConfig } from 'src/Config'
 import loadConfig from 'src/ConfigLoader'
+import { ProfileData } from './ProfileData'
 
 interface ProfileContentProps {
   config?: ClientConfig
@@ -15,6 +13,11 @@ interface ProfileContentProps {
 const ProfileContent = ({ config = loadConfig() }: ProfileContentProps) => {
   const { instance, accounts } = useMsal()
   const [graphData, setGraphData] = useState(null)
+
+  useEffect(() => {
+    RequestProfileData()
+  }, [])
+
   function RequestProfileData() {
     // Silently acquires an access token which is then attached to a request for MS Graph data
     instance
@@ -29,15 +32,7 @@ const ProfileContent = ({ config = loadConfig() }: ProfileContentProps) => {
       })
   }
 
-  return (
-    <>
-      {graphData ? (
-        <ProfileData graphData={graphData} />
-      ) : (
-        <Button onClick={RequestProfileData}>Request Profile</Button>
-      )}
-    </>
-  )
+  return <>{graphData && <ProfileData graphData={graphData} />}</>
 }
 
 export default ProfileContent

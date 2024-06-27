@@ -14,11 +14,11 @@ import { ClientConfig } from './Config'
 import loadConfig from './ConfigLoader'
 import { useFootprintData } from './utils/hooks'
 import { getEmissionDateRange } from './utils/helpers/handleDates'
-import ProfileContent from './common/ProfileContent/ProfileContent'
 import { msalConfig } from './auth/authConfig'
 import ProtectedRoute from './protected/ProtectedRoute'
 import LoginPage from './pages/LoginPage/LoginPage'
 import { useIsAuthenticated } from '@azure/msal-react'
+import ProfilePage from './pages/ProfilePage/ProfilePage'
 
 interface AppProps {
   config?: ClientConfig
@@ -53,7 +53,6 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
   const handleLogout = async () => {
     try {
       await msalInstance.logoutRedirect()
-      window.location.reload()
     } catch (error) {
       console.error('Logout error:', error)
     }
@@ -115,7 +114,6 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
   return (
     <>
       <HeaderBar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
-      {isAuthenticated && <ProfileContent />}
       <Container maxWidth={false} className={classes.appContainer}>
         <Routes>
           <Route
@@ -153,6 +151,7 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
             element={<ErrorPage errorMessage={errorMessage} />}
           />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </Container>
     </>

@@ -61,6 +61,15 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: '0.875rem', // Adjust the font size to be smaller
       marginLeft: theme.spacing(2), // Add some spacing between the logo/title and the welcome message
     },
+    avtar: {
+      marginRight: theme.spacing(2),
+    },
+    profileMenu: {
+      '& .MuiMenu-paper': {
+        top: '62px!important',
+        width: '150px',
+      },
+    },
   }),
 )
 

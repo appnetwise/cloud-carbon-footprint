@@ -9,6 +9,7 @@ const useStyles = makeStyles(({ spacing }) => ({
     padding: spacing(2),
   },
   leftPanel: {
+    background: 'url(/CCF.jpg) no-repeat center center',
     backgroundSize: 'cover',
     flex: 1,
   },

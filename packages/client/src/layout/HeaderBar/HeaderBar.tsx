@@ -1,9 +1,19 @@
-import { AppBar, Toolbar, Typography, Button } from '@material-ui/core'
-import { ReactElement } from 'react'
-import { NavLink } from 'react-router-dom'
+import {
+  AppBar,
+  IconButton,
+  Menu,
+  Toolbar,
+  Typography,
+} from '@material-ui/core'
+import { ReactElement, useState } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
 import clsx from 'clsx'
 import useStyles from './headerBarStyles'
 import logo from './ccf_logo.png'
+import { MenuItem, Avatar } from '@material-ui/core'
+import { useMsal } from '@azure/msal-react'
+import LogoutIcon from '@mui/icons-material/Logout'
+import PersonIcon from '@mui/icons-material/Person'
 
 interface HeaderBarProps {
   isAuthenticated: boolean
@@ -15,6 +25,18 @@ const HeaderBar = ({
   onLogout,
 }: HeaderBarProps): ReactElement => {
   const classes = useStyles()
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const { accounts } = useMsal()
+  const navigate = useNavigate()
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleMenuClose = () => {
+    setAnchorEl(null)
+    navigate('/profile')
+  }
 
   return (
     <AppBar
@@ -50,10 +72,27 @@ const HeaderBar = ({
               >
                 <Typography component="h2">RECOMMENDATIONS</Typography>
               </NavLink>
-
-              <Button color="inherit" onClick={onLogout}>
-                Logout
-              </Button>
+              <IconButton edge="end" color="inherit" onClick={handleMenuOpen}>
+                <Avatar alt="User Profile" className={classes.avtar} />
+                {accounts[0].name}
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+                className={classes.profileMenu}
+              >
+                <MenuItem onClick={handleMenuClose}>
+                  <PersonIcon />
+                  Profile
+                </MenuItem>
+                <MenuItem onClick={onLogout}>
+                  <LogoutIcon />
+                  Logout
+                </MenuItem>
+              </Menu>
             </>
           ) : (
             <></>
