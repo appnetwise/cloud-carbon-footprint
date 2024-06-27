@@ -23,6 +23,7 @@ if [ "$@" = 'nginx-fe' ]; then
         replace_var REACT_APP_MSAL_AUTHORITY $filename
         replace_var REACT_APP_MSAL_CLIENT_ID $filename
         replace_var REACT_APP_MSAL_REDIRECT_URI $filename
+        replace_var REACT_APP_MSAL_POST_LOGOUT_REDIRECT_URI $filename
     done
 
     exec nginx -g "daemon off;"
