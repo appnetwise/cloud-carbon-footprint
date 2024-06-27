@@ -34,7 +34,6 @@ const LoginPage = () => {
             variant="outlined"
             color="secondary"
             className={classes.loginButton}
-            onClick={() => console.log('Sign Up clicked')}
           >
             Sign Up
           </Button>

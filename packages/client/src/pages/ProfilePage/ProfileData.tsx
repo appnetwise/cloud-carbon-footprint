@@ -5,7 +5,6 @@ import ProfileCard from 'src/layout/ProfileCard/ProfileCard'
  * @param props
  */
 export const ProfileData = (props) => {
-  console.log(props.graphData)
   return (
     <ProfileCard
       name={props.graphData.givenName}
