@@ -41,10 +41,14 @@ const useRemoteRecommendationsService = (
                 awsRecommendationTarget: params.awsRecommendationTarget,
               },
               headers: {
-                Authorization: 'Bearer ' + token, //the token is a variable which holds the token
+                Authorization: 'Bearer ' + token,
               },
             })
-          : await axios.get(`${params.baseUrl}/recommendations`)
+          : await axios.get(`${params.baseUrl}/recommendations`, {
+              headers: {
+                Authorization: 'Bearer ' + token,
+              },
+            })
         setData(res.data)
       } catch (e) {
         console.error(e.message, e)
