@@ -137,11 +137,8 @@ jobs:
         client="client-$(date +%Y%m%d%H%M%S)"
         cp .yarnrc.yml packages/api/.yarnrc.yml
         cp -r .yarn packages/api/.yarn
-        ls packages/api
-        ls packages/api/.yarn
         echo "Setting NPM Token"
         sed -i "s,%NPM_AUTH_TOKEN%,$NPM_AUTH_TOKEN,g" packages/api/.yarnrc.yml
-        cat packages/api/.yarnrc.yml
         docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-client:$client packages/client
         docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-api:$api packages/api
         ccf_client="$(docker image ls --format {{.Repository}}:{{.Tag}} | grep ccf-client)"

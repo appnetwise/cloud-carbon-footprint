@@ -73,7 +73,6 @@ jobs:
       
       - name: Load and Push Docker Images
         run: |
-          docker login ${{ steps.acr.outputs.acr_url}} -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
           bash scripts/load_push_images.sh -i ccf-api -e ${{ inputs.target-env }} -t ${{ steps.get_next_tag.outputs.api_docker_tag }}
           bash scripts/load_push_images.sh -i ccf-client -e ${{ inputs.target-env }} -t ${{ steps.get_next_tag.outputs.client_docker_tag }}
       
