@@ -9,7 +9,6 @@ import { AppDataSource } from '../data-source'
 import { UserEntity } from './entity/user.entity'
 import { Logger } from '@cloud-carbon-footprint/common'
 import { ObjectId } from 'mongodb'
-import e from 'express'
 
 const defaultTenantId = '-1'
 const userServiceLogger = new Logger('UserService')
@@ -198,10 +197,9 @@ export const updateUser = async (
     userServiceLogger.error('error updating user', e)
     throw e
   }
-} 
+}
 
-
-  export const remove = async (id: string): Promise<null | void> => {
+export const remove = async (id: string): Promise<null | void> => {
   const user = await find(id)
 
   if (!user) {
