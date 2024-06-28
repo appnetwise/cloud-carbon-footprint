@@ -1,7 +1,7 @@
 FROM node:18-alpine
 WORKDIR /usr/src/app
 COPY ./dist ./dist
-COPY .npmrc ./
+COPY .yarnrc ./
 COPY ./package.json .
 RUN yarn install
 RUN rm -rf core
