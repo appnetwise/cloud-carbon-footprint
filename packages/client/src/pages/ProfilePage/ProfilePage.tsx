@@ -4,17 +4,18 @@ import useStyles from './profilePageStyles'
 import { Grid } from '@material-ui/core'
 
 const ProfilePage = () => {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, tokenProfile } = useAuth()
+
   const classes = useStyles()
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !tokenProfile) {
     return null
   }
   return (
     <div className={classes.pageContainer}>
       <div className={classes.boxContainer}>
         <Grid container spacing={3}>
-          <ProfileContent />
+          <ProfileContent externalId={tokenProfile.externalId} />
         </Grid>
       </div>
     </div>

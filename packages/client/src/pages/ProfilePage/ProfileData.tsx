@@ -7,10 +7,10 @@ import ProfileCard from 'src/layout/ProfileCard/ProfileCard'
 export const ProfileData = (props) => {
   return (
     <ProfileCard
-      name={props.graphData.givenName}
-      email={props.graphData.userPrincipalName}
+      name={props.graphData.firstName}
+      email={props.graphData.email}
       id={props.graphData.id}
-      displayName={props.graphData.displayName}
+      displayName={props.graphData.nickName}
     ></ProfileCard>
   )
 }

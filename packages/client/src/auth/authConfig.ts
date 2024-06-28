@@ -57,6 +57,7 @@ export const msalConfig = {
  */
 export const loginRequest = {
   scopes: ['https://management.azure.com/.default'],
+  //scopes: ['User.Read'],
 }
 
 /**

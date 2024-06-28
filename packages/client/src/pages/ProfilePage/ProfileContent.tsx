@@ -1,38 +1,31 @@
-import { useEffect, useState } from 'react'
-import { useMsal } from '@azure/msal-react'
-
-import { callMsGraph } from 'src/graph'
 import { ClientConfig } from 'src/Config'
 import loadConfig from 'src/ConfigLoader'
 import { ProfileData } from './ProfileData'
+import useGetUserProfile from 'src/utils/hooks/GetUserProfileHook'
 
 interface ProfileContentProps {
+  externalId: string
   config?: ClientConfig
 }
 
-const ProfileContent = ({ config = loadConfig() }: ProfileContentProps) => {
-  const { instance, accounts } = useMsal()
-  const [graphData, setGraphData] = useState(null)
+const ProfileContent = ({
+  config = loadConfig(),
+  externalId,
+}: ProfileContentProps) => {
+  const { userProfile, loading, error } = useGetUserProfile(
+    externalId,
+    config.BASE_URL,
+  )
 
-  useEffect(() => {
-    RequestProfileData()
-  }, [])
-
-  function RequestProfileData() {
-    // Silently acquires an access token which is then attached to a request for MS Graph data
-    instance
-      .acquireTokenSilent({
-        scopes: ['User.Read'],
-        account: accounts[0],
-      })
-      .then((response) => {
-        callMsGraph(response.accessToken, config.BASE_URL).then((response) =>
-          setGraphData(response),
-        )
-      })
+  if (loading) {
+    return <div>Loading...</div>
   }
 
-  return <>{graphData && <ProfileData graphData={graphData} />}</>
+  if (error) {
+    return <div>Error: {error}</div>
+  }
+
+  return <>{userProfile && <ProfileData graphData={userProfile} />}</>
 }
 
 export default ProfileContent

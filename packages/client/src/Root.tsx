@@ -6,6 +6,7 @@ import { CssBaseline, ThemeProvider } from '@material-ui/core'
 import { App } from './App'
 import { AuthProvider } from './auth/AuthContext'
 import CustomMsalProvider from './auth/CustomMsalProvider'
+import { ProfileProvider } from './profile/ProfileContext'
 
 export function Root() {
   const theme = useMemo(() => defaultTheme(), [])
@@ -17,7 +18,9 @@ export function Root() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <AuthProvider>
-            <App config={config} />
+            <ProfileProvider>
+              <App config={config} />
+            </ProfileProvider>
           </AuthProvider>
         </ThemeProvider>
       </BrowserRouter>

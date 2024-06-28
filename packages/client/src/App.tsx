@@ -150,7 +150,10 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
             path="/error"
             element={<ErrorPage errorMessage={errorMessage} />}
           />
-          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/login"
+            element={<LoginPage baseUrl={config.BASE_URL} />}
+          />
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </Container>

@@ -1,15 +1,57 @@
 import { Button, Typography } from '@material-ui/core'
+import { Navigate } from 'react-router'
 import MicrosoftIcon from '@mui/icons-material/Microsoft'
 import useStyles from './loginPageStyles'
-
-import { Navigate } from 'react-router'
 import { useAuth } from 'src/auth/AuthContext'
+import LoadingMessage from 'src/common/LoadingMessage'
+import useCheckUserExists from 'src/utils/hooks/CheckUserHook'
+import { useEffect } from 'react'
+import useCreateUser from 'src/utils/hooks/CreateUserHook'
 
-const LoginPage = () => {
+interface LoginPageProps {
+  baseUrl: string
+}
+
+const LoginPage = ({ baseUrl }: LoginPageProps) => {
   const classes = useStyles()
-  const { isAuthenticated, login } = useAuth()
-  if (isAuthenticated) {
-    return <Navigate to="/" replace />
+  const { isAuthenticated, login, tokenProfile: profile } = useAuth()
+  const { userExists, loading } = useCheckUserExists(
+    profile ? profile.externalId : null,
+    baseUrl,
+  )
+  const {
+    createUser,
+    loading: creatingUser,
+    data,
+  } = useCreateUser(baseUrl, !!profile)
+
+  useEffect(() => {
+    if (isAuthenticated && profile && userExists === false) {
+      const userDetails = {
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        nickName: profile.nickName,
+        email: profile.email,
+        isExternal: true,
+        externalId: profile.externalId,
+      }
+
+      createUser(userDetails)
+    }
+  }, [isAuthenticated, profile, userExists, createUser])
+
+  if (isAuthenticated && profile) {
+    if (loading || creatingUser) {
+      return <LoadingMessage message="Checking user data..." />
+    }
+
+    if (userExists === false && !creatingUser && data?.id) {
+      return <Navigate to="/profile" replace />
+    }
+
+    if (userExists === true) {
+      return <Navigate to="/" replace />
+    }
   }
 
   return (
