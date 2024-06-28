@@ -3,7 +3,7 @@ WORKDIR /usr/src/app
 COPY ./dist ./dist
 COPY .yarnrc ./
 COPY ./package.json .
-RUN yarn install
+RUN yarn install --immutable
 RUN rm -rf core
 
 CMD [ "yarn", "start:webprod"]
