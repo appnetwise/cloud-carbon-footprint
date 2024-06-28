@@ -8,6 +8,7 @@ import { RecommendationResult } from '@cloud-carbon-footprint/common'
 import { ServiceResult } from '../../Types'
 import { useAxiosErrorHandling } from '../../layout/ErrorPage'
 import { FootprintData } from './FootprintDataHook'
+import { useAuth } from 'src/auth/AuthContext'
 export interface UseRemoteRecommendationServiceParams {
   baseUrl: string | null
   onApiError?: (e: Error) => void
@@ -23,6 +24,7 @@ const useRemoteRecommendationsService = (
   const [loading, setLoading] = useState(true)
 
   const { error, setError } = useAxiosErrorHandling(params.onApiError)
+  const { token } = useAuth()
 
   useEffect(() => {
     const fetchRecommendations = async () => {
@@ -37,6 +39,9 @@ const useRemoteRecommendationsService = (
           ? await axios.get(`${params.baseUrl}/recommendations`, {
               params: {
                 awsRecommendationTarget: params.awsRecommendationTarget,
+              },
+              headers: {
+                Authorization: 'Bearer ' + token, //the token is a variable which holds the token
               },
             })
           : await axios.get(`${params.baseUrl}/recommendations`)
