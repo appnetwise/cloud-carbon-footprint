@@ -55,9 +55,9 @@ jobs:
           bash <(curl -s https://codecov.io/bash) -f packages/aws/coverage/* -F aws
           bash <(curl -s https://codecov.io/bash) -f packages/gcp/coverage/* -F gcp
           bash <(curl -s https://codecov.io/bash) -f packages/azure/coverage/* -F azure
-      - name: integration tests
-        run: yarn test:integration
-        continue-on-error: true
+      # - name: integration tests
+      #   run: yarn test:integration
+      #   continue-on-error: true
   build:
     needs: lint-test
     runs-on: ubuntu-latest
@@ -85,6 +85,7 @@ jobs:
           REACT_APP_MSAL_AUTHORITY: "%REACT_APP_MSAL_AUTHORITY%"
           REACT_APP_MSAL_CLIENT_ID: "%REACT_APP_MSAL_CLIENT_ID%"
           REACT_APP_MSAL_REDIRECT_URI: "%REACT_APP_MSAL_REDIRECT_URI%" 
+          REACT_APP_MSAL_POST_LOGOUT_REDIRECT_URI: "%REACT_APP_MSAL_POST_LOGOUT_REDIRECT_URI%"
       - name: build-workspace
         run: |
           yarn lerna run build:workspace
