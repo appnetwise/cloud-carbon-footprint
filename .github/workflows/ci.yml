@@ -134,6 +134,8 @@ jobs:
       run: |
         api="api-$(date +%Y%m%d%H%M%S)"
         client="client-$(date +%Y%m%d%H%M%S)"
+        echo "Setting NPM Token"
+        sed -i "s,%NPM_AUTH_TOKEN%,$NPM_AUTH_TOKEN,g" packages/api/.npmrc
         docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-client:$client packages/client
         docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-api:$api packages/api
         ccf_client="$(docker image ls --format {{.Repository}}:{{.Tag}} | grep ccf-client)"
@@ -144,6 +146,8 @@ jobs:
         gzip -v api_${{ github.sha }}.tar
         mkdir -p /tmp/_images
         cp *.tar.gz /tmp/_images
+      env:
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
     - uses: actions/upload-artifact@v4
       name: Upload docker images
       with:
