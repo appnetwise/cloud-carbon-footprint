@@ -6,6 +6,7 @@ import express, { Request, Response } from 'express'
 import * as userService from './user.service'
 import { BaseUser, User } from './user'
 import auth from '../utils/auth'
+import { UserEntity } from './entity/user.entity'
 
 const jwt = require('jsonwebtoken')
 
@@ -28,7 +29,7 @@ userRouter.use(auth)
  *      get:
  *          summary: Returns the user profile data
  *          description: Returns the user profile data
- *          tags: [User Profile]    
+ *          tags: [User Profile]
  *          security:
  *          - bearerAuth: []
  *          produces:
@@ -56,7 +57,7 @@ userRouter.get('/:id', async (req: Request, res: Response) => {
   const id: string = req.params.id
 
   try {
-    const user: User = await userService.find(id)
+    const user: UserEntity = await userService.getUserById(id)
 
     if (user) {
       return res.status(200).send(user)
@@ -75,7 +76,7 @@ userRouter.get('/:id', async (req: Request, res: Response) => {
  *      get:
  *          summary: Returns true/false if the user exists with the given external ID
  *          description: Returns true/false if the user exists with the given external ID
- *          tags: [User Exists]    
+ *          tags: [User Exists]
  *          security:
  *          - bearerAuth: []
  *          produces:
@@ -97,7 +98,8 @@ userRouter.get('/:externalId/exists', async (req: Request, res: Response) => {
   const externalId: string = req.params.externalId
 
   try {
-    const user: User = await userService.findByExternalId(externalId)
+    // const user: User = await userService.findByExternalId(externalId)
+    const user: UserEntity = await userService.getUserByExternalId(externalId)
 
     if (user && user.externalId === externalId) {
       return res.status(200).send(true)
@@ -116,7 +118,7 @@ userRouter.get('/:externalId/exists', async (req: Request, res: Response) => {
  *      get:
  *          summary: Returns true/false if the user exists with the given external ID
  *          description: Returns true/false if the user exists with the given external ID
- *          tags: [User Exists]    
+ *          tags: [User Exists]
  *          security:
  *          - bearerAuth: []
  *          produces:
@@ -144,7 +146,8 @@ userRouter.get('/external/:externalId', async (req: Request, res: Response) => {
   const externalId: string = req.params.externalId
 
   try {
-    const user: User = await userService.findByExternalId(externalId)
+    // const user: User = await userService.findByExternalId(externalId)
+    const user: UserEntity = await userService.getUserByExternalId(externalId)
 
     if (user) {
       return res.status(200).send(user)
@@ -156,15 +159,14 @@ userRouter.get('/external/:externalId', async (req: Request, res: Response) => {
   }
 })
 
-
-
 userRouter.get('/', async (req: Request, res: Response) => {
   try {
-    const users: User[] = await userService.findAll()
+    // const users: User[] = await userService.findAll()
+    const users: UserEntity[] = await userService.getAllUsers()
 
-    res.status(200).send(users)
+    return res.status(200).send(users)
   } catch (e) {
-    res.status(500).send(e.message)
+    return res.status(500).send(e.message)
   }
 })
 
@@ -177,11 +179,12 @@ userRouter.post('/', async (req: Request, res: Response) => {
     if (token) {
       user.tenantId = jwt.decode(token).tid
     }
-    const newUser = await userService.create(user)
+    // const newUser = await userService.create(user)
+    const newUser = await userService.createUser(user)
 
-    res.status(201).json(newUser)
+    return res.status(201).json(newUser)
   } catch (e) {
-    res.status(500).send(e.message)
+    return res.status(500).send(e.message)
   }
 })
 
@@ -193,16 +196,13 @@ userRouter.put('/:id', async (req: Request, res: Response) => {
   try {
     const userUpdate: User = req.body
 
-    const existingUser: User = await userService.find(id)
+    const updatedUser: UserEntity = await userService.updateUser(id, userUpdate)
 
-    if (existingUser) {
-      const updatedUser = await userService.update(id, userUpdate)
-      return res.status(200).json(updatedUser)
+    if (updatedUser) {
+      return res.status(200).json('User updated successfully')
     }
 
-    const newUser = await userService.create(userUpdate)
-
-    return res.status(201).json(newUser)
+    return res.status(404).send('User not found')
   } catch (e) {
     return res.status(500).send(e.message)
   }
@@ -213,10 +213,12 @@ userRouter.put('/:id', async (req: Request, res: Response) => {
 userRouter.delete('/:id', async (req: Request, res: Response) => {
   try {
     const id: string = req.params.id
-    await userService.remove(id)
+    // await userService.remove(id)
+    const isUserRemoved = await userService.removeUser(id)
 
-    res.sendStatus(204)
+    if (isUserRemoved) return res.status(200).send('User deleted successfully')
+    return res.status(404).send('User not found')
   } catch (e) {
-    res.status(500).send(e.message)
+    return res.status(500).send(e.message)
   }
 })

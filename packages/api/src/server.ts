@@ -11,15 +11,15 @@ import helmet from 'helmet'
 import cors, { CorsOptions } from 'cors'
 
 import { createRouter } from './api'
-import { userRouter } from "./users/user.router";
+import { userRouter } from './users/user.router'
 import { Logger, configLoader } from '@cloud-carbon-footprint/common'
 import { MongoDbCacheManager } from '@cloud-carbon-footprint/app'
 import swaggerDocs from './utils/swagger'
-import auth from './utils/auth'
+import { AppDataSource } from './data-source'
 
 const port = process.env.PORT || 4000
 const httpApp = express()
-httpApp.use(express.json());
+httpApp.use(express.json())
 
 const serverLogger = new Logger('Server')
 
@@ -63,12 +63,18 @@ if (process.env.ENABLE_CORS) {
 httpApp.use('/api', createRouter())
 httpApp.use('/api/users', userRouter)
 
-httpApp.listen(port, () => {
-  serverLogger.info(
-    `Cloud Carbon Footprint Server listening at http://localhost:${port}`,
-  )
-  swaggerDocs(httpApp, Number(port))
-})
+// Connect to MongoDB
+AppDataSource.initialize()
+  .then(async () => {
+    httpApp.listen(port, () => {
+      serverLogger.info(
+        `Cloud Carbon Footprint Server listening at http://localhost:${port}`,
+      )
+      swaggerDocs(httpApp, Number(port))
+    })
+    serverLogger.info('App Data Source has been initialized!')
+  })
+  .catch((error) => serverLogger.error('Server could not be started', error))
 
 // Instructions for graceful shutdown
 process.on('SIGINT', async () => {
@@ -76,6 +82,8 @@ process.on('SIGINT', async () => {
     await MongoDbCacheManager.mongoClient.close()
     serverLogger.info('\nMongoDB connection closed')
   }
+  await AppDataSource.destroy()
+  serverLogger.info('\nApp datasource has been closed')
   serverLogger.info('Cloud Carbon Footprint Server shutting down...')
   process.exit()
 })

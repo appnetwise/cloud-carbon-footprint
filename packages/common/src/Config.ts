@@ -89,6 +89,7 @@ export interface CCFConfig {
   MONGODB?: {
     URI?: string
     CREDENTIALS?: string
+    DATABASE?: string
   }
   ELECTRICITY_MAPS_TOKEN?: string
 }
@@ -308,6 +309,7 @@ const getConfig = (): CCFConfig => ({
   MONGODB: {
     URI: getEnvVar('MONGODB_URI') || '',
     CREDENTIALS: getEnvVar('MONGODB_CREDENTIALS') || '',
+    DATABASE: getEnvVar('MONGODB_DATABASE') || '',
   },
   ELECTRICITY_MAPS_TOKEN: getEnvVar('ELECTRICITY_MAPS_TOKEN') || '',
 })
