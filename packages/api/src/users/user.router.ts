@@ -244,6 +244,10 @@ userRouter.post('/', async (req: Request, res: Response) => {
  *          consumes:
  *          - application/json
  *          parameters:
+ *          -   in: path
+ *              name: id
+ *              required: true
+ *              description: ID of the user to update
  *          -   in: body
  *              name: User
  *              required: true
