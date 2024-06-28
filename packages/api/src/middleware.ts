@@ -131,8 +131,9 @@ export const RecommendationsApiMiddleware = async function (
   const footprintApp = new App()
   try {
     const estimationRequest = createValidRecommendationsRequest(rawRequest)
+    estimationRequest.accessToken = token
     const recommendations = await footprintApp.getRecommendations(
-      estimationRequest,
+      estimationRequest
     )
     res.json(recommendations)
   } catch (e) {

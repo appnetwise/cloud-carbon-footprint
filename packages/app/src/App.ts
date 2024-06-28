@@ -242,7 +242,7 @@ export default class App {
     if (AZURE?.USE_BILLING_DATA) {
       const azureAccount = new AzureAccount()
       if(tenantId) {
-        await azureAccount.initializeAccountForTenant(tenantId)
+        await azureAccount.initializeAccountForTenant(tenantId, request.accessToken)
       } else {
         await azureAccount.initializeAccount()
       }
