@@ -34,11 +34,6 @@ userRouter.use(auth)
  *          - bearerAuth: []
  *          produces:
  *          - application/json
- *          parameters:
- *          -   in: path
- *              name: externalId
- *              required: true
- *              description: External ID of the user to get
  *      responses:
  *       200:
  *         description: Success
