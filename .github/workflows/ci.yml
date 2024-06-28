@@ -134,8 +134,10 @@ jobs:
       run: |
         api="api-$(date +%Y%m%d%H%M%S)"
         client="client-$(date +%Y%m%d%H%M%S)"
+        cp .npmrc packages/api/.npmrc
         echo "Setting NPM Token"
         sed -i "s,%NPM_AUTH_TOKEN%,$NPM_AUTH_TOKEN,g" packages/api/.npmrc
+        cat packages/api/.npmrc
         docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-client:$client packages/client
         docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-api:$api packages/api
         ccf_client="$(docker image ls --format {{.Repository}}:{{.Tag}} | grep ccf-client)"
