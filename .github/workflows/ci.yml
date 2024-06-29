@@ -39,6 +39,7 @@ jobs:
       - uses: ./.github/build
         with:
           node-version: ${{ matrix.node-version }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - name: lint
         run: yarn lint
         continue-on-error: true
@@ -71,6 +72,7 @@ jobs:
       - uses: ./.github/build
         with:
           node-version: ${{ matrix.node-version }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - name: build-packages
         run: |
           yarn lerna run build --ignore @cloud-carbon-footprint/client --ignore @cloud-carbon-footprint/cli --ignore @cloud-carbon-footprint/create-app --ignore @cloud-carbon-footprint/integration-tests
@@ -110,6 +112,7 @@ jobs:
     - uses: ./.github/build
       with:
         node-version: ${{ matrix.node-version }}
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
     - name: build packages
       run: |
         yarn lerna run build
