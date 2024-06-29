@@ -2510,7 +2510,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@cloud-carbon-footprint/api@workspace:packages/api"
   dependencies:
-    "@cloud-carbon-footprint/app": "npm:^1.8.0"
+    "@cloud-carbon-footprint/app": "npm:^1.8.1"
     "@cloud-carbon-footprint/common": "npm:^1.15.0"
     "@microsoft/microsoft-graph-client": "npm:^3.0.7"
     "@types/cors": "npm:^2.8.12"
@@ -2573,7 +2573,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cloud-carbon-footprint/app@npm:^1.8.0, @cloud-carbon-footprint/app@workspace:packages/app":
+"@cloud-carbon-footprint/app@npm:^1.8.1, @cloud-carbon-footprint/app@workspace:packages/app":
   version: 0.0.0-use.local
   resolution: "@cloud-carbon-footprint/app@workspace:packages/app"
   dependencies:
