@@ -2,7 +2,7 @@
  * © 2021 Thoughtworks, Inc.
  */
 
-import React, {
+import {
   FunctionComponent,
   ReactElement,
   SyntheticEvent,

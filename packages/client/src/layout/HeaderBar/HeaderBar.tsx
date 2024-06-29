@@ -14,6 +14,7 @@ import { MenuItem, Avatar } from '@material-ui/core'
 import { useMsal } from '@azure/msal-react'
 import LogoutIcon from '@mui/icons-material/Logout'
 import PersonIcon from '@mui/icons-material/Person'
+import { useAuth } from 'src/auth/AuthContext'
 
 interface HeaderBarProps {
   isAuthenticated: boolean
@@ -27,6 +28,7 @@ const HeaderBar = ({
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const { accounts } = useMsal()
+  const { cloudToken } = useAuth()
   const navigate = useNavigate()
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -62,7 +64,9 @@ const HeaderBar = ({
           ></Typography>
         </NavLink>
         <div className={classes.navLinks}>
-          {isAuthenticated ? (
+          {cloudToken === '' || cloudToken === null ? (
+            <></>
+          ) : (
             <>
               <NavLink
                 to="/recommendations"
@@ -71,6 +75,18 @@ const HeaderBar = ({
                 })}
               >
                 <Typography component="h2">RECOMMENDATIONS</Typography>
+              </NavLink>
+            </>
+          )}
+          {isAuthenticated ? (
+            <>
+              <NavLink
+                to="/home"
+                className={clsx(classes.navLink, {
+                  isActive: classes.activeNavLink,
+                })}
+              >
+                <Typography component="h2">CONNECT TO CLOUD</Typography>
               </NavLink>
               <IconButton edge="end" color="inherit" onClick={handleMenuOpen}>
                 <Avatar alt="User Profile" className={classes.avtar} />

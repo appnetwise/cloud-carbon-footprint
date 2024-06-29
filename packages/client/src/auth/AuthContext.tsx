@@ -8,15 +8,17 @@ import {
 } from 'react'
 import { useMsal, useIsAuthenticated } from '@azure/msal-react'
 import { jwtDecode } from 'jwt-decode'
-import { loginRequest } from './authConfig'
+import { cloudRequest, loginRequest } from './authConfig'
 
 interface AuthContextType {
   isAuthenticated: boolean
   login: () => Promise<void>
   logout: () => void
   token: string | null
+  cloudToken: string | null
   account: unknown | null
   tokenProfile: TokenProfile | null
+  connectToCloud: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -46,6 +48,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { instance, accounts } = useMsal()
   const isAuthenticated = useIsAuthenticated()
   const [token, setToken] = useState<string | null>(null)
+  const [cloudToken, setCloudToken] = useState<string | null>(null)
   const [tokenProfile, setTokenProfile] = useState<TokenProfile | null>(null)
   useEffect(() => {
     const fetchToken = async () => {
@@ -101,6 +104,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     instance.logoutPopup()
     setToken(null)
     setTokenProfile(null)
+    setCloudToken(null)
+  }
+
+  const connectToCloud = async () => {
+    try {
+      const response = await instance.acquireTokenPopup({
+        ...cloudRequest,
+        account: accounts[0],
+      })
+      setCloudToken(response.accessToken)
+    } catch (error) {
+      console.error('Cloud connection token acquisition failed', error)
+      if (error.name === 'InteractionRequiredAuthError') {
+        try {
+          const response = await instance.acquireTokenPopup(cloudRequest)
+          setCloudToken(response.accessToken)
+        } catch (error) {
+          console.error('Interactive token acquisition for cloud failed', error)
+        }
+      }
+    }
   }
 
   const updateTokenProfile = (updatedProfile: Partial<TokenProfile>) => {
@@ -116,11 +140,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       login,
       logout,
       token,
+      cloudToken,
       account: accounts[0] || null,
       tokenProfile,
       setTokenProfile: updateTokenProfile,
+      connectToCloud,
     }),
-    [isAuthenticated, accounts, token, tokenProfile],
+    [isAuthenticated, accounts, token, cloudToken, tokenProfile],
   )
 
   return (

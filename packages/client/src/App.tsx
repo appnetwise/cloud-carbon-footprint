@@ -19,6 +19,7 @@ import ProtectedRoute from './protected/ProtectedRoute'
 import LoginPage from './pages/LoginPage/LoginPage'
 import { useIsAuthenticated } from '@azure/msal-react'
 import ProfilePage from './pages/ProfilePage/ProfilePage'
+import HomePage from './pages/HomePage/HomePage'
 
 interface AppProps {
   config?: ClientConfig
@@ -131,6 +132,7 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
               />
             }
           />
+          <Route path="/home" element={<HomePage />} />
           <Route
             path="/recommendations"
             element={

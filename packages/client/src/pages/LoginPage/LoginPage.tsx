@@ -50,7 +50,7 @@ const LoginPage = ({ baseUrl }: LoginPageProps) => {
     }
 
     if (userExists === true) {
-      return <Navigate to="/" replace />
+      return <Navigate to="/home" replace />
     }
   }
 
