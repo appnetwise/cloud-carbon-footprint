@@ -1,12 +1,12 @@
-import { makeStyles } from '@material-ui/core/styles'
-const useStyles = makeStyles(({ spacing }) => ({
+import { makeStyles, Theme } from '@material-ui/core/styles'
+const useStyles = makeStyles((theme: Theme) => ({
   boxContainer: {
-    padding: spacing(3, 10),
+    padding: theme.spacing(3, 10),
   },
   root: {
     display: 'flex',
     height: '100vh',
-    padding: spacing(2),
+    padding: theme.spacing(2),
   },
   leftPanel: {
     background: 'url(/CCF.jpg) no-repeat center center',
@@ -20,7 +20,7 @@ const useStyles = makeStyles(({ spacing }) => ({
     alignItems: 'center',
     flexDirection: 'column',
   },
-  loginButton: {
+  button: {
     marginTop: 20,
     width: '60%',
   },
@@ -33,6 +33,26 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   icon: {
     marginRight: 10,
+  },
+  loginButton: {
+    width: '60%',
+    marginTop: 20,
+    backgroundColor: '#0c7264',
+    border: 'none',
+    borderRadius: '5px',
+    color: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '16px',
+    fontWeight: 500,
+    padding: '12px 25px',
+    position: 'relative',
+    textAlign: 'center',
+    transition: '.5s',
+    zIndex: 1,
+    '&:hover': {
+      backgroundColor: '#095a4d' /* Desired hover color */,
+    },
   },
 }))
 

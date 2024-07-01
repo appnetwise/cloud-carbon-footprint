@@ -22,7 +22,12 @@ const CloudCard = ({ id, name, icon, onConnect }: CloudCardProps) => {
 
         <Divider variant="middle" className={classes.divider} />
         <div>
-          <Button variant="contained" color="primary" onClick={onConnect}>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.connectButton}
+            onClick={onConnect}
+          >
             <Typography>Connect</Typography>
           </Button>
         </div>

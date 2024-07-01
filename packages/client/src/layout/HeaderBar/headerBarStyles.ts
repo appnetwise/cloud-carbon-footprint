@@ -4,6 +4,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
+      backgroundColor: '#0c7264',
       flexGrow: 1,
     },
     logo: {
