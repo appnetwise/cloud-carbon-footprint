@@ -138,6 +138,8 @@ jobs:
       run: |
         api="api-$(date +%Y%m%d%H%M%S)"
         client="client-$(date +%Y%m%d%H%M%S)"
+        echo "Setting NPM Token"
+        sed -i "s,%NPM_AUTH_TOKEN%,$NPM_AUTH_TOKEN,g" .yarnrc.yml
         cat .yarnrc.yml
         cp .yarnrc.yml packages/api/.yarnrc.yml
         cp -r .yarn packages/api/.yarn
@@ -151,6 +153,8 @@ jobs:
         gzip -v api_${{ github.sha }}.tar
         mkdir -p /tmp/_images
         cp *.tar.gz /tmp/_images
+      env:
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
     - uses: actions/upload-artifact@v4
       name: Upload docker images
       with:
