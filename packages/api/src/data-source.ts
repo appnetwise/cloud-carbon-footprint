@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
   useUnifiedTopology: true,
   synchronize: false,
   logging: false,
-  entities: ['src/**/*.entity{.ts,.js}'],
+  entities: ['*/**/*.entity{.ts,.js}'],
   // migrations: [__dirname + '/migrations/*{.ts,.js}'],
   // subscribers: [__dirname + '/**/*.subscriber{.ts,.js}'],
 })
