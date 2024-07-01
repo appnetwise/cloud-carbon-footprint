@@ -1,6 +1,5 @@
 import { Button, Typography } from '@material-ui/core'
 import { Navigate } from 'react-router'
-import MicrosoftIcon from '@mui/icons-material/Microsoft'
 import useStyles from './loginPageStyles'
 import { useAuth } from 'src/auth/AuthContext'
 import LoadingMessage from 'src/common/LoadingMessage'
@@ -63,7 +62,7 @@ const LoginPage = ({ baseUrl }: LoginPageProps) => {
         </Typography>
 
         <Button variant="text" className={classes.loginButton} onClick={login}>
-          <MicrosoftIcon className={classes.icon} />
+          <img className={classes.icon} src={'microsoft_logo.svg'} />
           Sign in with Microsoft
         </Button>
         <div className={classes.signUpSection}>
