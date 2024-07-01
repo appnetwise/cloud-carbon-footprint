@@ -27,21 +27,21 @@ const HomePage = () => {
             <CloudCard
               id="1"
               name="Amazon AWS"
-              icon={<FaAws size={50} />}
+              icon={<FaAws size={100} />}
               description="This is a description"
               onConnect={() => console.log('Connected!')}
             ></CloudCard>
             <CloudCard
               id="2"
               name="Microsoft Azure"
-              icon={<FaMicrosoft size={50} />}
+              icon={<FaMicrosoft size={100} />}
               description="This is a description"
               onConnect={handleConnect}
             ></CloudCard>
             <CloudCard
               id="3"
               name="Google Cloud"
-              icon={<FaGoogle size={50} />}
+              icon={<FaGoogle size={100} />}
               description="This is a description"
               onConnect={() => console.log('Connected!')}
             ></CloudCard>
