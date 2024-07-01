@@ -61,22 +61,14 @@ const LoginPage = ({ baseUrl }: LoginPageProps) => {
         <Typography variant="h4" gutterBottom>
           Sign In
         </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.loginButton}
-          onClick={login}
-        >
+
+        <Button variant="text" className={classes.loginButton} onClick={login}>
           <MicrosoftIcon className={classes.icon} />
           Sign in with Microsoft
         </Button>
         <div className={classes.signUpSection}>
           <Typography variant="body1">OR</Typography>
-          <Button
-            variant="outlined"
-            color="secondary"
-            className={classes.loginButton}
-          >
+          <Button variant="text" className={classes.loginButton}>
             Sign Up
           </Button>
         </div>

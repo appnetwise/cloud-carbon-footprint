@@ -40,6 +40,22 @@ const useStyles = makeStyles((theme) => ({
   },
   updateProfileButton: {
     marginTop: theme.spacing(2),
+    backgroundColor: '#0c7264',
+    border: 'none',
+    borderRadius: '5px',
+    color: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '16px',
+    fontWeight: 700,
+    padding: '12px 25px',
+    position: 'relative',
+    textAlign: 'center',
+    transition: '.5s',
+    zIndex: 1,
+    '&:hover': {
+      backgroundColor: '#095a4d',
+    },
   },
 }))
 

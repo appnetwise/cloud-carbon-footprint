@@ -6,11 +6,11 @@ import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
   card: {
-    backgroundColor: '#3F51B5',
+    backgroundColor: '#0c7264',
     flex: '1 1 200px',
     maxWidth: 300,
     height: 350,
-    border: '5px solid #3F51B5',
+    border: '5px solid #0c7264',
     borderRadius: 15,
     display: 'flex',
     flexDirection: 'column',
@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
   },
   titleContainer: {
-    backgroundColor: '#3F51B5',
+    backgroundColor: '#0c7264',
     height: 64,
     width: '100%',
     display: 'flex',
@@ -39,7 +39,7 @@ const useStyles = makeStyles(() => ({
   },
 
   divider: {
-    backgroundColor: '#3F51B5',
+    backgroundColor: '#0c7264',
     width: '75%',
     height: 4,
   },
@@ -60,6 +60,24 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  connectButton: {
+    backgroundColor: '#0c7264',
+    border: 'none',
+    borderRadius: '5px',
+    color: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '16px',
+    fontWeight: 500,
+    padding: '12px 25px',
+    position: 'relative',
+    textAlign: 'center',
+    transition: '.5s',
+    zIndex: 1,
+    '&:hover': {
+      backgroundColor: '#095a4d' /* Desired hover color */,
+    },
   },
 }))
 
