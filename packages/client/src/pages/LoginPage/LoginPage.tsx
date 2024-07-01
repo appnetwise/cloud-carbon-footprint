@@ -45,7 +45,7 @@ const LoginPage = ({ baseUrl }: LoginPageProps) => {
     }
 
     if (userExists === false && !creatingUser && data?.id) {
-      return <Navigate to="/profile" replace />
+      return <Navigate to="/home" replace />
     }
 
     if (userExists === true) {
