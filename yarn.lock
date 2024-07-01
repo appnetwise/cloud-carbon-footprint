@@ -3068,9 +3068,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@cloud-carbon-footprint/azure@npm:^1.7.0":
-  version: 1.8.1
-  resolution: "@cloud-carbon-footprint/azure@npm:1.8.1"
+"@cloud-carbon-footprint/azure@^1.7.0, @cloud-carbon-footprint/azure@workspace:packages/azure":
+  version: 0.0.0-use.local
+  resolution: "@cloud-carbon-footprint/azure@workspace:packages/azure"
   dependencies:
     "@azure/arm-advisor": ^3.1.0
     "@azure/arm-consumption": ^9.2.0
@@ -3081,10 +3081,30 @@ __metadata:
     "@cloud-carbon-footprint/common": ^1.14.0
     "@cloud-carbon-footprint/core": ^0.17.3
     "@google-cloud/secret-manager": ^3.10.1
+    "@types/jest": ^27.4.0
+    "@types/jest-when": ^3.5.0
+    "@types/node": ^17.0.8
+    "@types/source-map-support": ^0.5.3
+    "@typescript-eslint/eslint-plugin": ^5.9.0
+    "@typescript-eslint/parser": ^5.9.0
+    eslint: ^8.6.0
+    eslint-config-prettier: ^8.3.0
+    eslint-plugin-prettier: ^4.0.0
+    eslint-plugin-unused-imports: ^2.0.0
+    jest: ^27.4.7
+    jest-when: ^3.5.0
+    lint-staged: ^12.1.7
     moment: ^2.29.1
-  checksum: 6ed97c947d953ca91eea50121719985000df8e97683da5fb53183202f6eeaded0ac1278db94c7fef06a97bf8dbfc6c8a3773569199501161438d5d21f8e9c162
-  languageName: node
-  linkType: hard
+    onchange: ^7.1.0
+    prettier: ^2.5.1
+    rimraf: ^3.0.2
+    source-map-support: ^0.5.19
+    ts-jest: ^27.1.2
+    ts-node: ^10.4.0
+    ts-node-dev: ^2.0.0
+    typescript: ^4.6.2
+  languageName: unknown
+  linkType: soft
 
 "@cloud-carbon-footprint/cli@workspace:packages/cli":
   version: 0.0.0-use.local
@@ -3607,7 +3627,7 @@ __metadata:
     glob: ^7.1.6
     minimatch: ^3.0.4
   bin:
-    asar: bin/asar.js
+    asar: ./bin/asar.js
   checksum: 09c131e8a87098f9215845e232a686031951bd10427420c7ef58fbf0c8f342991c2309c6a199049e1293d0da83bcb943a36c5a9002ebbba5a2f86f8e30131ed2
   languageName: node
   linkType: hard
@@ -4083,7 +4103,7 @@ __metadata:
     protobufjs: ^7.2.5
     yargs: ^17.7.2
   bin:
-    proto-loader-gen-types: build/bin/proto-loader-gen-types.js
+    proto-loader-gen-types: ./build/bin/proto-loader-gen-types.js
   checksum: 399c1b8a4627f93dc31660d9636ea6bf58be5675cc7581e3df56a249369e5be02c6cd0d642c5332b0d5673bc8621619bc06fb045aa3e8f57383737b5d35930dc
   languageName: node
   linkType: hard
@@ -8532,7 +8552,7 @@ __metadata:
   version: 0.0.9
   resolution: "ansi-html@npm:0.0.9"
   bin:
-    ansi-html: bin/ansi-html
+    ansi-html: ./bin/ansi-html
   checksum: a03754d6f66bae33938ed8bb3dd98174b7f4895ebe45226185036ed4a1388a7aaf2f2b9581608f0626432ba7add92cfc590aa6475a78bbb90d9d1e1d1af8cbe6
   languageName: node
   linkType: hard
@@ -10523,8 +10543,8 @@ __metadata:
     tree-kill: ^1.2.2
     yargs: ^17.3.1
   bin:
-    conc: dist/bin/concurrently.js
-    concurrently: dist/bin/concurrently.js
+    conc: ./dist/bin/concurrently.js
+    concurrently: ./dist/bin/concurrently.js
   checksum: f705c9a7960f1b16559ca64958043faeeef6385c0bf30a03d1375e15ab2d96dba4f8166f1bbbb1c85e8da35ca0ce3c353875d71dff2aa132b2357bb533b3332e
   languageName: node
   linkType: hard
@@ -11976,7 +11996,7 @@ __metadata:
   dependencies:
     jake: ^10.8.5
   bin:
-    ejs: bin/cli.js
+    ejs: ./bin/cli.js
   checksum: ce90637e9c7538663ae023b8a7a380b2ef7cc4096de70be85abf5a3b9641912dde65353211d05e24d56b1f242d71185c6d00e02cb8860701d571786d92c71f05
   languageName: node
   linkType: hard
@@ -12419,8 +12439,8 @@ __metadata:
     source-map:
       optional: true
   bin:
-    escodegen: bin/escodegen.js
-    esgenerate: bin/esgenerate.js
+    escodegen: ./bin/escodegen.js
+    esgenerate: ./bin/esgenerate.js
   checksum: 096696407e161305cd05aebb95134ad176708bc5cb13d0dcc89a5fcbb959b8ed757e7f2591a5f8036f8f4952d4a724de0df14cd419e29212729fa6df5ce16bf6
   languageName: node
   linkType: hard
@@ -12752,7 +12772,7 @@ __metadata:
     strip-ansi: ^6.0.1
     text-table: ^0.2.0
   bin:
-    eslint: bin/eslint.js
+    eslint: ./bin/eslint.js
   checksum: 3a48d7ff85ab420a8447e9810d8087aea5b1df9ef68c9151732b478de698389ee656fd895635b5f2871c89ee5a2652b3f343d11e9db6f8486880374ebc74a2d9
   languageName: node
   linkType: hard
@@ -13145,7 +13165,7 @@ __metadata:
   dependencies:
     strnum: ^1.0.5
   bin:
-    fxparser: src/cli/cli.js
+    fxparser: ./src/cli/cli.js
   checksum: d32b22005504eeb207249bf40dc82d0994b5bb9ca9dcc731d335a1f425e47fe085b3cace3cf9d32172dd1a5544193c49e8615ca95b4bf95a4a4920a226b06d80
   languageName: node
   linkType: hard
@@ -15767,7 +15787,7 @@ __metadata:
     filelist: ^1.0.4
     minimatch: ^3.1.2
   bin:
-    jake: bin/cli.js
+    jake: ./bin/cli.js
   checksum: 49659c156b8ad921af377fb782505ae3cc7e7dd8793695b782070d99b4b66d2688b4e3efb32e09252400bfe6e49a7fb393a3a0959e8e1a51dbda95bcacbb9c36
   languageName: node
   linkType: hard
@@ -16695,7 +16715,7 @@ __metadata:
     server-destroy: ^1.0.1
     yargs: ^17.0.1
   bin:
-    json-server: lib/cli/bin.js
+    json-server: ./lib/cli/bin.js
   checksum: 9462010ac0d106c0ed8cc9b5446dad7c3977c9649b6854383a0d81f2259049614cb879808a9bb6cbb3f15f48fee7263eafd26d9a7cd2d2eba61dd9d7bd89dbf4
   languageName: node
   linkType: hard
@@ -18458,7 +18478,7 @@ __metadata:
   version: 3.3.7
   resolution: "nanoid@npm:3.3.7"
   bin:
-    nanoid: bin/nanoid.cjs
+    nanoid: ./bin/nanoid.cjs
   checksum: d36c427e530713e4ac6567d488b489a36582ef89da1d6d4e3b87eded11eb10d7042a877958c6f104929809b2ab0bafa17652b076cdf84324aa75b30b722204f2
   languageName: node
   linkType: hard
@@ -18591,7 +18611,7 @@ __metadata:
     tar: ^6.1.2
     which: ^4.0.0
   bin:
-    node-gyp: bin/node-gyp.js
+    node-gyp: ./bin/node-gyp.js
   checksum: 72e2ab4b23fc32007a763da94018f58069fc0694bf36115d49a2b195c8831e12cf5dd1e7a3718fa85c06969aedf8fc126722d3b672ec1cb27e06ed33caee3c60
   languageName: node
   linkType: hard
@@ -20682,7 +20702,7 @@ __metadata:
   version: 2.8.8
   resolution: "prettier@npm:2.8.8"
   bin:
-    prettier: bin-prettier.js
+    prettier: ./bin-prettier.js
   checksum: b49e409431bf129dd89238d64299ba80717b57ff5a6d1c1a8b1a28b590d998a34e083fa13573bc732bb8d2305becb4c9a4407f8486c81fa7d55100eb08263cf8
   languageName: node
   linkType: hard
@@ -22095,7 +22115,7 @@ __metadata:
     path-parse: ^1.0.7
     supports-preserve-symlinks-flag: ^1.0.0
   bin:
-    resolve: bin/resolve
+    resolve: ./bin/resolve
   checksum: f8a26958aa572c9b064562750b52131a37c29d072478ea32e129063e2da7f83e31f7f11e7087a18225a8561cfe8d2f0df9dbea7c9d331a897571c0a2527dbb4c
   languageName: node
   linkType: hard
@@ -22108,7 +22128,7 @@ __metadata:
     path-parse: ^1.0.7
     supports-preserve-symlinks-flag: ^1.0.0
   bin:
-    resolve: bin/resolve
+    resolve: ./bin/resolve
   checksum: a73ac69a1c4bd34c56b213d91f5b17ce390688fdb4a1a96ed3025cc7e08e7bfb90b3a06fcce461780cb0b589c958afcb0080ab802c71c01a7ecc8c64feafc89f
   languageName: node
   linkType: hard
@@ -22121,7 +22141,7 @@ __metadata:
     path-parse: ^1.0.7
     supports-preserve-symlinks-flag: ^1.0.0
   bin:
-    resolve: bin/resolve
+    resolve: ./bin/resolve
   checksum: 5479b7d431cacd5185f8db64bfcb7286ae5e31eb299f4c4f404ad8aa6098b77599563ac4257cb2c37a42f59dfc06a1bec2bcf283bb448f319e37f0feb9a09847
   languageName: node
   linkType: hard
@@ -22134,7 +22154,7 @@ __metadata:
     path-parse: ^1.0.7
     supports-preserve-symlinks-flag: ^1.0.0
   bin:
-    resolve: bin/resolve
+    resolve: ./bin/resolve
   checksum: 064d09c1808d0c51b3d90b5d27e198e6d0c5dad0eb57065fd40803d6a20553e5398b07f76739d69cbabc12547058bec6b32106ea66622375fb0d7e8fca6a846c
   languageName: node
   linkType: hard
@@ -22519,7 +22539,7 @@ __metadata:
   version: 5.7.2
   resolution: "semver@npm:5.7.2"
   bin:
-    semver: bin/semver
+    semver: ./bin/semver
   checksum: fb4ab5e0dd1c22ce0c937ea390b4a822147a9c53dbd2a9a0132f12fe382902beef4fbf12cf51bb955248d8d15874ce8cd89532569756384f994309825f10b686
   languageName: node
   linkType: hard
@@ -23174,10 +23194,6 @@ __metadata:
     jsbn: ~0.1.0
     safer-buffer: ^2.0.2
     tweetnacl: ~0.14.0
-  bin:
-    sshpk-conv: bin/sshpk-conv
-    sshpk-sign: bin/sshpk-sign
-    sshpk-verify: bin/sshpk-verify
   checksum: 01d43374eee3a7e37b3b82fdbecd5518cbb2e47ccbed27d2ae30f9753f22bd6ffad31225cb8ef013bc3fb7785e686cea619203ee1439a228f965558c367c3cfa
   languageName: node
   linkType: hard
@@ -23644,8 +23660,8 @@ __metadata:
     pirates: ^4.0.1
     ts-interface-checker: ^0.1.9
   bin:
-    sucrase: bin/sucrase
-    sucrase-node: bin/sucrase-node
+    sucrase: ./bin/sucrase
+    sucrase-node: ./bin/sucrase-node
   checksum: 9fc5792a9ab8a14dcf9c47dcb704431d35c1cdff1d17d55d382a31c2e8e3063870ad32ce120a80915498486246d612e30cda44f1624d9d9a10423e1a43487ad1
   languageName: node
   linkType: hard
@@ -24325,7 +24341,7 @@ __metadata:
     unquote: ^1.1.1
     url-to-options: ^2.0.0
   bin:
-    testcafe: bin/testcafe-with-v8-flag-filter.js
+    testcafe: ./bin/testcafe-with-v8-flag-filter.js
   checksum: da4dd3ae7966676901aa1f0989df79284eecdf152a26195806f051a07fb856376087d5756fd917b5297296ac2be6af12f14db1a09497bdd426b0b72a71812619
   languageName: node
   linkType: hard
@@ -25057,8 +25073,8 @@ __metadata:
   version: 4.9.5
   resolution: "typescript@npm:4.9.5"
   bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
+    tsc: ./bin/tsc
+    tsserver: ./bin/tsserver
   checksum: ee000bc26848147ad423b581bd250075662a354d84f0e06eb76d3b892328d8d4440b7487b5a83e851b12b255f55d71835b008a66cbf8f255a11e4400159237db
   languageName: node
   linkType: hard
@@ -25067,8 +25083,8 @@ __metadata:
   version: 4.9.5
   resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=d73830"
   bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
+    tsc: ./bin/tsc
+    tsserver: ./bin/tsserver
   checksum: 2eee5c37cad4390385db5db5a8e81470e42e8f1401b0358d7390095d6f681b410f2c4a0c496c6ff9ebd775423c7785cdace7bcdad76c7bee283df3d9718c0f20
   languageName: node
   linkType: hard
@@ -25918,7 +25934,7 @@ __metadata:
   dependencies:
     isexe: ^3.1.1
   bin:
-    node-which: bin/which.js
+    node-which: ./bin/which.js
   checksum: f17e84c042592c21e23c8195108cff18c64050b9efb8459589116999ea9da6dd1509e6a1bac3aeebefd137be00fabbb61b5c2bc0aa0f8526f32b58ee2f545651
   languageName: node
   linkType: hard
@@ -26437,7 +26453,7 @@ __metadata:
   version: 2.4.5
   resolution: "yaml@npm:2.4.5"
   bin:
-    yaml: bin.mjs
+    yaml: ./bin.mjs
   checksum: f8efd407c07e095f00f3031108c9960b2b12971d10162b1ec19007200f6c987d2e28f73283f4731119aa610f177a3ea03d4a8fcf640600a25de1b74d00c69b3d
   languageName: node
   linkType: hard
@@ -26519,7 +26535,7 @@ __metadata:
     commander:
       optional: true
   bin:
-    z-schema: bin/z-schema
+    z-schema: ./bin/z-schema
   checksum: f1a5d0e0bc1096009f406420f330381bbe0770ef81a053512c16696c44c6993d6ce86b5157a51cb951bd7d1e802f03dc0cd94aadf030d77c9fb4a3a268617b06
   languageName: node
   linkType: hard
