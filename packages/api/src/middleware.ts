@@ -127,7 +127,7 @@ export const RecommendationsApiMiddleware = async function (
     rawRequest.tenantId = jwt.decode(token).tid;
   }
 
-  apiLogger.info(`Recommendations API request started`)
+  apiLogger.info(`Recommendations API request started for tenant: ${rawRequest.tenantId} with token: ${token}`)
   const footprintApp = new App()
   try {
     const estimationRequest = createValidRecommendationsRequest(rawRequest)
