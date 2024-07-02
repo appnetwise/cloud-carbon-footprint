@@ -67,6 +67,7 @@ export default class AzureAccount extends CloudProviderAccount {
 
   public async initializeAccountForTenant(tenantId: string, accessToken?: string): Promise<void> {
     try {
+      this.logger.info(`Initializing Azure account for tenant: ${tenantId} with accessToken: ${accessToken}`)
       this.credentials = await AzureCredentialsProvider.createCredentialForTenant(tenantId, accessToken);
       this.subscriptionClient = new SubscriptionClient(this.credentials)
     } catch (e) {
