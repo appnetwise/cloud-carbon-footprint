@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(2),
   },
   leftPanel: {
-    background: 'url(/CCF.jpg) no-repeat center center',
+    background: 'url(/ccf_login_min.webp) no-repeat center center',
     backgroundSize: 'cover',
     flex: 1,
   },
