@@ -285,3 +285,4 @@ packages/create-app/ccf-app
 
 #yarnrc
 .yarnrc
+.yarnrc.yml
