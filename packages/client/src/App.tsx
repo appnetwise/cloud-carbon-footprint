@@ -132,7 +132,15 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
               />
             }
           />
-          <Route path="/home" element={<HomePage />} />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute
+                isAuthenticated={isAuthenticated}
+                element={<HomePage />}
+              />
+            }
+          />
           <Route
             path="/recommendations"
             element={
@@ -156,7 +164,15 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
             path="/login"
             element={<LoginPage baseUrl={config.BASE_URL} />}
           />
-          <Route path="/profile" element={<ProfilePage />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute
+                isAuthenticated={isAuthenticated}
+                element={<ProfilePage />}
+              />
+            }
+          />
         </Routes>
       </Container>
     </>
