@@ -2,7 +2,7 @@
  * © 2021 Thoughtworks, Inc.
  */
 
-import React, { FunctionComponent, ReactElement } from 'react'
+import { FunctionComponent, ReactElement } from 'react'
 import { EstimationResult } from '@cloud-carbon-footprint/common'
 import NoDataMessage from '../../../common/NoDataMessage'
 import DashboardCard from '../../../layout/DashboardCard'
@@ -20,7 +20,7 @@ const EmissionsOverTimeCard: FunctionComponent<EmissionsOverTimeProps> = ({
       <ApexLineChart data={data} />
     </DashboardCard>
   ) : (
-    <NoDataMessage isTop isBold title="Cloud Usage" />
+    <NoDataMessage isTop isBold title="Cloud Usage" loading={true} />
   )
 
 export default EmissionsOverTimeCard

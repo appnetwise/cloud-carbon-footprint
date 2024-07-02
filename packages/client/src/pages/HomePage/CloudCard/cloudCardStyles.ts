@@ -79,6 +79,10 @@ const useStyles = makeStyles(() => ({
       backgroundColor: '#095a4d' /* Desired hover color */,
     },
   },
+  disabledCard: {
+    backgroundColor: '#b0b0b0', // Grayed out color
+    opacity: 0.6,
+  },
 }))
 
 export default useStyles

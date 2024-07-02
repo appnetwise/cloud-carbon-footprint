@@ -48,7 +48,7 @@ const HeaderBar = ({
       id="app-bar-header"
     >
       <Toolbar className={classes.navContainer}>
-        <NavLink to="/" className={classes.title}>
+        <NavLink to="/dashboard" className={classes.title}>
           <img
             src={logo}
             alt={'Cloud Carbon Footprint Logo'}
@@ -68,6 +68,14 @@ const HeaderBar = ({
             <></>
           ) : (
             <>
+              <NavLink
+                to="/dashboard"
+                className={clsx(classes.navLink, {
+                  isActive: classes.activeNavLink,
+                })}
+              >
+                <Typography component="h2">DASHBOARD</Typography>
+              </NavLink>
               <NavLink
                 to="/recommendations"
                 className={clsx(classes.navLink, {

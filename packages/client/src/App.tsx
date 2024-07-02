@@ -118,7 +118,7 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
       <Container maxWidth={false} className={classes.appContainer}>
         <Routes>
           <Route
-            path="/"
+            path="/dashboard"
             element={
               <ProtectedRoute
                 isAuthenticated={isAuthenticated}
@@ -163,6 +163,16 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
           <Route
             path="/login"
             element={<LoginPage baseUrl={config.BASE_URL} />}
+          />
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? (
+                <HomePage />
+              ) : (
+                <LoginPage baseUrl={config.BASE_URL} />
+              )
+            }
           />
           <Route
             path="/profile"

@@ -37,7 +37,7 @@ const EmissionsBreakdownCard: FunctionComponent<
   }
 
   if (!data?.length || emissionsLoading) {
-    return <NoDataMessage isHalf title="Emissions Breakdown" />
+    return <NoDataMessage isHalf title="Emissions Breakdown" loading />
   }
 
   return (

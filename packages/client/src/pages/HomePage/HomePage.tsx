@@ -12,12 +12,13 @@ const HomePage = () => {
     try {
       await connectToCloud()
       console.log('Connected to Azure Cloud')
-      navigate('/')
+      navigate('/dashboard')
     } catch (error) {
       console.error('Failed to connect to Azure Cloud', error)
     }
   }
   const classes = useStyles()
+  const { isCloudConnected } = useAuth()
   return (
     <div className={classes.pageContainer}>
       <div className={classes.boxContainer}>
@@ -30,6 +31,7 @@ const HomePage = () => {
               icon={<FaAws size={100} />}
               description="This is a description"
               onConnect={() => console.log('Connected!')}
+              isCloudConnected={false}
             ></CloudCard>
             <CloudCard
               id="2"
@@ -37,12 +39,14 @@ const HomePage = () => {
               icon={<FaMicrosoft size={100} />}
               description="This is a description"
               onConnect={handleConnect}
+              isCloudConnected={isCloudConnected}
             ></CloudCard>
             <CloudCard
               id="3"
               name="Google Cloud"
               icon={<FaGoogle size={100} />}
               description="This is a description"
+              isCloudConnected={false}
               onConnect={() => console.log('Connected!')}
             ></CloudCard>
           </div>

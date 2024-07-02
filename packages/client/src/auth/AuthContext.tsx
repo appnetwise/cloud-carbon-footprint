@@ -16,6 +16,7 @@ interface AuthContextType {
   logout: () => void
   token: string | null
   cloudToken: string | null
+  isCloudConnected: boolean
   account: unknown | null
   tokenProfile: TokenProfile | null
   connectToCloud: () => Promise<void>
@@ -50,6 +51,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState<string | null>(null)
   const [cloudToken, setCloudToken] = useState<string | null>(null)
   const [tokenProfile, setTokenProfile] = useState<TokenProfile | null>(null)
+  const [isCloudConnected, setIsCloudConnected] = useState<boolean>(false)
   useEffect(() => {
     const fetchToken = async () => {
       if (isAuthenticated && accounts.length > 0) {
@@ -91,6 +93,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     fetchToken()
   }, [isAuthenticated, accounts, instance])
+
+  useEffect(() => {
+    setIsCloudConnected(cloudToken !== null)
+  }, [cloudToken])
 
   const login = async () => {
     try {
@@ -145,8 +151,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       tokenProfile,
       setTokenProfile: updateTokenProfile,
       connectToCloud,
+      isCloudConnected,
     }),
-    [isAuthenticated, accounts, token, cloudToken, tokenProfile],
+    [
+      isAuthenticated,
+      accounts,
+      token,
+      cloudToken,
+      tokenProfile,
+      isCloudConnected,
+    ],
   )
 
   return (
