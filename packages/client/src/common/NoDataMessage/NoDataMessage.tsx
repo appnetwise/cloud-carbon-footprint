@@ -4,16 +4,12 @@
 
 import { FunctionComponent, ReactElement } from 'react'
 import clsx from 'clsx'
-import {
-  CardContent,
-  CircularProgress,
-  Grid,
-  Typography,
-} from '@material-ui/core'
+import { CardContent, Grid, Typography } from '@material-ui/core'
 import DashboardCard from '../../layout/DashboardCard'
 import useStyles from './noDataMessageStyles'
 import shruggingCloud from './V1Shrugging-cloud-icon.svg'
 import emptyStateIcon from './V1Empty-state-generic-icon.svg'
+import LoadingMessage from '../LoadingMessage'
 
 type NoDataMessageProps = {
   isTop?: boolean
@@ -56,10 +52,7 @@ const NoDataMessage: FunctionComponent<NoDataMessageProps> = ({
             <Grid item xs={12}>
               {loading ? (
                 <div className={classes.loadingContainer}>
-                  <CircularProgress />
-                  <Typography className={classes.loadingText}>
-                    Loading data, please wait...
-                  </Typography>
+                  <LoadingMessage message="Loading data, please wait..." />
                 </div>
               ) : (
                 <>
