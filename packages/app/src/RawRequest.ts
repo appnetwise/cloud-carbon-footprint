@@ -23,6 +23,7 @@ export interface RecommendationsRawRequest {
   awsRecommendationTarget?: string
   accounts?: string[]
   tenantId?: string
+  accessToken?: string 
 }
 
 export interface Tags {

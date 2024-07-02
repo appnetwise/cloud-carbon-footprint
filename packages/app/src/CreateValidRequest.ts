@@ -220,6 +220,7 @@ const rawRequestToRecommendationsRequest = (
   return {
     awsRecommendationTarget,
     tenantId: request.tenantId,
+    accessToken: request.accessToken,
   }
 }
 
