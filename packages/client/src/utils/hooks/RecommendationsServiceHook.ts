@@ -24,7 +24,7 @@ const useRemoteRecommendationsService = (
   const [loading, setLoading] = useState(true)
 
   const { error, setError } = useAxiosErrorHandling(params.onApiError)
-  const { cloudToken } = useAuth()
+  const { token } = useAuth()
 
   useEffect(() => {
     const fetchRecommendations = async () => {
@@ -41,12 +41,12 @@ const useRemoteRecommendationsService = (
                 awsRecommendationTarget: params.awsRecommendationTarget,
               },
               headers: {
-                Authorization: 'Bearer ' + cloudToken,
+                Authorization: 'Bearer ' + token,
               },
             })
           : await axios.get(`${params.baseUrl}/recommendations`, {
               headers: {
-                Authorization: 'Bearer ' + cloudToken,
+                Authorization: 'Bearer ' + token,
               },
             })
         setData(res.data)

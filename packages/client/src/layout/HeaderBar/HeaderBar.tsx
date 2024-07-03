@@ -28,7 +28,7 @@ const HeaderBar = ({
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const { accounts } = useMsal()
-  const { cloudToken } = useAuth()
+  const { token } = useAuth()
   const navigate = useNavigate()
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -64,7 +64,7 @@ const HeaderBar = ({
           ></Typography>
         </NavLink>
         <div className={classes.navLinks}>
-          {cloudToken === '' || cloudToken === null ? (
+          {token === '' || token === null ? (
             <></>
           ) : (
             <>

@@ -21,7 +21,7 @@ const useRemoteEmissionService = (
   const [loading, setLoading] = useState(true)
   const _isMounted = useRef(true)
   const { error, setError } = useAxiosErrorHandling(params.onApiError)
-  const { cloudToken } = useAuth()
+  const { token } = useAuth()
 
   useEffect(() => {
     const fetchEstimates = async () => {
@@ -38,7 +38,7 @@ const useRemoteEmissionService = (
           `${params.baseUrl}/regions/emissions-factors`,
           {
             headers: {
-              Authorization: 'Bearer ' + cloudToken, //the token is a variable which holds the token
+              Authorization: 'Bearer ' + token, //the token is a variable which holds the token
             },
           },
         )

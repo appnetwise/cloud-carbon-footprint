@@ -8,14 +8,13 @@ import {
 } from 'react'
 import { useMsal, useIsAuthenticated } from '@azure/msal-react'
 import { jwtDecode } from 'jwt-decode'
-import { cloudRequest, loginRequest } from './authConfig'
+import { loginRequest } from './authConfig'
 
 interface AuthContextType {
   isAuthenticated: boolean
   login: () => Promise<void>
   logout: () => void
   token: string | null
-  cloudToken: string | null
   isCloudConnected: boolean
   account: unknown | null
   tokenProfile: TokenProfile | null
@@ -49,7 +48,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { instance, accounts } = useMsal()
   const isAuthenticated = useIsAuthenticated()
   const [token, setToken] = useState<string | null>(null)
-  const [cloudToken, setCloudToken] = useState<string | null>(null)
   const [tokenProfile, setTokenProfile] = useState<TokenProfile | null>(null)
   const [isCloudConnected, setIsCloudConnected] = useState<boolean>(false)
   useEffect(() => {
@@ -95,8 +93,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [isAuthenticated, accounts, instance])
 
   useEffect(() => {
-    setIsCloudConnected(cloudToken !== null)
-  }, [cloudToken])
+    setIsCloudConnected(token !== null)
+  }, [token])
 
   const login = async () => {
     try {
@@ -110,22 +108,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     instance.logoutPopup()
     setToken(null)
     setTokenProfile(null)
-    setCloudToken(null)
   }
 
   const connectToCloud = async () => {
     try {
       const response = await instance.acquireTokenPopup({
-        ...cloudRequest,
+        ...loginRequest,
         account: accounts[0],
       })
-      setCloudToken(response.accessToken)
+      setToken(response.accessToken)
     } catch (error) {
       console.error('Cloud connection token acquisition failed', error)
       if (error.name === 'InteractionRequiredAuthError') {
         try {
-          const response = await instance.acquireTokenPopup(cloudRequest)
-          setCloudToken(response.accessToken)
+          const response = await instance.acquireTokenPopup(loginRequest)
+          setToken(response.accessToken)
         } catch (error) {
           console.error('Interactive token acquisition for cloud failed', error)
         }
@@ -146,21 +143,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       login,
       logout,
       token,
-      cloudToken,
       account: accounts[0] || null,
       tokenProfile,
       setTokenProfile: updateTokenProfile,
       connectToCloud,
       isCloudConnected,
     }),
-    [
-      isAuthenticated,
-      accounts,
-      token,
-      cloudToken,
-      tokenProfile,
-      isCloudConnected,
-    ],
+    [isAuthenticated, accounts, token, tokenProfile, isCloudConnected],
   )
 
   return (
