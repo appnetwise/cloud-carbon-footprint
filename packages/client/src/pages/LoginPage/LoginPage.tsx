@@ -1,11 +1,11 @@
 import { Button, Typography } from '@material-ui/core'
-import { Navigate } from 'react-router'
 import useStyles from './loginPageStyles'
 import { useAuth } from 'src/auth/AuthContext'
 import LoadingMessage from 'src/common/LoadingMessage'
 import useCheckUserExists from 'src/utils/hooks/CheckUserHook'
 import { useEffect } from 'react'
 import useCreateUser from 'src/utils/hooks/CreateUserHook'
+import { useNavigate } from 'react-router'
 
 interface LoginPageProps {
   baseUrl: string
@@ -14,10 +14,11 @@ interface LoginPageProps {
 const LoginPage = ({ baseUrl }: LoginPageProps) => {
   const classes = useStyles()
   const { isAuthenticated, login, tokenProfile: profile } = useAuth()
-  const { userExists, loading } = useCheckUserExists(
+  const { userExists, loading: userExistsLoading } = useCheckUserExists(
     profile ? profile.externalId : null,
     baseUrl,
   )
+
   const {
     createUser,
     loading: creatingUser,
@@ -39,17 +40,31 @@ const LoginPage = ({ baseUrl }: LoginPageProps) => {
     }
   }, [isAuthenticated, profile, userExists, createUser])
 
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (isAuthenticated && profile) {
+      if (!userExistsLoading && !creatingUser) {
+        if (userExists === false && data?.id) {
+          navigate('/home')
+        }
+        if (userExists === true) {
+          navigate('/home')
+        }
+      }
+    }
+  }, [
+    isAuthenticated,
+    profile,
+    userExists,
+    userExistsLoading,
+    creatingUser,
+    data,
+    navigate, // Added navigate to the dependency array
+  ])
+
   if (isAuthenticated && profile) {
-    if (loading || creatingUser) {
+    if (userExistsLoading || creatingUser) {
       return <LoadingMessage message="Checking user data..." />
-    }
-
-    if (userExists === false && !creatingUser && data?.id) {
-      return <Navigate to="/home" replace />
-    }
-
-    if (userExists === true) {
-      return <Navigate to="/home" replace />
     }
   }
 

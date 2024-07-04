@@ -1,5 +1,5 @@
 import { ReactElement, useCallback, useEffect, useState } from 'react'
-import { Route, Routes, useNavigate } from 'react-router-dom'
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { Container } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { PublicClientApplication } from '@azure/msal-browser'
@@ -165,16 +165,6 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
             element={<LoginPage baseUrl={config.BASE_URL} />}
           />
           <Route
-            path="/"
-            element={
-              isAuthenticated ? (
-                <HomePage />
-              ) : (
-                <LoginPage baseUrl={config.BASE_URL} />
-              )
-            }
-          />
-          <Route
             path="/profile"
             element={
               <ProtectedRoute
@@ -183,6 +173,7 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
               />
             }
           />
+          <Route path="/" element={<Navigate to="/home" replace />} />
         </Routes>
       </Container>
     </>
