@@ -4,6 +4,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
+      backgroundColor: '#0c7264',
       flexGrow: 1,
     },
     logo: {
@@ -60,6 +61,15 @@ const useStyles = makeStyles((theme: Theme) =>
     welcomeMessage: {
       fontSize: '0.875rem', // Adjust the font size to be smaller
       marginLeft: theme.spacing(2), // Add some spacing between the logo/title and the welcome message
+    },
+    avtar: {
+      marginRight: theme.spacing(2),
+    },
+    profileMenu: {
+      '& .MuiMenu-paper': {
+        top: '62px!important',
+        width: '150px',
+      },
     },
   }),
 )

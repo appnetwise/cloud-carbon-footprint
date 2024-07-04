@@ -2,7 +2,7 @@
  * © 2021 Thoughtworks, Inc.
  */
 
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { Grid } from '@material-ui/core'
 import { EstimationResult } from '@cloud-carbon-footprint/common'
 import { FilterOptions, FilterResultResponse } from 'src/Types'
@@ -35,6 +35,7 @@ export default function EmissionsMetricsPage({
   const filterOptions: FilterResultResponse = useFilterDataFromEstimates(
     footprint.data,
   )
+  console.log(footprint)
 
   const { filteredData, filters, setFilters } = useFilters(
     footprint.data,
@@ -55,7 +56,10 @@ export default function EmissionsMetricsPage({
       <EmissionsFilterBar {...filterBarProps} />
       <div className={classes.boxContainer}>
         <Grid container spacing={3}>
-          <EmissionsOverTimeCard data={filterBarProps.filteredData} />
+          <EmissionsOverTimeCard
+            data={filterBarProps.filteredData}
+            error={footprint.error}
+          />
           <Grid item xs={12}>
             <Grid container spacing={3} className={classes.gridCardRow}>
               <CarbonComparisonCard data={filterBarProps.filteredData} />

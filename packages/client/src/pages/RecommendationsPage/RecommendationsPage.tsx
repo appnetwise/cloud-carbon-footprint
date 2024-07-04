@@ -2,7 +2,7 @@
  * © 2021 Thoughtworks, Inc.
  */
 
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { Grid } from '@material-ui/core'
 import RecommendationsTable from './RecommendationsTable'
 import useStyles from './recommendationsPageStyles'

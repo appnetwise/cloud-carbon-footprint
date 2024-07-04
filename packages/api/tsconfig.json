@@ -5,6 +5,7 @@
     "baseUrl": ".",
     "outDir": "./dist",
     "skipLibCheck": true,
+    "emitDecoratorMetadata": true,
   },
   "include": ["./src"],
 }

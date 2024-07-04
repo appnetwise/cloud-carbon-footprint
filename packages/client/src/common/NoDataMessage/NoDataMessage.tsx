@@ -2,13 +2,14 @@
  * © 2021 Thoughtworks, Inc.
  */
 
-import React, { FunctionComponent, ReactElement } from 'react'
+import { FunctionComponent, ReactElement } from 'react'
 import clsx from 'clsx'
 import { CardContent, Grid, Typography } from '@material-ui/core'
 import DashboardCard from '../../layout/DashboardCard'
 import useStyles from './noDataMessageStyles'
 import shruggingCloud from './V1Shrugging-cloud-icon.svg'
 import emptyStateIcon from './V1Empty-state-generic-icon.svg'
+import LoadingMessage from '../LoadingMessage'
 
 type NoDataMessageProps = {
   isTop?: boolean
@@ -16,6 +17,7 @@ type NoDataMessageProps = {
   isHalf?: boolean
   title?: string
   boldTitle?: string
+  loading?: boolean
 }
 
 const NoDataMessage: FunctionComponent<NoDataMessageProps> = ({
@@ -24,6 +26,7 @@ const NoDataMessage: FunctionComponent<NoDataMessageProps> = ({
   isHalf,
   title,
   boldTitle,
+  loading,
 }): ReactElement => {
   const classes = useStyles()
   const containerClass = clsx({ [classes.largeMessage]: isBold })
@@ -47,18 +50,27 @@ const NoDataMessage: FunctionComponent<NoDataMessageProps> = ({
         <div className={clsx(classes.root, { [classes.boldRoot]: boldTitle })}>
           <Grid container>
             <Grid item xs={12}>
-              <img
-                src={isTop ? shruggingCloud : emptyStateIcon}
-                alt="No Data Icon"
-              />
-              <div className={classes.addSpacing}>
-                There's no data to display!
-              </div>
-              <div>Expand your search parameters to get started.</div>
-              {isTop && (
-                <div className={classes.smallText}>
-                  (Try adding accounts, services or expanding the date range)
+              {loading ? (
+                <div className={classes.loadingContainer}>
+                  <LoadingMessage message="Loading data, please wait..." />
                 </div>
+              ) : (
+                <>
+                  <img
+                    src={isTop ? shruggingCloud : emptyStateIcon}
+                    alt="No Data Icon"
+                  />
+                  <div className={classes.addSpacing}>
+                    There's no data to display!
+                  </div>
+                  <div>Expand your search parameters to get started.</div>
+                  {isTop && (
+                    <div className={classes.smallText}>
+                      (Try adding accounts, services or expanding the date
+                      range)
+                    </div>
+                  )}
+                </>
               )}
             </Grid>
           </Grid>

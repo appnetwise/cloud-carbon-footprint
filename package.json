@@ -55,5 +55,6 @@
     "release": "changeset version && yarn install",
     "postinstall": "husky install",
     "version": "yarn changeset version && yarn install --no-immutable"
-  }
+  },
+  "packageManager": "yarn@4.3.1"
 }

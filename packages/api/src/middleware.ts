@@ -125,14 +125,15 @@ export const RecommendationsApiMiddleware = async function (
   const token = req.headers.authorization?.split(' ')[1];
   if(token && !rawRequest.tenantId) {
     rawRequest.tenantId = jwt.decode(token).tid;
+    rawRequest.accessToken = token;
   }
 
-  apiLogger.info(`Recommendations API request started`)
+  apiLogger.info(`Recommendations API request started for tenant: ${rawRequest.tenantId} with token: ${token}`)
   const footprintApp = new App()
   try {
     const estimationRequest = createValidRecommendationsRequest(rawRequest)
     const recommendations = await footprintApp.getRecommendations(
-      estimationRequest,
+      estimationRequest
     )
     res.json(recommendations)
   } catch (e) {
@@ -155,7 +156,7 @@ export const ProfileDataApiMiddleware = async function (
   apiLogger.info(`Profile API request started`)
 
   try {
-    const accessToken = req.headers.authorization.split(' ')[1]
+    const accessToken = req.headers.authorization?.split(' ')[1]
     const graphData = await getGraphClient(accessToken)
       .api('/me')
       // .responseType('json')

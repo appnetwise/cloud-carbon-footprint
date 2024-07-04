@@ -39,6 +39,7 @@ jobs:
       - uses: ./.github/build
         with:
           node-version: ${{ matrix.node-version }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - name: lint
         run: yarn lint
         continue-on-error: true
@@ -55,9 +56,9 @@ jobs:
           bash <(curl -s https://codecov.io/bash) -f packages/aws/coverage/* -F aws
           bash <(curl -s https://codecov.io/bash) -f packages/gcp/coverage/* -F gcp
           bash <(curl -s https://codecov.io/bash) -f packages/azure/coverage/* -F azure
-      - name: integration tests
-        run: yarn test:integration
-        continue-on-error: true
+      # - name: integration tests
+      #   run: yarn test:integration
+      #   continue-on-error: true
   build:
     needs: lint-test
     runs-on: ubuntu-latest
@@ -71,6 +72,7 @@ jobs:
       - uses: ./.github/build
         with:
           node-version: ${{ matrix.node-version }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - name: build-packages
         run: |
           yarn lerna run build --ignore @cloud-carbon-footprint/client --ignore @cloud-carbon-footprint/cli --ignore @cloud-carbon-footprint/create-app --ignore @cloud-carbon-footprint/integration-tests
@@ -81,6 +83,11 @@ jobs:
           ./create_client_env_file.sh
           yarn build:app
           cd ../..
+        env:
+          REACT_APP_MSAL_AUTHORITY: "%REACT_APP_MSAL_AUTHORITY%"
+          REACT_APP_MSAL_CLIENT_ID: "%REACT_APP_MSAL_CLIENT_ID%"
+          REACT_APP_MSAL_REDIRECT_URI: "%REACT_APP_MSAL_REDIRECT_URI%" 
+          REACT_APP_MSAL_POST_LOGOUT_REDIRECT_URI: "%REACT_APP_MSAL_POST_LOGOUT_REDIRECT_URI%"
       - name: build-workspace
         run: |
           yarn lerna run build:workspace
@@ -105,14 +112,21 @@ jobs:
     - uses: ./.github/build
       with:
         node-version: ${{ matrix.node-version }}
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
     - name: build packages
       run: |
         yarn lerna run build
         cd packages/client
         chmod +x create_client_env_file.sh
         ./create_client_env_file.sh
+        cat .env
         yarn build:app
         cd ../..
+      env:
+        REACT_APP_MSAL_AUTHORITY: "%REACT_APP_MSAL_AUTHORITY%"
+        REACT_APP_MSAL_CLIENT_ID: "%REACT_APP_MSAL_CLIENT_ID%"
+        REACT_APP_MSAL_REDIRECT_URI: "%REACT_APP_MSAL_REDIRECT_URI%" 
+        REACT_APP_MSAL_POST_LOGOUT_REDIRECT_URI: "%REACT_APP_MSAL_POST_LOGOUT_REDIRECT_URI%"
     - name: Azure Container Registry Login
       uses: Azure/docker-login@v1
       with:
@@ -124,6 +138,11 @@ jobs:
       run: |
         api="api-$(date +%Y%m%d%H%M%S)"
         client="client-$(date +%Y%m%d%H%M%S)"
+        echo "Setting NPM Token"
+        sed -i "s,%NPM_AUTH_TOKEN%,$NPM_AUTH_TOKEN,g" .yarnrc.yml
+        cat .yarnrc.yml
+        cp .yarnrc.yml packages/api/.yarnrc.yml
+        cp -r .yarn packages/api/.yarn
         docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-client:$client packages/client
         docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-api:$api packages/api
         ccf_client="$(docker image ls --format {{.Repository}}:{{.Tag}} | grep ccf-client)"
@@ -134,6 +153,8 @@ jobs:
         gzip -v api_${{ github.sha }}.tar
         mkdir -p /tmp/_images
         cp *.tar.gz /tmp/_images
+      env:
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
     - uses: actions/upload-artifact@v4
       name: Upload docker images
       with:

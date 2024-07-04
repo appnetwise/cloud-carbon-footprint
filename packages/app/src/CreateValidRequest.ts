@@ -37,6 +37,7 @@ export interface RecommendationRequest {
   awsRecommendationTarget?: AWS_RECOMMENDATIONS_TARGETS
   accounts?: string[]
   tenantId?: string
+  accessToken?: string
 }
 
 interface FormattedEstimationRequest {
@@ -218,7 +219,8 @@ const rawRequestToRecommendationsRequest = (
 
   return {
     awsRecommendationTarget,
-    tenantId: request.tenantId
+    tenantId: request.tenantId,
+    accessToken: request.accessToken,
   }
 }
 

@@ -98,3 +98,22 @@ components:
           type: string          
         id:
           type: string
+    UserResponse:
+      type: object
+      properties:
+        nickName:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        isExternal:
+          type: boolean          
+        createdAt:
+          type: date          
+        udpatedAt:
+          type: date          
+        id:
+          type: string          

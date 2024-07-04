@@ -1,5 +1,5 @@
 import { ReactElement, useCallback, useEffect, useState } from 'react'
-import { Route, Routes, useNavigate } from 'react-router-dom'
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { Container } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { PublicClientApplication } from '@azure/msal-browser'
@@ -14,10 +14,12 @@ import { ClientConfig } from './Config'
 import loadConfig from './ConfigLoader'
 import { useFootprintData } from './utils/hooks'
 import { getEmissionDateRange } from './utils/helpers/handleDates'
-import ProfileContent from './common/ProfileContent/ProfileContent'
-import { msalConfig } from './authConfig'
+import { msalConfig } from './auth/authConfig'
 import ProtectedRoute from './protected/ProtectedRoute'
 import LoginPage from './pages/LoginPage/LoginPage'
+import { useIsAuthenticated } from '@azure/msal-react'
+import ProfilePage from './pages/ProfilePage/ProfilePage'
+import HomePage from './pages/HomePage/HomePage'
 
 interface AppProps {
   config?: ClientConfig
@@ -25,11 +27,11 @@ interface AppProps {
 
 export function App({ config = loadConfig() }: AppProps): ReactElement {
   const [errorMessage, setErrorMessage] = useState<string>('')
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
   const [mobileWarningEnabled, setMobileWarningEnabled] = useState<boolean>(
     window.innerWidth < 768,
   )
   const navigate = useNavigate()
+  const isAuthenticated = useIsAuthenticated()
 
   const msalInstance = new PublicClientApplication(msalConfig)
 
@@ -37,12 +39,9 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
     const initializeMsal = async () => {
       try {
         await msalInstance.initialize()
-
         const accounts = msalInstance.getAllAccounts()
         if (accounts.length > 0) {
-          const activeAccount = accounts[0]
-          console.log('Active account:', activeAccount)
-          setIsAuthenticated(true)
+          msalInstance.setActiveAccount(accounts[0])
         }
       } catch (error) {
         console.error('MSAL initialization error:', error)
@@ -50,29 +49,11 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
     }
 
     initializeMsal()
-  }, [])
-
-  const handleLogin = async () => {
-    try {
-      // Ensure MSAL is initialized before calling loginPopup()
-      await msalInstance.initialize()
-      const loginResult = await msalInstance.loginPopup()
-      if (loginResult) {
-        setIsAuthenticated(true)
-        navigate('/')
-      }
-    } catch (error) {
-      console.error('Login error:', error)
-    }
-  }
+  }, [msalInstance])
 
   const handleLogout = async () => {
     try {
-      // Ensure MSAL is initialized before calling logoutPopup()
-      await msalInstance.initialize()
-      await msalInstance.logoutPopup()
-      setIsAuthenticated(false)
-      window.location.reload()
+      await msalInstance.logoutRedirect()
     } catch (error) {
       console.error('Logout error:', error)
     }
@@ -134,11 +115,10 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
   return (
     <>
       <HeaderBar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
-      {isAuthenticated && <ProfileContent />}
       <Container maxWidth={false} className={classes.appContainer}>
         <Routes>
           <Route
-            path="/"
+            path="/dashboard"
             element={
               <ProtectedRoute
                 isAuthenticated={isAuthenticated}
@@ -149,6 +129,15 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
                     footprint={footprint}
                   />
                 }
+              />
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute
+                isAuthenticated={isAuthenticated}
+                element={<HomePage />}
               />
             }
           />
@@ -171,7 +160,20 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
             path="/error"
             element={<ErrorPage errorMessage={errorMessage} />}
           />
-          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route
+            path="/login"
+            element={<LoginPage baseUrl={config.BASE_URL} />}
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute
+                isAuthenticated={isAuthenticated}
+                element={<ProfilePage />}
+              />
+            }
+          />
+          <Route path="/" element={<Navigate to="/home" replace />} />
         </Routes>
       </Container>
     </>

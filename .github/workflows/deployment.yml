@@ -27,7 +27,6 @@ jobs:
     name: Deploy to ${{ inputs.target-env }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.target-env }}
-
     steps:
       - run: echo "🎉 target evn ${{ inputs.target-env }}"
       - uses: actions/checkout@v4
