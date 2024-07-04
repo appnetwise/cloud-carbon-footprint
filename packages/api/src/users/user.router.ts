@@ -5,7 +5,7 @@
 import express, { Request, Response } from 'express'
 import * as userService from './user.service'
 import { BaseUser, User } from './user'
-import auth from '../utils/auth'
+import { auth } from '../utils/auth'
 import { UserEntity } from './entity/user.entity'
 
 const jwt = require('jsonwebtoken')
@@ -201,7 +201,7 @@ userRouter.get(
  *          -   in: body
  *              name: User
  *              required: true
- *              description: User JSON 
+ *              description: User JSON
  *      responses:
  *       200:
  *         description: Success

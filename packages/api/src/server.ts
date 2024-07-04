@@ -16,6 +16,7 @@ import { Logger, configLoader } from '@cloud-carbon-footprint/common'
 import { MongoDbCacheManager } from '@cloud-carbon-footprint/app'
 import swaggerDocs from './utils/swagger'
 import { AppDataSource } from './data-source'
+import bodyParser from 'body-parser';
 
 const port = process.env.PORT || 4000
 const httpApp = express()
@@ -26,7 +27,7 @@ const serverLogger = new Logger('Server')
 if (process.env.NODE_ENV === 'production') {
   // httpApp.use(auth)
 }
-
+httpApp.use(bodyParser.json());
 httpApp.use(helmet())
 
 // Enable CORS for all routes

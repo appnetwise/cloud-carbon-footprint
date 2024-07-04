@@ -10,7 +10,7 @@ import {
   RecommendationsApiMiddleware,
   ProfileDataApiMiddleware,
 } from './middleware'
-import auth from './utils/auth'
+import { auth } from './utils/auth'
 
 export const createRouter = (config?: CCFConfig) => {
   setConfig(config)

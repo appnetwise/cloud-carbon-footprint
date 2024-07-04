@@ -121,7 +121,7 @@ export const RecommendationsApiMiddleware = async function (
     awsRecommendationTarget: req.query.awsRecommendationTarget?.toString(),
     tenantId: req.headers[X_TENANT_ID]?.toString()
   }
-  
+  const user = req.user;
   const token = req.headers.authorization?.split(' ')[1];
   if(token && !rawRequest.tenantId) {
     rawRequest.tenantId = jwt.decode(token).tid;
