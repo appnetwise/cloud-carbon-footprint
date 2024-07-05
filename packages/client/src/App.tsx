@@ -7,7 +7,6 @@ import EmissionsMetricsPage from './pages/EmissionsMetricsPage'
 import RecommendationsPage from './pages/RecommendationsPage/'
 import ErrorPage from './layout/ErrorPage'
 import HeaderBar from './layout/HeaderBar'
-import MobileWarning from './layout/MobileWarning'
 import LoadingMessage from './common/LoadingMessage'
 import { formatAxiosError } from './layout/ErrorPage/ErrorPage'
 import { ClientConfig } from './Config'
@@ -27,9 +26,6 @@ interface AppProps {
 
 export function App({ config = loadConfig() }: AppProps): ReactElement {
   const [errorMessage, setErrorMessage] = useState<string>('')
-  const [mobileWarningEnabled, setMobileWarningEnabled] = useState<boolean>(
-    window.innerWidth < 768,
-  )
   const navigate = useNavigate()
   const isAuthenticated = useIsAuthenticated()
 
@@ -81,10 +77,6 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
     ignoreCache: config.DISABLE_CACHE,
   })
 
-  const handleWarningClose = () => {
-    setMobileWarningEnabled(false)
-  }
-
   const useStyles = makeStyles(() => ({
     appContainer: {
       padding: 0,
@@ -93,15 +85,6 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
   }))
 
   const classes = useStyles()
-
-  if (mobileWarningEnabled) {
-    return (
-      <Container maxWidth="xl" className={classes.appContainer}>
-        <HeaderBar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
-        <MobileWarning handleClose={handleWarningClose} />
-      </Container>
-    )
-  }
 
   if (footprint.loading) {
     return (
