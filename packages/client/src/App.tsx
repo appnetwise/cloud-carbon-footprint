@@ -15,6 +15,7 @@ import { useFootprintData } from './utils/hooks'
 import LoadingMessage from './common/LoadingMessage'
 import EmissionsMetricsPage from './pages/EmissionsMetricsPage'
 import RecommendationsPage from './pages/RecommendationsPage'
+import ProfilePage from './pages/ProfilePage/ProfilePage'
 
 interface AppProps {
   config?: ClientConfig
@@ -120,6 +121,10 @@ function Pages({ config = loadConfig(), footprint, onApiError, errorMessage }) {
                 }
               />
             }
+          />
+          <Route
+            path="/profile"
+            element={<ProtectedRoute element={<ProfilePage />} />}
           />
 
           <Route
