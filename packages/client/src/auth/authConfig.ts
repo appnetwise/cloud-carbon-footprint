@@ -1,28 +1,16 @@
-/*
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License.
- */
+import { Configuration, LogLevel, PopupRequest } from '@azure/msal-browser'
 
-import { LogLevel } from '@azure/msal-browser'
-
-/**
- * Configuration object to be passed to MSAL instance on creation.
- * For a full list of MSAL.js configuration parameters, visit:
- * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/configuration.md
- */
-
-export const msalConfig = {
+// Config object to be passed to Msal on creation
+export const msalConfig: Configuration = {
   auth: {
     authority: process.env.REACT_APP_MSAL_AUTHORITY,
     clientId: process.env.REACT_APP_MSAL_CLIENT_ID,
     redirectUri: process.env.REACT_APP_MSAL_REDIRECT_URI,
     postLogoutRedirectUri: process.env.REACT_APP_MSAL_POST_LOGOUT_REDIRECT_URI,
-  },
-  cache: {
-    cacheLocation: 'sessionStorage',
-    storeAuthStateInCookie: false,
+    navigateToLoginRequestUrl: false,
   },
   system: {
+    allowNativeBroker: false, // Disables WAM Broker
     loggerOptions: {
       loggerCallback: (level, message, containsPii) => {
         if (containsPii) {
@@ -50,13 +38,8 @@ export const msalConfig = {
   },
 }
 
-/**
- * Scopes you add here will be prompted for user consent during sign-in.
- * By default, MSAL.js will add OIDC scopes (openid, profile, email) to any login request.
- * For more information about OIDC scopes, visit:
- * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
- */
-export const loginRequest = {
+// Add here scopes for id token to be used at MS Identity Platform endpoints.
+export const loginRequest: PopupRequest = {
   scopes: ['User.Read'],
 }
 
@@ -64,10 +47,7 @@ export const cloudRequest = {
   scopes: ['https://management.azure.com/.default'],
 }
 
-/**
- * Add here the scopes to request when obtaining an access token for MS Graph API. For more information, see:
- * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/resources-and-scopes.md
- */
+// Add here the endpoints for MS Graph API services you would like to use.
 export const graphConfig = {
   graphMeEndpoint: 'https://graph.microsoft.com/v1.0/me',
 }

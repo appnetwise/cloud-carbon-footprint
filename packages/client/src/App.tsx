@@ -1,65 +1,36 @@
-import { ReactElement, useCallback, useEffect, useState } from 'react'
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
-import { Container } from '@material-ui/core'
+import { ReactElement, useCallback, useState } from 'react'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
+import { Container } from '@material-ui/core'
 import { PublicClientApplication } from '@azure/msal-browser'
-import EmissionsMetricsPage from './pages/EmissionsMetricsPage'
-import RecommendationsPage from './pages/RecommendationsPage/'
-import ErrorPage from './layout/ErrorPage'
-import HeaderBar from './layout/HeaderBar'
-import LoadingMessage from './common/LoadingMessage'
-import { formatAxiosError } from './layout/ErrorPage/ErrorPage'
 import { ClientConfig } from './Config'
 import loadConfig from './ConfigLoader'
-import { useFootprintData } from './utils/hooks'
-import { getEmissionDateRange } from './utils/helpers/handleDates'
-import { msalConfig } from './auth/authConfig'
-import ProtectedRoute from './protected/ProtectedRoute'
-import LoginPage from './pages/LoginPage/LoginPage'
-import { useIsAuthenticated } from '@azure/msal-react'
-import ProfilePage from './pages/ProfilePage/ProfilePage'
 import HomePage from './pages/HomePage/HomePage'
+import LoginPage from './pages/LoginPage/LoginPage'
+import HeaderBar from './layout/HeaderBar'
+import ProtectedRoute from './protected/ProtectedRoute'
+import ErrorPage from './layout/ErrorPage/ErrorPage'
+import { getEmissionDateRange } from './utils/helpers/handleDates'
+import { useFootprintData } from './utils/hooks'
+import LoadingMessage from './common/LoadingMessage'
+import EmissionsMetricsPage from './pages/EmissionsMetricsPage'
+import RecommendationsPage from './pages/RecommendationsPage'
 
 interface AppProps {
   config?: ClientConfig
+  pca: PublicClientApplication
 }
 
 export function App({ config = loadConfig() }: AppProps): ReactElement {
+  console.log(config)
   const [errorMessage, setErrorMessage] = useState<string>('')
   const navigate = useNavigate()
-  const isAuthenticated = useIsAuthenticated()
-
-  const msalInstance = new PublicClientApplication(msalConfig)
-
-  useEffect(() => {
-    const initializeMsal = async () => {
-      try {
-        await msalInstance.initialize()
-        const accounts = msalInstance.getAllAccounts()
-        if (accounts.length > 0) {
-          msalInstance.setActiveAccount(accounts[0])
-        }
-      } catch (error) {
-        console.error('MSAL initialization error:', error)
-      }
-    }
-
-    initializeMsal()
-  }, [msalInstance])
-
-  const handleLogout = async () => {
-    try {
-      await msalInstance.logoutRedirect()
-    } catch (error) {
-      console.error('Logout error:', error)
-    }
-  }
 
   const onApiError = useCallback(
     (error) => {
       console.error('API Error:', error)
       setErrorMessage(error.response?.data ?? 'An error occurred')
-      navigate('/error', { state: formatAxiosError(error) })
+      // navigate('/error', { state: formatAxiosError(error) })
     },
     [navigate],
   )
@@ -67,16 +38,39 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
   const endDate = getEmissionDateRange({ config }).end
   const startDate = getEmissionDateRange({ config }).start
 
-  const footprint = useFootprintData({
-    baseUrl: config.BASE_URL,
-    startDate,
-    endDate,
-    onApiError,
-    groupBy: config.GROUP_BY,
-    limit: parseInt(config.PAGE_LIMIT as string, 10),
-    ignoreCache: config.DISABLE_CACHE,
-  })
+  const shouldFetchFootprint = !['/login'].includes(location.pathname)
 
+  const footprint = useFootprintData(
+    {
+      baseUrl: config.BASE_URL,
+      startDate,
+      endDate,
+      onApiError,
+      groupBy: config.GROUP_BY,
+      limit: parseInt(config.PAGE_LIMIT as string, 10),
+      ignoreCache: config.DISABLE_CACHE,
+    },
+    shouldFetchFootprint,
+  )
+
+  if (footprint.loading) {
+    return (
+      <>
+        <HeaderBar />
+        <LoadingMessage message="Loading cloud data. This may take a while..." />
+      </>
+    )
+  }
+
+  return (
+    <Pages
+      footprint={footprint}
+      onApiError={onApiError}
+      errorMessage={errorMessage}
+    />
+  )
+}
+function Pages({ config = loadConfig(), footprint, onApiError, errorMessage }) {
   const useStyles = makeStyles(() => ({
     appContainer: {
       padding: 0,
@@ -85,26 +79,24 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
   }))
 
   const classes = useStyles()
-
-  if (footprint.loading) {
-    return (
-      <>
-        <HeaderBar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
-        <LoadingMessage message="Loading cloud data. This may take a while..." />
-      </>
-    )
-  }
-
   return (
     <>
-      <HeaderBar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
+      <HeaderBar />
       <Container maxWidth={false} className={classes.appContainer}>
         <Routes>
+          <Route path="/" element={<LoginPage baseUrl={config.BASE_URL} />} />
+          <Route
+            path="/login"
+            element={<LoginPage baseUrl={config.BASE_URL} />}
+          />
+          <Route
+            path="/home"
+            element={<ProtectedRoute element={<HomePage />} />}
+          />
           <Route
             path="/dashboard"
             element={
               <ProtectedRoute
-                isAuthenticated={isAuthenticated}
                 element={
                   <EmissionsMetricsPage
                     config={config}
@@ -116,19 +108,9 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
             }
           />
           <Route
-            path="/home"
-            element={
-              <ProtectedRoute
-                isAuthenticated={isAuthenticated}
-                element={<HomePage />}
-              />
-            }
-          />
-          <Route
             path="/recommendations"
             element={
               <ProtectedRoute
-                isAuthenticated={isAuthenticated}
                 element={
                   <RecommendationsPage
                     config={config}
@@ -139,24 +121,11 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
               />
             }
           />
+
           <Route
             path="/error"
             element={<ErrorPage errorMessage={errorMessage} />}
           />
-          <Route
-            path="/login"
-            element={<LoginPage baseUrl={config.BASE_URL} />}
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute
-                isAuthenticated={isAuthenticated}
-                element={<ProfilePage />}
-              />
-            }
-          />
-          <Route path="/" element={<Navigate to="/home" replace />} />
         </Routes>
       </Container>
     </>
