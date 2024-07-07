@@ -84,6 +84,7 @@ function Pages({ config = loadConfig(), footprint, onApiError, errorMessage }) {
       <HeaderBar />
       <Container maxWidth={false} className={classes.appContainer}>
         <Routes>
+          <Route path="/" element={<LoginPage baseUrl={config.BASE_URL} />} />
           <Route
             path="/login"
             element={<LoginPage baseUrl={config.BASE_URL} />}
@@ -92,7 +93,6 @@ function Pages({ config = loadConfig(), footprint, onApiError, errorMessage }) {
             path="/home"
             element={<ProtectedRoute element={<HomePage />} />}
           />
-
           <Route
             path="/dashboard"
             element={
