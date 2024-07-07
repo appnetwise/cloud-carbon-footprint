@@ -107,7 +107,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }
 
   const logout = () => {
-    instance.logoutPopup()
+    instance.logoutRedirect()
     setToken(null)
     setTokenProfile(null)
     setCloudToken(null)
