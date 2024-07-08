@@ -11,25 +11,19 @@ import clsx from 'clsx'
 import useStyles from './headerBarStyles'
 import logo from './ccf_logo.png'
 import { MenuItem, Avatar } from '@material-ui/core'
-import { useMsal } from '@azure/msal-react'
+import { useIsAuthenticated, useMsal } from '@azure/msal-react'
 import LogoutIcon from '@mui/icons-material/Logout'
 import PersonIcon from '@mui/icons-material/Person'
 import { useAuth } from 'src/auth/AuthContext'
 
-interface HeaderBarProps {
-  isAuthenticated: boolean
-  onLogout: () => void
-}
-
-const HeaderBar = ({
-  isAuthenticated,
-  onLogout,
-}: HeaderBarProps): ReactElement => {
+const HeaderBar = (): ReactElement => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const { accounts } = useMsal()
-  const { token } = useAuth()
+  const isAuthenticated = useIsAuthenticated()
+  const { logout } = useAuth()
   const navigate = useNavigate()
+  const { token } = useAuth()
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -40,6 +34,10 @@ const HeaderBar = ({
     navigate('/profile')
   }
 
+  const handleLogout = () => {
+    logout()
+  }
+
   return (
     <AppBar
       position="sticky"
@@ -48,7 +46,7 @@ const HeaderBar = ({
       id="app-bar-header"
     >
       <Toolbar className={classes.navContainer}>
-        <NavLink to="/dashboard" className={classes.title}>
+        <NavLink to="/home" className={classes.title}>
           <img
             src={logo}
             alt={'Cloud Carbon Footprint Logo'}
@@ -112,7 +110,7 @@ const HeaderBar = ({
                   <PersonIcon />
                   Profile
                 </MenuItem>
-                <MenuItem onClick={onLogout}>
+                <MenuItem onClick={handleLogout}>
                   <LogoutIcon />
                   Logout
                 </MenuItem>

@@ -13,8 +13,9 @@ export interface FootprintData {
 
 export const useFootprintData = (
   params: UseRemoteFootprintServiceParams,
+  enabled: boolean,
 ): FootprintData => {
-  const { data, error, loading } = useRemoteFootprintService(params)
+  const { data, error, loading } = enabled && useRemoteFootprintService(params)
 
   return {
     data,
