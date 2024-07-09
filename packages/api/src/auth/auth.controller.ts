@@ -9,17 +9,14 @@ import {
 import AuthProvider from './auth.provider'
 import { ResponseType } from '@microsoft/microsoft-graph-client'
 import { handleAnyClaimsChallenge, setClaims } from '../utils/claimUtils'
+const authProvider = new AuthProvider({
+  msalConfig: msalConfig,
+  redirectUri: REDIRECT_URI,
+  postLogoutRedirectUri: POST_LOGOUT_REDIRECT_URI,
+})
 
 class AuthController {
-  private authProvider: AuthProvider
-
-  constructor() {
-    this.authProvider = new AuthProvider({
-      msalConfig: msalConfig,
-      redirectUri: REDIRECT_URI,
-      postLogoutRedirectUri: POST_LOGOUT_REDIRECT_URI,
-    })
-  }
+  constructor() {}
 
   public async loginUser(req, res, next) {
     let postLoginRedirectUri
@@ -33,39 +30,34 @@ class AuthController {
       scopesToConsent = decodeURIComponent(req.query.scopesToConsent)
     }
 
-    return this.authProvider.login(req, res, next, {
+    return authProvider.login(req, res, next, {
       postLoginRedirectUri,
       scopesToConsent,
     })
   }
 
   public async handleRedirect(req, res, next) {
-    return this.authProvider.handleRedirect(req, res, next)
+    return authProvider.handleRedirect(req, res, next)
   }
 
   public async logoutUser(req, res, next) {
-    return this.authProvider.logout(req, res, next)
+    return authProvider.logout(req, res, next)
   }
 
   public async getAccount(req, res, next) {
-    const account = this.authProvider.getAccount(req, res, next)
+    const account = authProvider.getAccount(req, res, next)
     res.status(200).json(account)
   }
 
   public async getProfile(req, res, next) {
-    if (!this.authProvider.isAuthenticated(req, res, next)) {
+    if (!authProvider.isAuthenticated(req, res, next)) {
       return res.status(401).json({ error: 'unauthorized' })
     }
 
     try {
-      const tokenResponse = await this.authProvider.acquireToken(
-        req,
-        res,
-        next,
-        {
-          scopes: ['User.Read'],
-        },
-      )
+      const tokenResponse = await authProvider.acquireToken(req, res, next, {
+        scopes: ['User.Read'],
+      })
       const graphResponse = await getGraphClient(tokenResponse.accessToken)
         .api('/me')
         .responseType(ResponseType.RAW)
@@ -95,15 +87,19 @@ class AuthController {
   }
 
   public async connectCloud(req, res, next) {
-    if (!this.authProvider.isAuthenticated(req, res, next)) {
+    if (!authProvider.isAuthenticated(req, res, next)) {
       return res.status(401).json({ error: 'unauthorized' })
     }
 
     try {
-      const tokenResponse =
-        await this.authProvider.acquireTokenForConsumptionMgmt(req, res, next, {
+      const tokenResponse = await authProvider.acquireTokenForConsumptionMgmt(
+        req,
+        res,
+        next,
+        {
           scopes: ['user_impersonation'],
-        })
+        },
+      )
 
       // const user = await userService.getUserByExternalId(graphData.oid)
       // const graphResponse = await getGraphClient(tokenResponse.accessToken)

@@ -7,8 +7,8 @@ export const POST_LOGOUT_REDIRECT_URI =
 export const GRAPH_ME_ENDPOINT = 'https://graph.microsoft.com/v1.0/me'
 export const AZURE_SERVICES_ENDPOINT = 'https://management.azure.com/.default'
 
-export const SESSION_COOKIE_NAME = 'msid.user.session'
-export const STATE_COOKIE_NAME = 'msid.user.state'
+export const SESSION_COOKIE_NAME = 'msid.ccf.session'
+export const STATE_COOKIE_NAME = 'msid.ccf.state'
 
 /**
  * For enhanced security, consider using client certificates instead of secrets.
