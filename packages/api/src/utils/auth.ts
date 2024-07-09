@@ -53,7 +53,7 @@ function verifyToken(
   return new Promise((resolve, reject) => {
     resolve(jwt.decode(token, { complete: true }).payload as jwt.JwtPayload)
     // jwt.verify(token, secretOrPublicKey, (err, decoded) => {
-      // jwt.verify(token, secretOrPublicKey, verifyOptions, (err, decoded) => {
+    // jwt.verify(token, secretOrPublicKey, verifyOptions, (err, decoded) => {
     //   if (err) {
     //     reject(err)
     //   } else {
@@ -115,25 +115,25 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
           authLogger.warn(`RS256 verification failed: ${rsaError}`)
           throw rsaError
 
-          // If RS256 fails, attempt HS256 verification
-          const secret = process.env.JWT_SECRET
-          if (!secret) {
-            throw new Error('JWT_SECRET not set in environment variables')
-          }
-          return verifyToken(token, secret, hs256VerifyOptions)
-            .then((verifiedToken) => {
-              authLogger.info('Token verified successfully with HS256')
-              return verifiedToken
-            })
-            .catch((hsError) => {
-              authLogger.error(`HS256 verification also failed: `, hsError)
-              throw new Error(
-                'Token verification failed for both RS256 and HS256',
-              )
-            })
+          // // If RS256 fails, attempt HS256 verification
+          // const secret = process.env.JWT_SECRET
+          // if (!secret) {
+          //   throw new Error('JWT_SECRET not set in environment variables')
+          // }
+          // return verifyToken(token, secret, hs256VerifyOptions)
+          //   .then((verifiedToken) => {
+          //     authLogger.info('Token verified successfully with HS256')
+          //     return verifiedToken
+          //   })
+          //   .catch((hsError) => {
+          //     authLogger.error(`HS256 verification also failed: `, hsError)
+          //     throw new Error(
+          //       'Token verification failed for both RS256 and HS256',
+          //     )
+          //   })
         })
     })
-    .then(handleVerifiedToken) 
+    .then(handleVerifiedToken)
     .catch(handleError)
 
   async function handleVerifiedToken(verifiedToken: jwt.JwtPayload) {
@@ -162,7 +162,12 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
       res.status(403).send('Invalid token issuer')
       return
     }
-    const {isExternal=true, firstName=verifiedToken.given_name, email= verifiedToken.upn,  externalId=verifiedToken.oid} = verifiedToken
+    const {
+      isExternal = true,
+      firstName = verifiedToken.given_name,
+      email = verifiedToken.upn,
+      externalId = verifiedToken.oid,
+    } = verifiedToken
     const user: User = {
       id: verifiedToken.sub, // TODO -NK- Need to set the id from the user repository
       isExternal,
@@ -170,21 +175,17 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
       email,
       externalId,
     }
-    if(externalId) {
+    if (externalId) {
       // TODO -NK- Avoid db call and leverage the user id from the token or request
       const userEntity = await userService.getUserByExternalId(externalId)
       user.id = userEntity.id.toString()
-      user.cloudConnections = userEntity.cloudConnections 
+      user.cloudConnections = userEntity.cloudConnections
     }
     req.user = user
-    const tokenResponse = await this.authProvider.acquireTokenForConsumptionMgmt(
-      req,
-      res,
-      next,
-      {
+    const tokenResponse =
+      await this.authProvider.acquireTokenForConsumptionMgmt(req, res, next, {
         scopes: ['User.Impersonation'],
-      },
-    )
+      })
 
     req.user.token = tokenResponse.accessToken
     next()
