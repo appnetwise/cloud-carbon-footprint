@@ -2,7 +2,6 @@ import { useState } from 'react'
 import axios from 'axios'
 
 const useLoginUser = (baseUrl) => {
-  const [data, setData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
@@ -10,10 +9,11 @@ const useLoginUser = (baseUrl) => {
     setLoading(true)
     try {
       const response = await axios.get(`${baseUrl}/auth/login`)
-      if (response.status === 200) {
-        setData(response.data)
+      if (response.data && response.data.authUrl) {
+        // Redirect to Microsoft login page
+        window.location.href = response.data.authUrl
       } else {
-        setError('Failed to login')
+        throw new Error('Invalid response from server')
       }
     } catch (error) {
       setError(error.message)
@@ -22,7 +22,7 @@ const useLoginUser = (baseUrl) => {
     }
   }
 
-  return { data, loading, error, login }
+  return { loading, error, login }
 }
 
 export default useLoginUser
