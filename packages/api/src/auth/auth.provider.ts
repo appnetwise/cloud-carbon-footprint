@@ -19,6 +19,7 @@ class AuthProvider {
       telemetry?: msal.NodeTelemetryOptions
     }
     redirectUri: any
+    postLoginRedirectUri: any
     postLogoutRedirectUri: any
   }
   cryptoProvider: msal.CryptoProvider
@@ -43,7 +44,7 @@ class AuthProvider {
         csrfToken: this.cryptoProvider.createNewGuid(), // create a GUID for csrf
         redirectTo: options.postLoginRedirectUri
           ? options.postLoginRedirectUri
-          : '/',
+          : this.config.postLoginRedirectUri ? this.config.postLoginRedirectUri : '/',
       }),
     )
 

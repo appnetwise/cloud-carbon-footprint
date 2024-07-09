@@ -2,6 +2,7 @@ import getGraphClient from '../utils/graphClient'
 import {
   msalConfig,
   REDIRECT_URI,
+  POST_LOGIN_REDIRECT_URI,
   POST_LOGOUT_REDIRECT_URI,
   GRAPH_ME_ENDPOINT,
 } from '../authConfig'
@@ -12,6 +13,7 @@ import { handleAnyClaimsChallenge, setClaims } from '../utils/claimUtils'
 const authProvider = new AuthProvider({
   msalConfig: msalConfig,
   redirectUri: REDIRECT_URI,
+  postLoginRedirectUri: POST_LOGIN_REDIRECT_URI,
   postLogoutRedirectUri: POST_LOGOUT_REDIRECT_URI,
 })
 

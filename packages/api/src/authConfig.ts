@@ -2,6 +2,7 @@ const msal = require('@azure/msal-node')
 const fs = require('fs')
 
 export const REDIRECT_URI = process.env.MSAL_REDIRECT_URI
+export const POST_LOGIN_REDIRECT_URI = process.env.MSAL_POST_LOGIN_REDIRECT_URI
 export const POST_LOGOUT_REDIRECT_URI =
   process.env.MSAL_POST_LOGOUT_REDIRECT_URI
 export const GRAPH_ME_ENDPOINT = 'https://graph.microsoft.com/v1.0/me'
