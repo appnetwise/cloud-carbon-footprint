@@ -6,6 +6,7 @@ import useCheckUserExists from 'src/utils/hooks/CheckUserHook'
 import { useEffect } from 'react'
 import useCreateUser from 'src/utils/hooks/CreateUserHook'
 import { useNavigate } from 'react-router'
+import useLoginUser from 'src/utils/hooks/LoginUserHook'
 
 interface LoginPageProps {
   baseUrl: string
@@ -13,7 +14,10 @@ interface LoginPageProps {
 
 const LoginPage = ({ baseUrl }: LoginPageProps) => {
   const classes = useStyles()
-  const { isAuthenticated, login, tokenProfile: profile } = useAuth()
+  const { isAuthenticated, tokenProfile: profile } = useAuth()
+
+  const { login } = useLoginUser(baseUrl)
+
   const { userExists, loading: userExistsLoading } = useCheckUserExists(
     profile ? profile.externalId : null,
     baseUrl,
@@ -77,7 +81,11 @@ const LoginPage = ({ baseUrl }: LoginPageProps) => {
         </Typography>
 
         <Button variant="text" className={classes.loginButton} onClick={login}>
-          <img className={classes.icon} src={'microsoft_logo.svg'} />
+          <img
+            className={classes.icon}
+            src={'microsoft_logo.svg'}
+            alt="Microsoft Logo"
+          />
           Sign in with Microsoft
         </Button>
         <div className={classes.signUpSection}>
