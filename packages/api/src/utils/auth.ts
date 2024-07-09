@@ -182,12 +182,6 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
       user.cloudConnections = userEntity.cloudConnections
     }
     req.user = user
-    const tokenResponse =
-      await this.authProvider.acquireTokenForConsumptionMgmt(req, res, next, {
-        scopes: ['User.Impersonation'],
-      })
-
-    req.user.token = tokenResponse.accessToken
     next()
   }
 
