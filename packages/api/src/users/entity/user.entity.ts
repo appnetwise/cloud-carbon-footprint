@@ -39,4 +39,21 @@ export class UserEntity {
 
   @UpdateDateColumn()
   updatedAt?: Date
+
+  @Column("simple-json")
+  cloudConnections?: {
+      azure: {
+          connected: boolean;
+          scopes: string[];
+          refreshToken: string;
+          refreshTokenExpires: Date;
+          code?: string;  
+      };
+      aws: {
+          // Similar structure
+      };
+      gcp: {
+          // Similar structure
+      };
+  };
 }

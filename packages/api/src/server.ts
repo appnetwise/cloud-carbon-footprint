@@ -8,27 +8,53 @@ if (process.env.NODE_ENV === 'production') {
 
 import express from 'express'
 import helmet from 'helmet'
+import cookieParser from 'cookie-parser'
 import cors, { CorsOptions } from 'cors'
-
 import { createRouter } from './api'
 import { userRouter } from './users/user.router'
 import { Logger, configLoader } from '@cloud-carbon-footprint/common'
 import { MongoDbCacheManager } from '@cloud-carbon-footprint/app'
 import swaggerDocs from './utils/swagger'
 import { AppDataSource } from './data-source'
-import bodyParser from 'body-parser';
+import { authRouter } from './auth/auth.router'
+import { SESSION_COOKIE_NAME, REDIRECT_URI } from './authConfig'
+import session from 'express-session'
 
 const port = process.env.PORT || 4000
+const csrf = require('lusca').csrf
 const httpApp = express()
+httpApp.use(helmet())
 httpApp.use(express.json())
+httpApp.use(cookieParser())
+httpApp.use(express.urlencoded({ extended: false }))
+// httpApp.use(express.static(path.join(__dirname, 'client/build')));
 
 const serverLogger = new Logger('Server')
 
+const sessionConfig = {
+  name: SESSION_COOKIE_NAME,
+  secret: process.env.SESSION_COOKIE_SECRET, // replace with your own secret
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    sameSite: 'strict',
+    httpOnly: true,
+    secure: false, // set this to true on production
+  },
+}
+
 if (process.env.NODE_ENV === 'production') {
+  httpApp.set('trust proxy', 1) // trust first proxy e.g. App Service
+  sessionConfig.cookie.secure = true // serve secure cookies on production
   // httpApp.use(auth)
 }
-httpApp.use(bodyParser.json());
-httpApp.use(helmet())
+
+httpApp.use(session(sessionConfig))
+httpApp.use(
+  csrf({
+    blocklist: [new URL(REDIRECT_URI).pathname],
+  }),
+)
 
 // Enable CORS for all routes
 const corsOptions = {
@@ -62,7 +88,9 @@ if (process.env.ENABLE_CORS) {
 
 // controllers(routers)
 httpApp.use('/api', createRouter())
+httpApp.use('/api/auth', authRouter())
 httpApp.use('/api/users', userRouter)
+// httpApp.use('/api/connect', connectRouter)
 
 // Connect to MongoDB
 AppDataSource.initialize()

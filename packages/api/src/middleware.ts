@@ -38,7 +38,7 @@ export const FootprintApiMiddleware = async function (
 ): Promise<void> {
   // Set the request time out to 10 minutes to allow the request enough time to complete.
   req.socket.setTimeout(1000 * 60 * 10)
-  const token = req.headers.authorization?.split(' ')[1];
+  const token = req.user.token || req.headers.authorization?.split(' ')[1]
   const rawRequest: FootprintEstimatesRawRequest = {
     startDate: req.query.start?.toString(),
     endDate: req.query.end?.toString(),
@@ -52,10 +52,10 @@ export const FootprintApiMiddleware = async function (
     regions: req.query.regions as string[],
     tags: req.query.tags as Tags,
     tenantId: req.headers[X_TENANT_ID]?.toString(),
-    accessToken: token   
+    accessToken: token,
   }
-  if(token && !rawRequest.tenantId) {
-    rawRequest.tenantId = jwt.decode(token).tid;
+  if (token && !rawRequest.tenantId) {
+    rawRequest.tenantId = jwt.decode(token).tid
   }
 
   apiLogger.info(`Footprint API request started.`)
@@ -119,21 +119,23 @@ export const RecommendationsApiMiddleware = async function (
 ): Promise<void> {
   const rawRequest: RecommendationsRawRequest = {
     awsRecommendationTarget: req.query.awsRecommendationTarget?.toString(),
-    tenantId: req.headers[X_TENANT_ID]?.toString()
+    tenantId: req.headers[X_TENANT_ID]?.toString(),
   }
-  const user = req.user;
-  const token = req.headers.authorization?.split(' ')[1];
-  if(token && !rawRequest.tenantId) {
-    rawRequest.tenantId = jwt.decode(token).tid;
-    rawRequest.accessToken = token;
+  const user = req.user
+  const token = req.user.token || req.headers.authorization?.split(' ')[1]
+  if (token && !rawRequest.tenantId) {
+    rawRequest.tenantId = jwt.decode(token).tid
+    rawRequest.accessToken = token
   }
 
-  apiLogger.info(`Recommendations API request started for tenant: ${rawRequest.tenantId} with token: ${token}`)
+  apiLogger.info(
+    `Recommendations API request started for tenant: ${rawRequest.tenantId} with token: ${token}`,
+  )
   const footprintApp = new App()
   try {
     const estimationRequest = createValidRecommendationsRequest(rawRequest)
     const recommendations = await footprintApp.getRecommendations(
-      estimationRequest
+      estimationRequest,
     )
     res.json(recommendations)
   } catch (e) {
