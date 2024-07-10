@@ -13,6 +13,8 @@ import { useFootprintData } from './utils/hooks'
 import LoadingMessage from './common/LoadingMessage'
 import EmissionsMetricsPage from './pages/EmissionsMetricsPage'
 import RecommendationsPage from './pages/RecommendationsPage'
+import ProtectedRoute from './protected/ProtectedRoute'
+import { useAuth } from './auth/AuthContext'
 import ProfilePage from './pages/ProfilePage/ProfilePage'
 
 interface AppProps {
@@ -22,6 +24,7 @@ interface AppProps {
 export function App({ config = loadConfig() }: AppProps): ReactElement {
   console.log(config)
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const { isAuthenticated, isLoading } = useAuth()
   const navigate = useNavigate()
 
   const onApiError = useCallback(
@@ -65,10 +68,19 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
       footprint={footprint}
       onApiError={onApiError}
       errorMessage={errorMessage}
+      isAuthenticated={isAuthenticated}
+      isLoading={isLoading}
     />
   )
 }
-function Pages({ config = loadConfig(), footprint, onApiError, errorMessage }) {
+function Pages({
+  config = loadConfig(),
+  footprint,
+  onApiError,
+  errorMessage,
+  isAuthenticated,
+  isLoading,
+}) {
   const useStyles = makeStyles(() => ({
     appContainer: {
       padding: 0,
@@ -84,28 +96,58 @@ function Pages({ config = loadConfig(), footprint, onApiError, errorMessage }) {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/home" element={<HomePage />} />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute
+                element={<HomePage />}
+                isAuthenticated={isAuthenticated}
+                isLoading={isLoading}
+              />
+            }
+          />
           <Route
             path="/dashboard"
             element={
-              <EmissionsMetricsPage
-                config={config}
-                onApiError={onApiError}
-                footprint={footprint}
+              <ProtectedRoute
+                element={
+                  <EmissionsMetricsPage
+                    config={config}
+                    onApiError={onApiError}
+                    footprint={footprint}
+                  />
+                }
+                isAuthenticated={isAuthenticated}
+                isLoading={isLoading}
               />
             }
           />
           <Route
             path="/recommendations"
             element={
-              <RecommendationsPage
-                config={config}
-                onApiError={onApiError}
-                footprint={footprint}
+              <ProtectedRoute
+                element={
+                  <RecommendationsPage
+                    config={config}
+                    onApiError={onApiError}
+                    footprint={footprint}
+                  />
+                }
+                isAuthenticated={isAuthenticated}
+                isLoading={isLoading}
               />
             }
           />
-          <Route path="/profile" element={<ProfilePage />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute
+                element={<ProfilePage />}
+                isAuthenticated={isAuthenticated}
+                isLoading={isLoading}
+              />
+            }
+          />
 
           <Route
             path="/error"

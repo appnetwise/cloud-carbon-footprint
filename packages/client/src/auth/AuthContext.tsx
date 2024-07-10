@@ -15,6 +15,7 @@ export const AuthProvider = ({ children, baseUrl }) => {
   const getAccount = async () => {
     const response = await fetch(`${baseUrl}/auth/account`)
     const data = await response.json()
+    console.log(data)
     setIsAuthenticated(data ? true : false)
     setAccount(data)
 
@@ -23,7 +24,7 @@ export const AuthProvider = ({ children, baseUrl }) => {
 
   useEffect(() => {
     getAccount()
-  }, [])
+  }, [isAuthenticated])
 
   return (
     <AuthContext.Provider

@@ -4,6 +4,7 @@ import { EmissionsFilters } from '../../pages/EmissionsMetricsPage/EmissionsFilt
 import useRemoteFootprintService, {
   UseRemoteFootprintServiceParams,
 } from './FootprintServiceHook'
+import { useAuth } from 'src/auth/AuthContext'
 
 export interface FootprintData {
   data: EstimationResult[]
@@ -15,7 +16,11 @@ export const useFootprintData = (
   params: UseRemoteFootprintServiceParams,
   enabled: boolean,
 ): FootprintData => {
-  const { data, error, loading } = enabled && useRemoteFootprintService(params)
+  const { isAuthenticated } = useAuth()
+  const { data, error, loading } = useRemoteFootprintService(
+    params,
+    enabled && isAuthenticated,
+  )
 
   return {
     data,

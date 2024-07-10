@@ -60,9 +60,8 @@ const HeaderBar = (): ReactElement => {
           ></Typography>
         </NavLink>
         <div className={classes.navLinks}>
-          {token === '' || token === null ? (
-            <></>
-          ) : (
+          {token === '' || token === null ? <></> : <></>}
+          {isAuthenticated ? (
             <>
               <NavLink
                 to="/dashboard"
@@ -80,10 +79,6 @@ const HeaderBar = (): ReactElement => {
               >
                 <Typography component="h2">RECOMMENDATIONS</Typography>
               </NavLink>
-            </>
-          )}
-          {isAuthenticated ? (
-            <>
               <NavLink
                 to="/home"
                 className={clsx(classes.navLink, {
