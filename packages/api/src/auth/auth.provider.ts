@@ -1,6 +1,5 @@
 import msal from '@azure/msal-node'
 import axios from 'axios'
-
 import {
   AZURE_SERVICES_ENDPOINT,
   GRAPH_ME_ENDPOINT,
@@ -8,6 +7,9 @@ import {
   STATE_COOKIE_NAME,
 } from '../authConfig'
 import { getClaims } from '../utils/claimUtils'
+import { BaseUser } from '../users/user'
+import * as userService from '../users/user.service'
+import jwt from 'jsonwebtoken'
 
 class AuthProvider {
   config: {
@@ -44,7 +46,9 @@ class AuthProvider {
         csrfToken: this.cryptoProvider.createNewGuid(), // create a GUID for csrf
         redirectTo: options.postLoginRedirectUri
           ? options.postLoginRedirectUri
-          : this.config.postLoginRedirectUri ? this.config.postLoginRedirectUri : '/',
+          : this.config.postLoginRedirectUri
+          ? this.config.postLoginRedirectUri
+          : '/',
       }),
     )
 
@@ -190,6 +194,36 @@ class AuthProvider {
         secure: true,
         sameSite: 'none',
       }) // discard the state cookie
+
+      // check if the user exists
+      const decodedToken: jwt.JwtPayload = jwt.decode(
+        tokenResponse.accessToken,
+        { complete: true },
+      ).payload as jwt.JwtPayload
+      let user = await userService.getUserByExternalId(decodedToken.oid)
+      if (!user) {
+        // create the user
+        const {
+          isExternal = true,
+          firstName = decodedToken.given_name,
+          lastName = decodedToken.family_name,
+          nickName = decodedToken.name,
+          email = decodedToken.upn,
+          externalId = decodedToken.oid,
+          tenantId = decodedToken.tid,
+        } = decodedToken
+        const baseUser: BaseUser = {
+          isExternal,
+          firstName,
+          lastName,
+          nickName,
+          email,
+          externalId,
+          tenantId,
+        }
+
+        user = await userService.createUser(baseUser)
+      }
       res.redirect(redirectTo)
     } catch (error) {
       next(error)
@@ -289,7 +323,6 @@ class AuthProvider {
       }
     }
   }
-
 
   isAuthenticated(req, res, next) {
     if (req.session && req.session.isAuthenticated) {
