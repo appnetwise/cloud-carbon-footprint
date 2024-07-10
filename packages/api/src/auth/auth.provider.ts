@@ -225,17 +225,8 @@ class AuthProvider {
 
         user = await userService.createUser(baseUser)
       }
-
-      // Set a cookie with user information
-      res.clearCookie(USER_COOKIE_NAME, {
-        httpOnly: true,
-        secure: true,
-      }) // discard the user cookie
-      res.cookie(
-        USER_COOKIE_NAME,
-        { id: user.id, name: user.nickName },
-        { httpOnly: true, secure: true },
-      )
+      // update the user info in the session account
+      req.session.account.user = { id: user.id.toString(), name: user.nickName }
       res.redirect(redirectTo)
     } catch (error) {
       next(error)
