@@ -20,7 +20,7 @@ const jwt = require('jsonwebtoken')
  *       bearerFormat: JWT
  */
 export const userRouter = express.Router()
-userRouter.use(auth)
+// userRouter.use(auth)
 
 /**
  * @openapi

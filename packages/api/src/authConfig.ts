@@ -10,6 +10,7 @@ export const AZURE_SERVICES_ENDPOINT = 'https://management.azure.com/.default'
 
 export const SESSION_COOKIE_NAME = 'msid.ccf.session'
 export const STATE_COOKIE_NAME = 'msid.ccf.state'
+export const USER_COOKIE_NAME = 'msid.ccf.user'
 
 /**
  * For enhanced security, consider using client certificates instead of secrets.

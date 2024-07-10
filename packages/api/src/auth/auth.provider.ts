@@ -5,6 +5,7 @@ import {
   GRAPH_ME_ENDPOINT,
   SESSION_COOKIE_NAME,
   STATE_COOKIE_NAME,
+  USER_COOKIE_NAME,
 } from '../authConfig'
 import { getClaims } from '../utils/claimUtils'
 import { BaseUser } from '../users/user'
@@ -224,6 +225,17 @@ class AuthProvider {
 
         user = await userService.createUser(baseUser)
       }
+
+      // Set a cookie with user information
+      res.clearCookie(USER_COOKIE_NAME, {
+        httpOnly: true,
+        secure: true,
+      }) // discard the user cookie
+      res.cookie(
+        USER_COOKIE_NAME,
+        { id: user.id, name: user.nickName },
+        { httpOnly: true, secure: true },
+      )
       res.redirect(redirectTo)
     } catch (error) {
       next(error)
