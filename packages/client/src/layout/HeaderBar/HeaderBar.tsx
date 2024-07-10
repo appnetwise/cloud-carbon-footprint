@@ -11,7 +11,6 @@ import clsx from 'clsx'
 import useStyles from './headerBarStyles'
 import logo from './ccf_logo.png'
 import { MenuItem, Avatar } from '@material-ui/core'
-import { useIsAuthenticated, useMsal } from '@azure/msal-react'
 import LogoutIcon from '@mui/icons-material/Logout'
 import PersonIcon from '@mui/icons-material/Person'
 import { useAuth } from 'src/auth/AuthContext'
@@ -19,9 +18,8 @@ import { useAuth } from 'src/auth/AuthContext'
 const HeaderBar = (): ReactElement => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const { accounts } = useMsal()
-  const isAuthenticated = useIsAuthenticated()
-  const { logout } = useAuth()
+
+  const { logout, isAuthenticated, account } = useAuth()
   const navigate = useNavigate()
   const { token } = useAuth()
 
@@ -96,7 +94,7 @@ const HeaderBar = (): ReactElement => {
               </NavLink>
               <IconButton edge="end" color="inherit" onClick={handleMenuOpen}>
                 <Avatar alt="User Profile" className={classes.avtar} />
-                {accounts[0].name}
+                {account.name}
               </IconButton>
               <Menu
                 anchorEl={anchorEl}

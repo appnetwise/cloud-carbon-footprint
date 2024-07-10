@@ -23,8 +23,6 @@
     "carbon-footprint"
   ],
   "dependencies": {
-    "@azure/msal-browser": "^3.17.0",
-    "@azure/msal-react": "^2.0.19",
     "@babel/runtime": "^7.14.0",
     "@cloud-carbon-footprint/common": "^1.15.0",
     "@emotion/react": "^11.9.0",
@@ -39,7 +37,6 @@
     "axios": "^0.26.1",
     "express": "^4.17.1",
     "helmet": "^5.0.1",
-    "jwt-decode": "^4.0.0",
     "moment": "^2.29.1",
     "ramda": "^0.29.0",
     "react": "^18.2.0",

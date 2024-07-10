@@ -432,22 +432,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@azure/msal-browser@npm:^3.17.0":
-  version: 3.17.0
-  resolution: "@azure/msal-browser@npm:3.17.0"
-  dependencies:
-    "@azure/msal-common": "npm:14.12.0"
-  checksum: 4b01ee3500e5bb1c8a71e92b81f61174d23109eb60101c17bf95ede248eeefd2ca5d68228d7d1cf147eeeade5bbe994a09f8ada96e14f3352da7822899c0c441
-  languageName: node
-  linkType: hard
-
-"@azure/msal-common@npm:14.12.0":
-  version: 14.12.0
-  resolution: "@azure/msal-common@npm:14.12.0"
-  checksum: 9a987b7b9b6453500481ec48224b4d9f728c62ac584f9a35ef519eff46016fc63c1a7dc159f725a5ec3748bf1ade352654fd7a7170ba42bc27ca263a01cf59db
-  languageName: node
-  linkType: hard
-
 "@azure/msal-common@npm:14.13.0":
   version: 14.13.0
   resolution: "@azure/msal-common@npm:14.13.0"
@@ -488,16 +472,6 @@ __metadata:
     jsonwebtoken: ^9.0.0
     uuid: ^8.3.0
   checksum: a58d6f2dc1d3d61bbb525787c6a3e51c2a655a9e11135050628238cc43d6a640f2c0ed320d627e399c2d2f864d978e86a28cc4f1c15e633ed377a1ee4a6e301a
-  languageName: node
-  linkType: hard
-
-"@azure/msal-react@npm:^2.0.19":
-  version: 2.0.19
-  resolution: "@azure/msal-react@npm:2.0.19"
-  peerDependencies:
-    "@azure/msal-browser": ^3.17.0
-    react: ^16.8.0 || ^17 || ^18
-  checksum: 73142a5bfc15b79f357a86c3969ed8cb208177ebd4b16cae2c1feeeef9cd58506506d91ef3076aac54d53381725cd5b5985ea8522098c45cd54044a909286cec
   languageName: node
   linkType: hard
 
@@ -2755,8 +2729,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@cloud-carbon-footprint/client@workspace:packages/client"
   dependencies:
-    "@azure/msal-browser": ^3.17.0
-    "@azure/msal-react": ^2.0.19
     "@babel/runtime": ^7.14.0
     "@cloud-carbon-footprint/common": ^1.15.0
     "@emotion/react": ^11.9.0
@@ -2797,7 +2769,6 @@ __metadata:
     immer: ^9.0.2
     jest: ^27.4.7
     json-server: ^0.17.0
-    jwt-decode: ^4.0.0
     lint-staged: ^12.1.7
     mockdate: ^3.0.5
     moment: ^2.29.1
@@ -16176,13 +16147,6 @@ __metadata:
     jwa: "npm:^2.0.0"
     safe-buffer: "npm:^5.0.1"
   checksum: d68d07aa6d1b8cb35c363a9bd2b48f15064d342a5d9dc18a250dbbce8dc06bd7e4792516c50baa16b8d14f61167c19e851fd7f66b59ecc68b7f6a013759765f7
-  languageName: node
-  linkType: hard
-
-"jwt-decode@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "jwt-decode@npm:4.0.0"
-  checksum: 390e2edcb31a92e86c8cbdd1edeea4c0d62acd371f8a8f0a8878e499390c0ecf4c658b365c4e941e4ef37d0170e4ca650aaa49f99a45c0b9695a235b210154b0
   languageName: node
   linkType: hard
 

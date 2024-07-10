@@ -5,7 +5,6 @@ import {
   GRAPH_ME_ENDPOINT,
   SESSION_COOKIE_NAME,
   STATE_COOKIE_NAME,
-  USER_COOKIE_NAME,
 } from '../authConfig'
 import { getClaims } from '../utils/claimUtils'
 import { BaseUser } from '../users/user'
@@ -243,8 +242,8 @@ class AuthProvider {
 
     req.session.destroy(() => {
       res.clearCookie(SESSION_COOKIE_NAME)
-      res.redirect(logoutUri)
     })
+    res.json({ authUrl: logoutUri })
   }
 
   async acquireToken(req, res, next, options = {} as any) {
