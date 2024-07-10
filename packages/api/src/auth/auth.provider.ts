@@ -242,8 +242,8 @@ class AuthProvider {
 
     req.session.destroy(() => {
       res.clearCookie(SESSION_COOKIE_NAME)
+      res.json({ authUrl: logoutUri })
     })
-    res.json({ authUrl: logoutUri })
   }
 
   async acquireToken(req, res, next, options = {} as any) {
