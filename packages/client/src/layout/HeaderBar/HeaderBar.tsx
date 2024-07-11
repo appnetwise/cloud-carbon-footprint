@@ -19,9 +19,8 @@ const HeaderBar = (): ReactElement => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
-  const { logout, isAuthenticated, account } = useAuth()
+  const { logout, isAuthenticated, account, isCloudConnected } = useAuth()
   const navigate = useNavigate()
-  const { token } = useAuth()
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -60,8 +59,7 @@ const HeaderBar = (): ReactElement => {
           ></Typography>
         </NavLink>
         <div className={classes.navLinks}>
-          {token === '' || token === null ? <></> : <></>}
-          {isAuthenticated ? (
+          {isCloudConnected ? (
             <>
               <NavLink
                 to="/dashboard"
@@ -79,6 +77,12 @@ const HeaderBar = (): ReactElement => {
               >
                 <Typography component="h2">RECOMMENDATIONS</Typography>
               </NavLink>
+            </>
+          ) : (
+            <></>
+          )}
+          {isAuthenticated ? (
+            <>
               <NavLink
                 to="/home"
                 className={clsx(classes.navLink, {

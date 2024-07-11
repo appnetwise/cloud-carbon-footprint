@@ -18,6 +18,7 @@ export const AuthProvider = ({ children, baseUrl }) => {
     const data = await response.json()
     console.log(data)
     setIsAuthenticated(data ? true : false)
+    setIsCloudConnected(data?.user.isCloudConnected || false)
     setAccount(data)
     setIsLoading(false)
   }, [baseUrl])
