@@ -5,6 +5,7 @@ import {
   POST_LOGIN_REDIRECT_URI,
   POST_LOGOUT_REDIRECT_URI,
   GRAPH_ME_ENDPOINT,
+  AZURE_SERVICES_ENDPOINT,
 } from '../authConfig'
 
 import AuthProvider from './auth.provider'
@@ -103,20 +104,15 @@ class AuthController {
         },
       )
 
-      // const user = await userService.getUserByExternalId(graphData.oid)
-      // const graphResponse = await getGraphClient(tokenResponse.accessToken)
-      //   .api('/me')
-      //   .responseType(ResponseType.RAW)
-      //   .get()
-      // const graphData = await handleAnyClaimsChallenge(graphResponse)
-
+      // const user = await userService.getUserByExternalId(req.session.account.user.id)
+      
       res.status(200).json({ msg: 'Connected to cloud', tokenResponse })
     } catch (error) {
       if (error.name === 'ClaimsChallengeAuthError') {
         setClaims(
           req.session,
           msalConfig.auth.clientId,
-          GRAPH_ME_ENDPOINT,
+          AZURE_SERVICES_ENDPOINT,
           error.payload,
         )
         return res.status(401).json({ error: error.name })
