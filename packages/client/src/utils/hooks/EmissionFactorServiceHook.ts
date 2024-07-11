@@ -8,7 +8,6 @@ import { EmissionRatioResult } from '@cloud-carbon-footprint/common'
 import { useAxiosErrorHandling } from '../../layout/ErrorPage'
 
 import { ServiceResult } from '../../Types'
-import { useAuth } from 'src/auth/AuthContext'
 
 interface UseRemoteEmissionServiceParams {
   baseUrl: string | null
@@ -21,7 +20,6 @@ const useRemoteEmissionService = (
   const [loading, setLoading] = useState(true)
   const _isMounted = useRef(true)
   const { error, setError } = useAxiosErrorHandling(params.onApiError)
-  const { token } = useAuth()
 
   useEffect(() => {
     const fetchEstimates = async () => {
@@ -36,11 +34,6 @@ const useRemoteEmissionService = (
       try {
         const res = await axios.get(
           `${params.baseUrl}/regions/emissions-factors`,
-          {
-            headers: {
-              Authorization: 'Bearer ' + token, //the token is a variable which holds the token
-            },
-          },
         )
 
         if (_isMounted.current) {

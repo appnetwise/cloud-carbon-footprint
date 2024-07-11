@@ -1,21 +1,15 @@
 import { useState } from 'react'
-import axios from 'axios'
+import { useAuth } from 'src/auth/AuthContext'
 
-const useConnectToCloud = (baseUrl) => {
+const useConnectToCloud = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [isCloudConnected, setIsCloudConnected] = useState(false)
+  const { isCloudConnected, connectToCloud } = useAuth()
 
-  const connectToCloud = async () => {
+  const handleConnectToCloud = async () => {
     setLoading(true)
     try {
-      const response = await axios.get(`${baseUrl}/auth/connect`)
-      if (response.data && response.data.authUrl) {
-        setIsCloudConnected(true)
-        window.location.href = response.data.authUrl
-      } else {
-        throw new Error('Invalid response from server')
-      }
+      await connectToCloud()
     } catch (error) {
       setError(error.message)
     } finally {
@@ -23,7 +17,12 @@ const useConnectToCloud = (baseUrl) => {
     }
   }
 
-  return { loading, error, isCloudConnected, connectToCloud }
+  return {
+    loading,
+    error,
+    isCloudConnected,
+    connectToCloud: handleConnectToCloud,
+  }
 }
 
 export default useConnectToCloud

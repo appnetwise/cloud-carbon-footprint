@@ -39,7 +39,9 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
   const endDate = getEmissionDateRange({ config }).end
   const startDate = getEmissionDateRange({ config }).start
 
-  const shouldFetchFootprint = !['/login'].includes(location.pathname)
+  const shouldFetchFootprint =
+    !['/login'].includes(location.pathname) &&
+    ['/dasboard'].includes(location.pathname)
 
   const footprint = useFootprintData(
     {
@@ -54,6 +56,7 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
     shouldFetchFootprint,
   )
 
+  console.log(footprint)
   if (footprint.loading) {
     return (
       <>

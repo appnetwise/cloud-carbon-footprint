@@ -59,6 +59,7 @@ export default function EmissionsMetricsPage({
           <EmissionsOverTimeCard
             data={filterBarProps.filteredData}
             error={footprint.error}
+            loading={footprint.loading}
           />
           <Grid item xs={12}>
             <Grid container spacing={3} className={classes.gridCardRow}>

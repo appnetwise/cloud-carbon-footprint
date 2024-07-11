@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
-import useConnectToCloud from 'src/utils/hooks/ConnectToCloudHook'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import useLoginUser from 'src/utils/hooks/LoginUserHook'
 import useLogoutUser from 'src/utils/hooks/LogoutUserHook'
 
@@ -10,23 +9,37 @@ export const AuthProvider = ({ children, baseUrl }) => {
   const [account, setAccount] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isCloudConnected, setIsCloudConnected] = useState(false)
   const { login } = useLoginUser(baseUrl)
   const { logout } = useLogoutUser(baseUrl)
-  const { connectToCloud, isCloudConnected } = useConnectToCloud(baseUrl)
 
-  const getAccount = async () => {
+  const getAccount = useCallback(async () => {
     const response = await fetch(`${baseUrl}/auth/account`)
     const data = await response.json()
     console.log(data)
     setIsAuthenticated(data ? true : false)
     setAccount(data)
-
     setIsLoading(false)
-  }
+  }, [baseUrl])
 
   useEffect(() => {
     getAccount()
-  }, [isAuthenticated])
+  }, [getAccount, isAuthenticated, isCloudConnected])
+
+  const connectToCloud = useCallback(async () => {
+    try {
+      const response = await fetch(`${baseUrl}/auth/connect`)
+      const data = await response.json()
+      if (data && data.authUrl) {
+        setIsCloudConnected(true)
+        window.location.href = data.authUrl
+      } else {
+        throw new Error('Invalid response from server')
+      }
+    } catch (error) {
+      console.error('Failed to connect to cloud', error)
+    }
+  }, [baseUrl])
 
   return (
     <AuthContext.Provider
@@ -35,6 +48,7 @@ export const AuthProvider = ({ children, baseUrl }) => {
         isLoading,
         isAuthenticated,
         isCloudConnected,
+        setIsCloudConnected,
         login,
         logout,
         connectToCloud,

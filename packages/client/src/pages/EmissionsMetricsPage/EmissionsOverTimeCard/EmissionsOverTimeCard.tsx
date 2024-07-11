@@ -12,21 +12,23 @@ import ErrorPage from 'src/layout/ErrorPage'
 type EmissionsOverTimeProps = {
   data: EstimationResult[]
   error: Error
+  loading: boolean
 }
 
 const EmissionsOverTimeCard: FunctionComponent<EmissionsOverTimeProps> = ({
   data,
   error,
+  loading,
 }): ReactElement => {
   if (error) {
     return <ErrorPage></ErrorPage>
   }
-  return data.length ? (
+  return !loading ? (
     <DashboardCard testId="cloudUsage">
       <ApexLineChart data={data} />
     </DashboardCard>
   ) : (
-    <NoDataMessage isTop isBold title="Cloud Usage" loading={true} />
+    <NoDataMessage isTop isBold title="Cloud Usage" loading={loading} />
   )
 }
 

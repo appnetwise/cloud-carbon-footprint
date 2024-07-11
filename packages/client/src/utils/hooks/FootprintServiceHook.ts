@@ -41,6 +41,7 @@ const useRemoteFootprintService = (
     const fetchEstimates = async () => {
       if (!params.baseUrl || !enabled) {
         setLoading(false)
+        return
       }
       setError(null)
 
@@ -96,6 +97,7 @@ const useRemoteFootprintService = (
     params.baseUrl,
     params.groupBy,
     params.limit,
+    enabled,
   ])
 
   return { data, loading, error }

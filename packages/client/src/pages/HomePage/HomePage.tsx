@@ -3,21 +3,20 @@ import { FaAws, FaGoogle, FaMicrosoft } from 'react-icons/fa'
 import useStyles from './homePageStyles'
 import { Typography } from '@material-ui/core'
 import { useAuth } from 'src/auth/AuthContext'
+import useConnectToCloud from 'src/utils/hooks/ConnectToCloudHook'
 
 const HomePage = () => {
-  const { connectToCloud } = useAuth()
+  const { connectToCloud } = useConnectToCloud()
   const handleConnect = async () => {
     try {
-      const isCloudConnected = await connectToCloud()
-      if (isCloudConnected) {
-        console.log('Connected to Azure Cloud')
-      }
+      await connectToCloud()
+      console.log('Connected to Azure Cloud')
     } catch (error) {
       console.error('Failed to connect to Azure Cloud', error)
     }
   }
-  const classes = useStyles()
   const { isCloudConnected } = useAuth()
+  const classes = useStyles()
   return (
     <div className={classes.pageContainer}>
       <div className={classes.boxContainer}>
