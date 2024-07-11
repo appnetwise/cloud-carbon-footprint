@@ -380,16 +380,21 @@ class AuthProvider {
       )
 
       // req.session.tokenCache = msalInstance.getTokenCache().serialize()
-      // req.session.accessToken = tokenResponse.accessToken
       // req.session.idToken = tokenResponse.idToken
-      // req.session.account = tokenResponse.account
-      // req.session.isAuthenticated = true
-
-      // store the connect info to user entity
+      req.session.accessToken = tokenResponse.accessToken
+      req.session.account = tokenResponse.account
+      req.session.isAuthenticated = true
       const decodedToken: jwt.JwtPayload = jwt.decode(
         tokenResponse.accessToken,
         { complete: true },
       ).payload as jwt.JwtPayload
+      // update the user info in the session account
+      let user = await userService.getUserByExternalId(decodedToken.oid)
+      req.session.account.user = {
+        id: user.id.toString(),
+        name: user.nickName,
+        isCloudConnected: true,
+      }
 
       const { redirectTo } = JSON.parse(
         this.cryptoProvider.base64Decode(req.body.state),

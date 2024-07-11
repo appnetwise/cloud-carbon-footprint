@@ -64,7 +64,7 @@ function verifyToken(
 }
 
 export const authSession = (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction,
 ) => {
@@ -73,6 +73,10 @@ export const authSession = (
     res.status(401).send('Session not found or has expired')
     return
   }
+  if(!req.user) {
+    req.user = {}
+  }
+  req.user.token = req.session?.accessToken
   next()
 }
 

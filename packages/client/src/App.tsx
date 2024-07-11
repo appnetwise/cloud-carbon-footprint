@@ -41,7 +41,7 @@ export function App({ config = loadConfig() }: AppProps): ReactElement {
 
   const shouldFetchFootprint =
     !['/login'].includes(location.pathname) &&
-    ['/dasboard'].includes(location.pathname)
+    ['/dashboard'].includes(location.pathname)
 
   const footprint = useFootprintData(
     {
