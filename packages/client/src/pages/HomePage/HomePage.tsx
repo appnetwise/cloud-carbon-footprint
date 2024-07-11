@@ -3,16 +3,15 @@ import { FaAws, FaGoogle, FaMicrosoft } from 'react-icons/fa'
 import useStyles from './homePageStyles'
 import { Typography } from '@material-ui/core'
 import { useAuth } from 'src/auth/AuthContext'
-import { useNavigate } from 'react-router-dom'
 
 const HomePage = () => {
   const { connectToCloud } = useAuth()
-  const navigate = useNavigate()
   const handleConnect = async () => {
     try {
-      await connectToCloud()
-      console.log('Connected to Azure Cloud')
-      navigate('/dashboard')
+      const isCloudConnected = await connectToCloud()
+      if (isCloudConnected) {
+        console.log('Connected to Azure Cloud')
+      }
     } catch (error) {
       console.error('Failed to connect to Azure Cloud', error)
     }

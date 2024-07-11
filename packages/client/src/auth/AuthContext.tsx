@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
+import useConnectToCloud from 'src/utils/hooks/ConnectToCloudHook'
 import useLoginUser from 'src/utils/hooks/LoginUserHook'
 import useLogoutUser from 'src/utils/hooks/LogoutUserHook'
 
@@ -11,6 +12,7 @@ export const AuthProvider = ({ children, baseUrl }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const { login } = useLoginUser(baseUrl)
   const { logout } = useLogoutUser(baseUrl)
+  const { connectToCloud, isCloudConnected } = useConnectToCloud(baseUrl)
 
   const getAccount = async () => {
     const response = await fetch(`${baseUrl}/auth/account`)
@@ -32,8 +34,10 @@ export const AuthProvider = ({ children, baseUrl }) => {
         account,
         isLoading,
         isAuthenticated,
+        isCloudConnected,
         login,
         logout,
+        connectToCloud,
       }}
     >
       {children}
