@@ -63,6 +63,27 @@ function verifyToken(
   })
 }
 
+export const authSession = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (!isAuthenticated(req, res, next)) {
+    authLogger.warn(`Session not found or has expired`)
+    res.status(401).send('Session not found or has expired')
+    return
+  }
+  next()
+}
+
+function isAuthenticated(req, res, next) {
+  if (req.session && req.session.isAuthenticated) {
+    return true
+  }
+
+  return false
+}
+
 export const auth = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization
   if (!authHeader) {

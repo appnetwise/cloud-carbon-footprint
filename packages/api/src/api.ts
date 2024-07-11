@@ -10,7 +10,7 @@ import {
   RecommendationsApiMiddleware,
   ProfileDataApiMiddleware,
 } from './middleware'
-import { auth } from './utils/auth'
+import { authSession } from './utils/auth'
 
 export const createRouter = (config?: CCFConfig) => {
   setConfig(config)
@@ -135,7 +135,7 @@ export const createRouter = (config?: CCFConfig) => {
    *       500:
    *         description: Internal Server Error
    */
-  router.get('/footprint', auth, FootprintApiMiddleware)
+  router.get('/footprint', authSession, FootprintApiMiddleware)
 
   /**
    * @openapi
@@ -161,7 +161,7 @@ export const createRouter = (config?: CCFConfig) => {
    *       401:
    *         description: Unauthorized
    */
-  router.get('/regions/emissions-factors', auth, EmissionsApiMiddleware)
+  router.get('/regions/emissions-factors', authSession, EmissionsApiMiddleware)
 
   /**
    * @openapi
@@ -195,7 +195,7 @@ export const createRouter = (config?: CCFConfig) => {
    *       401:
    *         description: Unauthorized
    */
-  router.get('/recommendations', auth, RecommendationsApiMiddleware)
+  router.get('/recommendations', authSession, RecommendationsApiMiddleware)
 
   /**
    * @openapi
@@ -239,7 +239,7 @@ export const createRouter = (config?: CCFConfig) => {
    *       500:
    *        description: Internal Server Error
    */
-  router.get('/profile', auth, ProfileDataApiMiddleware)
+  router.get('/profile', authSession, ProfileDataApiMiddleware)
 
   return router
 }

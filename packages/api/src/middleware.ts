@@ -38,7 +38,7 @@ export const FootprintApiMiddleware = async function (
 ): Promise<void> {
   // Set the request time out to 10 minutes to allow the request enough time to complete.
   req.socket.setTimeout(1000 * 60 * 10)
-  const token = req.user.token || req.headers.authorization?.split(' ')[1]
+  const token = req.user?.token || req.headers.authorization?.split(' ')[1]
   const rawRequest: FootprintEstimatesRawRequest = {
     startDate: req.query.start?.toString(),
     endDate: req.query.end?.toString(),
@@ -122,9 +122,9 @@ export const RecommendationsApiMiddleware = async function (
     tenantId: req.headers[X_TENANT_ID]?.toString(),
   }
   const user = req.user
-  const token = req.user.token || req.headers.authorization?.split(' ')[1]
+  const token = req.user?.token || req.headers.authorization?.split(' ')[1]
   if (token && !rawRequest.tenantId) {
-    rawRequest.tenantId = jwt.decode(token).tid
+    rawRequest.tenantId = jwt.decode(token)?.tid
     rawRequest.accessToken = token
   }
 

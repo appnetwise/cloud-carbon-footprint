@@ -40,6 +40,8 @@ const sessionConfig = {
     sameSite: 'strict',
     httpOnly: true,
     secure: false, // set this to true on production
+    maxAge: 30 * 60 * 1000, // Session expires after 30 minutes of inactivity
+    rolling: true // Resets maxAge on every response
   },
 }
 

@@ -5,7 +5,7 @@
 import express, { Request, Response } from 'express'
 import * as userService from './user.service'
 import { BaseUser, User } from './user'
-import { auth } from '../utils/auth'
+import { authSession } from '../utils/auth'
 import { UserEntity } from './entity/user.entity'
 
 const jwt = require('jsonwebtoken')
@@ -20,6 +20,7 @@ const jwt = require('jsonwebtoken')
  *       bearerFormat: JWT
  */
 export const userRouter = express.Router()
+userRouter.use(authSession)
 // userRouter.use(auth)
 
 /**
