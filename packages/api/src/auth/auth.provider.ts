@@ -2,6 +2,7 @@ import msal from '@azure/msal-node'
 import axios from 'axios'
 import {
   AZURE_SERVICES_ENDPOINT,
+  CONNECT_STATE_COOKIE_NAME,
   GRAPH_ME_ENDPOINT,
   SESSION_COOKIE_NAME,
   STATE_COOKIE_NAME,
@@ -21,8 +22,10 @@ class AuthProvider {
       telemetry?: msal.NodeTelemetryOptions
     }
     redirectUri: any
+    redirectConnectUri: any
     postLoginRedirectUri: any
     postLogoutRedirectUri: any
+    postConnectRedirectUri: any
   }
   cryptoProvider: msal.CryptoProvider
 
@@ -104,6 +107,84 @@ class AuthProvider {
     const msalInstance = this.getMsalInstance()
 
     return this.redirectToAuthCodeUrl(
+      req,
+      res,
+      next,
+      authCodeUrlRequestParams,
+      authCodeRequestParams,
+      msalInstance,
+    )
+  }
+
+  async connect(req, res, next, options = {} as any) {
+    /**
+     * MSAL Node allows you to pass your custom state as state parameter in the Request object.
+     * The state parameter can also be used to encode information of the app's state before redirect.
+     * You can pass the user's state in the app, such as the page or view they were on, as input to this parameter.
+     */
+    const state = this.cryptoProvider.base64Encode(
+      JSON.stringify({
+        csrfToken: this.cryptoProvider.createNewGuid(), // create a GUID for csrf
+        redirectTo: options.postConnectRedirectUri
+          ? options.postConnectRedirectUri
+          : this.config.postConnectRedirectUri
+          ? this.config.postConnectRedirectUri
+          : '/',
+      }),
+    )
+
+    const authCodeUrlRequestParams = {
+      state: state,
+      /**
+       * By default, MSAL Node will add OIDC scopes to the auth code url request. For more information, visit:
+       * https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
+       */
+      scopes: options.scopesToConsent ? options.scopesToConsent.split(' ') : [],
+      claims: getClaims(
+        req.session,
+        this.config.msalConfig.auth.clientId,
+        AZURE_SERVICES_ENDPOINT,
+      ),
+    }
+
+    const authCodeRequestParams = {
+      state: state,
+      /**
+       * By default, MSAL Node will add OIDC scopes to the auth code request. For more information, visit:
+       * https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
+       */
+      scopes: options.scopesToConsent ? options.scopesToConsent.split(' ') : [],
+      claims: getClaims(
+        req.session,
+        this.config.msalConfig.auth.clientId,
+        AZURE_SERVICES_ENDPOINT,
+      ),
+    }
+
+    /**
+     * If the current msal configuration does not have cloudDiscoveryMetadata or authorityMetadata, we will
+     * make a request to the relevant endpoints to retrieve the metadata. This allows MSAL to avoid making
+     * metadata discovery calls, thereby improving performance of token acquisition process.
+     */
+    if (
+      !this.config.msalConfig.auth.cloudDiscoveryMetadata ||
+      !this.config.msalConfig.auth.authorityMetadata
+    ) {
+      const [cloudDiscoveryMetadata, authorityMetadata] = await Promise.all([
+        this.getCloudDiscoveryMetadata(),
+        this.getAuthorityMetadata(),
+      ])
+
+      this.config.msalConfig.auth.cloudDiscoveryMetadata = JSON.stringify(
+        cloudDiscoveryMetadata,
+      )
+      this.config.msalConfig.auth.authorityMetadata =
+        JSON.stringify(authorityMetadata)
+    }
+
+    const msalInstance = this.getMsalInstance()
+
+    return this.redirectToAuthCodeUrlForConnect(
       req,
       res,
       next,
@@ -232,6 +313,99 @@ class AuthProvider {
     }
   }
 
+  async redirectToAuthCodeUrlForConnect(
+    req,
+    res,
+    next,
+    authCodeUrlRequestParams,
+    authCodeRequestParams,
+    msalInstance,
+  ) {
+    const { verifier, challenge } =
+      await this.cryptoProvider.generatePkceCodes()
+
+    const authCodeUrlRequest = {
+      redirectUri: this.config.redirectConnectUri,
+      responseMode: msal.ResponseMode.FORM_POST, // recommended for confidential clients
+      codeChallenge: challenge,
+      codeChallengeMethod: 'S256',
+      ...authCodeUrlRequestParams,
+    }
+
+    const cookiePayload = {
+      pkceCodes: {
+        verifier: verifier,
+      },
+      authCodeRequest: {
+        redirectUri: this.config.redirectConnectUri,
+        ...authCodeRequestParams,
+      },
+    }
+
+    try {
+      const authCodeUrlResponse = await msalInstance.getAuthCodeUrl(
+        authCodeUrlRequest,
+      )
+
+      /**
+       * Web apps using OIDC form_post flow for authentication rely on cross-domain
+       * cookies for security. Here we designate the cookie with sameSite=none to ensure we can retrieve
+       * state after redirect from the Azure AD takes place. For more information, visit:
+       * https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-handle-samesite-cookie-changes-chrome-browser
+       */
+      res.cookie(CONNECT_STATE_COOKIE_NAME, cookiePayload, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      })
+      //res.redirect(authCodeUrlResponse)
+      res.json({ authUrl: authCodeUrlResponse })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async handleRedirectToConnect(req, res, next) {
+    const authCodeRequest = {
+      ...req.cookies[CONNECT_STATE_COOKIE_NAME].authCodeRequest,
+      codeVerifier: req.cookies[CONNECT_STATE_COOKIE_NAME].pkceCodes.verifier,
+      code: req.body.code,
+    }
+
+    try {
+      const msalInstance = this.getMsalInstance()
+      const tokenResponse = await msalInstance.acquireTokenByCode(
+        authCodeRequest,
+        req.body,
+      )
+
+      // req.session.tokenCache = msalInstance.getTokenCache().serialize()
+      // req.session.accessToken = tokenResponse.accessToken
+      // req.session.idToken = tokenResponse.idToken
+      // req.session.account = tokenResponse.account
+      // req.session.isAuthenticated = true
+
+      // store the connect info to user entity
+      const decodedToken: jwt.JwtPayload = jwt.decode(
+        tokenResponse.accessToken,
+        { complete: true },
+      ).payload as jwt.JwtPayload
+
+      const { redirectTo } = JSON.parse(
+        this.cryptoProvider.base64Decode(req.body.state),
+      )
+
+      res.clearCookie(CONNECT_STATE_COOKIE_NAME, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      }) // discard the state cookie
+      res.redirect(redirectTo)
+    } catch (error) {
+      next(error)
+    }
+  }
+
   async logout(req, res, next) {
     /**
      * Construct a logout URI and redirect the user to end the
@@ -291,8 +465,7 @@ class AuthProvider {
 
     try {
       msalInstance.getTokenCache().deserialize(req.session.tokenCache)
-
-      const tokenResponse = await msalInstance.acquireTokenSilent({
+      const acquireTokenRequest = {
         account: req.session.account,
         scopes: options.scopes || [],
         claims: getClaims(
@@ -300,7 +473,10 @@ class AuthProvider {
           this.config.msalConfig.auth.clientId,
           AZURE_SERVICES_ENDPOINT,
         ),
-      })
+      }
+      const tokenResponse = await msalInstance.acquireTokenSilent(
+        acquireTokenRequest,
+      )
 
       req.session.tokenCache = msalInstance.getTokenCache().serialize()
       req.session.accessToken = tokenResponse.accessToken

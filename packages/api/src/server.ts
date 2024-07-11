@@ -17,7 +17,11 @@ import { MongoDbCacheManager } from '@cloud-carbon-footprint/app'
 import swaggerDocs from './utils/swagger'
 import { AppDataSource } from './data-source'
 import { authRouter } from './auth/auth.router'
-import { SESSION_COOKIE_NAME, REDIRECT_URI } from './authConfig'
+import {
+  SESSION_COOKIE_NAME,
+  REDIRECT_URI,
+  REDIRECT_CONNECT_URI,
+} from './authConfig'
 import session from 'express-session'
 
 const port = process.env.PORT || 4000
@@ -41,7 +45,7 @@ const sessionConfig = {
     httpOnly: true,
     secure: false, // set this to true on production
     maxAge: 30 * 60 * 1000, // Session expires after 30 minutes of inactivity
-    rolling: true // Resets maxAge on every response
+    rolling: true, // Resets maxAge on every response
   },
 }
 
@@ -54,7 +58,10 @@ if (process.env.NODE_ENV === 'production') {
 httpApp.use(session(sessionConfig))
 httpApp.use(
   csrf({
-    blocklist: [new URL(REDIRECT_URI).pathname],
+    blocklist: [
+      new URL(REDIRECT_URI).pathname,
+      new URL(REDIRECT_CONNECT_URI).pathname,
+    ],
   }),
 )
 

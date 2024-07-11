@@ -6,6 +6,8 @@ import {
   POST_LOGOUT_REDIRECT_URI,
   GRAPH_ME_ENDPOINT,
   AZURE_SERVICES_ENDPOINT,
+  POST_CONNECT_REDIRECT_URI,
+  REDIRECT_CONNECT_URI,
 } from '../authConfig'
 
 import AuthProvider from './auth.provider'
@@ -14,8 +16,10 @@ import { handleAnyClaimsChallenge, setClaims } from '../utils/claimUtils'
 const authProvider = new AuthProvider({
   msalConfig: msalConfig,
   redirectUri: REDIRECT_URI,
+  redirectConnectUri: REDIRECT_CONNECT_URI,
   postLoginRedirectUri: POST_LOGIN_REDIRECT_URI,
   postLogoutRedirectUri: POST_LOGOUT_REDIRECT_URI,
+  postConnectRedirectUri: POST_CONNECT_REDIRECT_URI,
 })
 
 class AuthController {
@@ -33,7 +37,7 @@ class AuthController {
       scopesToConsent = decodeURIComponent(req.query.scopesToConsent)
     }
 
-    return authProvider.login(req, res, next, {
+    return await authProvider.login(req, res, next, {
       postLoginRedirectUri,
       scopesToConsent,
     })
@@ -41,6 +45,10 @@ class AuthController {
 
   public async handleRedirect(req, res, next) {
     return authProvider.handleRedirect(req, res, next)
+  }
+
+  public async handleRedirectToConnect(req, res, next) {
+    return authProvider.handleRedirectToConnect(req, res, next)
   }
 
   public async logoutUser(req, res, next) {
@@ -95,18 +103,25 @@ class AuthController {
     }
 
     try {
-      const tokenResponse = await authProvider.acquireTokenForConsumptionMgmt(
-        req,
-        res,
-        next,
-        {
-          scopes: ['user_impersonation'],
-        },
-      )
+      let postLoginRedirectUri
+      let scopesToConsent
 
-      // const user = await userService.getUserByExternalId(req.session.account.user.id)
-      
-      res.status(200).json({ msg: 'Connected to cloud', tokenResponse })
+      if (req.query && req.query.postLoginRedirectUri) {
+        postLoginRedirectUri = decodeURIComponent(
+          req.query.postLoginRedirectUri,
+        )
+      }
+
+      if (req.query && req.query.scopesToConsent) {
+        scopesToConsent = decodeURIComponent(req.query.scopesToConsent)
+      }
+      if (!scopesToConsent) {
+        // space separated list of scopes
+        scopesToConsent = AZURE_SERVICES_ENDPOINT
+      }
+      return await authProvider.connect(req, res, next, {
+        scopesToConsent,
+      })
     } catch (error) {
       if (error.name === 'ClaimsChallengeAuthError') {
         setClaims(
