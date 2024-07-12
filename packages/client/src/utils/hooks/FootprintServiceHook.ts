@@ -11,6 +11,7 @@ import { EstimationResult } from '@cloud-carbon-footprint/common'
 import { useAxiosErrorHandling } from '../../layout/ErrorPage'
 import { ServiceResult } from '../../Types'
 import moment from 'moment'
+import { useAuth } from 'src/auth/AuthContext'
 
 export interface UseRemoteFootprintServiceParams {
   baseUrl: string | null
@@ -31,6 +32,7 @@ const useRemoteFootprintService = (
 ): ServiceResult<EstimationResult> => {
   const [data, setData] = useState(params.initial ?? [])
   const [loading, setLoading] = useState(true)
+  const { isCloudConnected } = useAuth()
 
   const { error, setError } = useAxiosErrorHandling(params.onApiError)
 
@@ -97,7 +99,7 @@ const useRemoteFootprintService = (
     params.baseUrl,
     params.groupBy,
     params.limit,
-    enabled,
+    isCloudConnected,
   ])
 
   return { data, loading, error }
