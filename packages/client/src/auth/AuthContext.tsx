@@ -53,6 +53,7 @@ export const AuthProvider = ({ children, baseUrl }) => {
         login,
         logout,
         connectToCloud,
+        getAccount,
       }}
     >
       {children}
