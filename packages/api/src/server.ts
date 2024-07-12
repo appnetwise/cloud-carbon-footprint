@@ -52,7 +52,6 @@ const sessionConfig = {
 if (process.env.NODE_ENV === 'production') {
   httpApp.set('trust proxy', 1) // trust first proxy e.g. App Service
   sessionConfig.cookie.secure = true // serve secure cookies on production
-  // httpApp.use(auth)
 }
 
 httpApp.use(session(sessionConfig))

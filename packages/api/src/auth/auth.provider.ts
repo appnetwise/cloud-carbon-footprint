@@ -239,7 +239,6 @@ class AuthProvider {
         secure: true,
         sameSite: 'none',
       })
-      //res.redirect(authCodeUrlResponse)
       res.json({ authUrl: authCodeUrlResponse })
     } catch (error) {
       next(error)
@@ -358,7 +357,6 @@ class AuthProvider {
         secure: true,
         sameSite: 'none',
       })
-      //res.redirect(authCodeUrlResponse)
       res.json({ authUrl: authCodeUrlResponse })
     } catch (error) {
       next(error)
