@@ -114,8 +114,12 @@ AppDataSource.initialize()
   })
   .catch((error) => serverLogger.error('Server could not be started', error))
 
-// Instructions for graceful shutdown
-process.on('SIGINT', async () => {
+// Listen for shutdown signals
+process.on('SIGINT', shutdown)
+process.on('SIGTERM', shutdown)
+
+// Function to handle server shutdown
+async function shutdown() {
   if (configLoader()?.CACHE_MODE === 'MONGODB') {
     await MongoDbCacheManager.mongoClient.close()
     serverLogger.info('\nMongoDB connection closed')
@@ -123,5 +127,5 @@ process.on('SIGINT', async () => {
   await AppDataSource.destroy()
   serverLogger.info('\nApp datasource has been closed')
   serverLogger.info('Cloud Carbon Footprint Server shutting down...')
-  process.exit()
-})
+  process.exit(0)
+}
