@@ -23,12 +23,12 @@ const EmissionsOverTimeCard: FunctionComponent<EmissionsOverTimeProps> = ({
   if (error) {
     return <ErrorPage></ErrorPage>
   }
-  return !loading ? (
+  return !loading && data.length ? (
     <DashboardCard testId="cloudUsage">
       <ApexLineChart data={data} />
     </DashboardCard>
   ) : (
-    <NoDataMessage isTop isBold title="Cloud Usage" loading={loading} />
+    <NoDataMessage isTop isBold title="Cloud Usage" loading={true} />
   )
 }
 
