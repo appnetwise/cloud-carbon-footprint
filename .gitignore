@@ -287,3 +287,4 @@ packages/create-app/ccf-app
 .yarnrc
 .yarnrc.yml
 
+*.pem
