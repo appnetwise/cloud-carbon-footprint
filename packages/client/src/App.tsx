@@ -1,5 +1,5 @@
 import { ReactElement, useCallback, useState } from 'react'
-import { Route, Routes, useNavigate } from 'react-router-dom'
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import { Container } from '@material-ui/core'
 import { ClientConfig } from './Config'
@@ -97,8 +97,18 @@ function Pages({
       <HeaderBar />
       <Container maxWidth={false} className={classes.appContainer}>
         <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? <Navigate to="/home" replace /> : <LoginPage />
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              isAuthenticated ? <Navigate to="/home" replace /> : <LoginPage />
+            }
+          />
           <Route
             path="/home"
             element={
