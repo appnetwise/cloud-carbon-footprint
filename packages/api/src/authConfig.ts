@@ -11,10 +11,10 @@ export const POST_CONNECT_REDIRECT_URI =
 export const GRAPH_ME_ENDPOINT = 'https://graph.microsoft.com/v1.0/me'
 export const AZURE_SERVICES_ENDPOINT = 'https://management.azure.com/.default'
 
-export const SESSION_COOKIE_NAME = 'msid.ccf.session'
-export const STATE_COOKIE_NAME = 'msid.ccf.state'
-export const CONNECT_STATE_COOKIE_NAME = 'msid.ccf.connect.state'
-export const USER_COOKIE_NAME = 'msid.ccf.user'
+export const SESSION_COLLECTION_NAME = 'user_sessions'
+export const SESSION_COOKIE_NAME = 'anw.ccf.session'
+export const STATE_COOKIE_NAME = 'anw.ccf.state'
+export const CONNECT_STATE_COOKIE_NAME = 'anw.ccf.connect.state'
 
 /**
  * For enhanced security, consider using client certificates instead of secrets.
@@ -30,7 +30,5 @@ export const msalConfig = {
     //     thumbprint: "YOUR_CERT_THUMBPRINT",
     //     privateKey: fs.readFileSync('PATH_TO_YOUR_PRIVATE_KEY_FILE'),
     // }
-    // redirectUri: '/redirect',
-    // postLogoutRedirectUri: '/logout',
   },
 }

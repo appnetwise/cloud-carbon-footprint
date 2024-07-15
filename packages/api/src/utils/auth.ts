@@ -76,7 +76,8 @@ export const authSession = (
   if(!req.user) {
     req.user = {}
   }
-  req.user.token = req.session?.accessToken
+  req.user.token = req.session?.accessTokenToCloud || req.session?.accessToken
+  
   next()
 }
 

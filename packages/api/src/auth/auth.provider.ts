@@ -376,12 +376,12 @@ class AuthProvider {
         authCodeRequest,
         req.body,
       )
-
-      // req.session.tokenCache = msalInstance.getTokenCache().serialize()
-      // req.session.idToken = tokenResponse.idToken
-      req.session.accessToken = tokenResponse.accessToken
-      req.session.account = tokenResponse.account
-      req.session.isAuthenticated = true
+      
+      if (!req.session.account) {
+        req.session.accessToken = tokenResponse.accessToken
+        req.session.account = tokenResponse.account
+        req.session.isAuthenticated = true
+      }
       const decodedToken: jwt.JwtPayload = jwt.decode(
         tokenResponse.accessToken,
         { complete: true },
@@ -393,6 +393,7 @@ class AuthProvider {
         name: user.nickName,
         isCloudConnected: true,
       }
+      req.session.accessTokenToCloud = tokenResponse.accessToken
 
       const { redirectTo } = JSON.parse(
         this.cryptoProvider.base64Decode(req.body.state),

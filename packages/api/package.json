@@ -79,6 +79,7 @@
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "@types/express": "^4.17.12",
     "axios": "^1.6.8",
+    "connect-mongodb-session": "^5.0.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.17.1",

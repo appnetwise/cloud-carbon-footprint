@@ -21,10 +21,12 @@ import {
   SESSION_COOKIE_NAME,
   REDIRECT_URI,
   REDIRECT_CONNECT_URI,
+  SESSION_COLLECTION_NAME,
 } from './authConfig'
 import session from 'express-session'
 
 const port = process.env.PORT || 4000
+
 const csrf = require('lusca').csrf
 const httpApp = express()
 httpApp.use(helmet())
@@ -34,6 +36,18 @@ httpApp.use(express.urlencoded({ extended: false }))
 // httpApp.use(express.static(path.join(__dirname, 'client/build')));
 
 const serverLogger = new Logger('Server')
+const MongoDBStore = require('connect-mongodb-session')(session)
+const mongoOptions = {
+  uri: process.env.MONGODB_URI,
+  databaseName: process.env.MONGODB_DATABASE,
+  collection: SESSION_COLLECTION_NAME,
+}
+const mongoStore = new MongoDBStore(mongoOptions)
+
+// Catch errors, if any
+mongoStore.on('error', function (error) {
+  serverLogger.error(`error connecting to mongo store ${mongoOptions}`, error)
+})
 
 const sessionConfig = {
   name: SESSION_COOKIE_NAME,
@@ -47,6 +61,7 @@ const sessionConfig = {
     secure: false, // set this to true on production
     maxAge: 30 * 60 * 1000, // Session expires after 30 minutes of inactivity
   },
+  store: mongoStore,
 }
 
 if (process.env.NODE_ENV === 'production') {
