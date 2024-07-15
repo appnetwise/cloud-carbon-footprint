@@ -42,9 +42,9 @@ const sessionConfig = {
   saveUninitialized: false,
   rolling: true,
   cookie: {
-    sameSite: 'none',
+    sameSite: 'Strict',
     httpOnly: true,
-    secure: true, // set this to true on production
+    secure: false, // set this to true on production
     maxAge: 30 * 60 * 1000, // Session expires after 30 minutes of inactivity
   },
 }
@@ -52,6 +52,7 @@ const sessionConfig = {
 if (process.env.NODE_ENV === 'production') {
   httpApp.set('trust proxy', 1) // trust first proxy e.g. App Service
   sessionConfig.cookie.secure = true // serve secure cookies on production
+  sessionConfig.cookie.sameSite = 'none' // serve secure cookies on production  
 }
 
 httpApp.use(session(sessionConfig))
