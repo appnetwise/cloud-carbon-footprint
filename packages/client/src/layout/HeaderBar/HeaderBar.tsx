@@ -21,6 +21,8 @@ const HeaderBar = (): ReactElement => {
 
   const { logout, isAuthenticated, account, isCloudConnected } = useAuth()
   const navigate = useNavigate()
+  const isHomeActive =
+    location.pathname === '/home' || location.pathname === '/'
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -87,6 +89,7 @@ const HeaderBar = (): ReactElement => {
                 to="/home"
                 className={clsx(classes.navLink, {
                   isActive: classes.activeNavLink,
+                  [classes.activeNavLink]: isHomeActive,
                 })}
               >
                 <Typography component="h2">CONNECT TO CLOUD</Typography>
