@@ -42,9 +42,9 @@ const sessionConfig = {
   saveUninitialized: false,
   rolling: true,
   cookie: {
-    sameSite: 'strict',
+    sameSite: 'none',
     httpOnly: true,
-    secure: false, // set this to true on production
+    secure: true, // set this to true on production
     maxAge: 30 * 60 * 1000, // Session expires after 30 minutes of inactivity
   },
 }
