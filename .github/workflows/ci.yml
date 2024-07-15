@@ -1,15 +1,5 @@
 name: CI
 on:
-  workflow_dispatch:
-    inputs:
-      REGISTRY_URL:
-        description: 'Docker Registry URL'
-        required: true
-        default: anwapplication.azurecr.io
-        type: choice
-        options:
-          - anwapplication.azurecr.io
-      
   push:
     branches: ['*']
     paths-ignore:
@@ -21,6 +11,16 @@ on:
     paths-ignore:
       - 'microsite/**'
       - '.github/workflows/**'
+  workflow_dispatch:
+    inputs:
+      REGISTRY_URL:
+        description: 'Docker Registry URL'
+        required: true
+        default: anwapplication.azurecr.io
+        type: choice
+        options:
+          - anwapplication.azurecr.io
+      
 
 concurrency: 
   group: ${{ github.workflow }}-${{ github.ref }}
