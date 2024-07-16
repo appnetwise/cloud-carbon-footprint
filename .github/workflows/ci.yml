@@ -1,7 +1,8 @@
 name: CI
 on:
   push:
-    branches: ['*']
+    branches:
+      - '**'
     paths-ignore:
       - 'microsite/**'
       - '.github/workflows/**'
