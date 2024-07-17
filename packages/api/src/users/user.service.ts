@@ -190,6 +190,10 @@ export const updateUser = async (
     if (userUpdate.nickName) {
       user.nickName = userUpdate.nickName
     }
+    if (userUpdate.cloudConnections) {
+      user.cloudConnections = userUpdate.cloudConnections
+    }
+
     await userRepository.save(user)
 
     return user

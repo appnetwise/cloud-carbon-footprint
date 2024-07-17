@@ -45,8 +45,8 @@ export class UserEntity {
       azure: {
           connected: boolean;
           scopes: string[];
-          refreshToken: string;
-          refreshTokenExpires: Date;
+          account?: any,
+          accessToken?: string;
           code?: string;  
       };
       aws: {

@@ -116,84 +116,6 @@ class AuthProvider {
     )
   }
 
-  async connect(req, res, next, options = {} as any) {
-    /**
-     * MSAL Node allows you to pass your custom state as state parameter in the Request object.
-     * The state parameter can also be used to encode information of the app's state before redirect.
-     * You can pass the user's state in the app, such as the page or view they were on, as input to this parameter.
-     */
-    const state = this.cryptoProvider.base64Encode(
-      JSON.stringify({
-        csrfToken: this.cryptoProvider.createNewGuid(), // create a GUID for csrf
-        redirectTo: options.postConnectRedirectUri
-          ? options.postConnectRedirectUri
-          : this.config.postConnectRedirectUri
-          ? this.config.postConnectRedirectUri
-          : '/',
-      }),
-    )
-
-    const authCodeUrlRequestParams = {
-      state: state,
-      /**
-       * By default, MSAL Node will add OIDC scopes to the auth code url request. For more information, visit:
-       * https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
-       */
-      scopes: options.scopesToConsent ? options.scopesToConsent.split(' ') : [],
-      claims: getClaims(
-        req.session,
-        this.config.msalConfig.auth.clientId,
-        AZURE_SERVICES_ENDPOINT,
-      ),
-    }
-
-    const authCodeRequestParams = {
-      state: state,
-      /**
-       * By default, MSAL Node will add OIDC scopes to the auth code request. For more information, visit:
-       * https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
-       */
-      scopes: options.scopesToConsent ? options.scopesToConsent.split(' ') : [],
-      claims: getClaims(
-        req.session,
-        this.config.msalConfig.auth.clientId,
-        AZURE_SERVICES_ENDPOINT,
-      ),
-    }
-
-    /**
-     * If the current msal configuration does not have cloudDiscoveryMetadata or authorityMetadata, we will
-     * make a request to the relevant endpoints to retrieve the metadata. This allows MSAL to avoid making
-     * metadata discovery calls, thereby improving performance of token acquisition process.
-     */
-    if (
-      !this.config.msalConfig.auth.cloudDiscoveryMetadata ||
-      !this.config.msalConfig.auth.authorityMetadata
-    ) {
-      const [cloudDiscoveryMetadata, authorityMetadata] = await Promise.all([
-        this.getCloudDiscoveryMetadata(),
-        this.getAuthorityMetadata(),
-      ])
-
-      this.config.msalConfig.auth.cloudDiscoveryMetadata = JSON.stringify(
-        cloudDiscoveryMetadata,
-      )
-      this.config.msalConfig.auth.authorityMetadata =
-        JSON.stringify(authorityMetadata)
-    }
-
-    const msalInstance = this.getMsalInstance()
-
-    return this.redirectToAuthCodeUrlForConnect(
-      req,
-      res,
-      next,
-      authCodeUrlRequestParams,
-      authCodeRequestParams,
-      msalInstance,
-    )
-  }
-
   async redirectToAuthCodeUrl(
     req,
     res,
@@ -305,11 +227,94 @@ class AuthProvider {
         user = await userService.createUser(baseUser)
       }
       // update the user info in the session account
-      req.session.account.user = { id: user.id.toString(), name: user.nickName }
+      req.session.account.user = {
+        id: user.id.toString(),
+        name: user.nickName,
+        isCloudConnected: user.cloudConnections?.azure?.connected || false,
+      }
+      req.session.accessTokenToCloud = user.cloudConnections?.azure?.accessToken
       res.redirect(redirectTo)
     } catch (error) {
       next(error)
     }
+  }
+
+  async connect(req, res, next, options = {} as any) {
+    /**
+     * MSAL Node allows you to pass your custom state as state parameter in the Request object.
+     * The state parameter can also be used to encode information of the app's state before redirect.
+     * You can pass the user's state in the app, such as the page or view they were on, as input to this parameter.
+     */
+    const state = this.cryptoProvider.base64Encode(
+      JSON.stringify({
+        csrfToken: this.cryptoProvider.createNewGuid(), // create a GUID for csrf
+        redirectTo: options.postConnectRedirectUri
+          ? options.postConnectRedirectUri
+          : this.config.postConnectRedirectUri
+          ? this.config.postConnectRedirectUri
+          : '/',
+      }),
+    )
+
+    const authCodeUrlRequestParams = {
+      state: state,
+      /**
+       * By default, MSAL Node will add OIDC scopes to the auth code url request. For more information, visit:
+       * https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
+       */
+      scopes: options.scopesToConsent ? options.scopesToConsent.split(' ') : [],
+      claims: getClaims(
+        req.session,
+        this.config.msalConfig.auth.clientId,
+        AZURE_SERVICES_ENDPOINT,
+      ),
+    }
+
+    const authCodeRequestParams = {
+      state: state,
+      /**
+       * By default, MSAL Node will add OIDC scopes to the auth code request. For more information, visit:
+       * https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
+       */
+      scopes: options.scopesToConsent ? options.scopesToConsent.split(' ') : [],
+      claims: getClaims(
+        req.session,
+        this.config.msalConfig.auth.clientId,
+        AZURE_SERVICES_ENDPOINT,
+      ),
+    }
+
+    /**
+     * If the current msal configuration does not have cloudDiscoveryMetadata or authorityMetadata, we will
+     * make a request to the relevant endpoints to retrieve the metadata. This allows MSAL to avoid making
+     * metadata discovery calls, thereby improving performance of token acquisition process.
+     */
+    if (
+      !this.config.msalConfig.auth.cloudDiscoveryMetadata ||
+      !this.config.msalConfig.auth.authorityMetadata
+    ) {
+      const [cloudDiscoveryMetadata, authorityMetadata] = await Promise.all([
+        this.getCloudDiscoveryMetadata(),
+        this.getAuthorityMetadata(),
+      ])
+
+      this.config.msalConfig.auth.cloudDiscoveryMetadata = JSON.stringify(
+        cloudDiscoveryMetadata,
+      )
+      this.config.msalConfig.auth.authorityMetadata =
+        JSON.stringify(authorityMetadata)
+    }
+
+    const msalInstance = this.getMsalInstance()
+
+    return this.redirectToAuthCodeUrlForConnect(
+      req,
+      res,
+      next,
+      authCodeUrlRequestParams,
+      authCodeRequestParams,
+      msalInstance,
+    )
   }
 
   async redirectToAuthCodeUrlForConnect(
@@ -376,24 +381,38 @@ class AuthProvider {
         authCodeRequest,
         req.body,
       )
-      
+
       if (!req.session.account) {
         req.session.accessToken = tokenResponse.accessToken
         req.session.account = tokenResponse.account
         req.session.isAuthenticated = true
       }
+      req.session.accessTokenToCloud = tokenResponse.accessToken
+
       const decodedToken: jwt.JwtPayload = jwt.decode(
         tokenResponse.accessToken,
         { complete: true },
       ).payload as jwt.JwtPayload
       // update the user info in the session account
-      let user = await userService.getUserByExternalId(decodedToken.oid)
+      const user: any = await userService.getUserByExternalId(decodedToken.oid)
+      if (user) {
+        if (!user.cloudConnections) {
+          user.cloudConnections = {}
+        }
+        user.cloudConnections.azure = {
+          connected: true,
+          scopes: decodedToken.scp.split(' '),
+          account: tokenResponse.account,
+          code: req.body.code,
+          accessToken: tokenResponse.accessToken,
+        }
+        await userService.updateUser(user.id, user)
+      }
       req.session.account.user = {
         id: user.id.toString(),
         name: user.nickName,
         isCloudConnected: true,
       }
-      req.session.accessTokenToCloud = tokenResponse.accessToken
 
       const { redirectTo } = JSON.parse(
         this.cryptoProvider.base64Decode(req.body.state),
