@@ -100,6 +100,7 @@ const useRemoteFootprintService = (
     params.groupBy,
     params.limit,
     isCloudConnected,
+    enabled,
   ])
 
   return { data, loading, error }

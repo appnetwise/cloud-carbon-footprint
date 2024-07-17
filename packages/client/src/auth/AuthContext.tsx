@@ -10,8 +10,15 @@ export const AuthProvider = ({ children, baseUrl }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isCloudConnected, setIsCloudConnected] = useState(false)
+  const [isFirstVisit, setIsFirstVisit] = useState(true) // New state for first visit
   const { login } = useLoginUser(baseUrl)
-  const { logout } = useLogoutUser(baseUrl)
+  // const { logout } = useLogoutUser(baseUrl)
+  const { logout: performLogout } = useLogoutUser(baseUrl)
+
+  const logout = useCallback(async () => {
+    await performLogout()
+    setIsFirstVisit(true) // Reset isFirstVisit on logout
+  }, [performLogout])
 
   const getAccount = useCallback(async () => {
     const response = await fetch(`${baseUrl}/auth/account`)
@@ -49,6 +56,8 @@ export const AuthProvider = ({ children, baseUrl }) => {
         isLoading,
         isAuthenticated,
         isCloudConnected,
+        isFirstVisit,
+        setIsFirstVisit,
         setIsCloudConnected,
         login,
         logout,

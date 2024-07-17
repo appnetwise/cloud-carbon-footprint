@@ -35,7 +35,6 @@ export default function EmissionsMetricsPage({
   const filterOptions: FilterResultResponse = useFilterDataFromEstimates(
     footprint.data,
   )
-  console.log(footprint)
 
   const { filteredData, filters, setFilters } = useFilters(
     footprint.data,
