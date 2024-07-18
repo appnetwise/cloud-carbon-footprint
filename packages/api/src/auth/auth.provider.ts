@@ -1,4 +1,14 @@
-import msal from '@azure/msal-node'
+import {
+  NodeAuthOptions,
+  BrokerOptions,
+  CacheOptions,
+  NodeSystemOptions,
+  NodeTelemetryOptions,
+  CryptoProvider,
+  ConfidentialClientApplication,
+  ResponseMode,
+  InteractionRequiredAuthError,
+} from '@azure/msal-node'
 import axios from 'axios'
 import {
   msalConfig,
@@ -21,11 +31,11 @@ import jwt from 'jsonwebtoken'
 class AuthProvider {
   config: {
     msalConfig: {
-      auth: any
-      broker?: msal.BrokerOptions
-      cache?: msal.CacheOptions
-      system?: msal.NodeSystemOptions
-      telemetry?: msal.NodeTelemetryOptions
+      auth: NodeAuthOptions
+      broker?: BrokerOptions
+      cache?: CacheOptions
+      system?: NodeSystemOptions
+      telemetry?: NodeTelemetryOptions
     }
     redirectUri: any
     redirectConnectUri: any
@@ -33,15 +43,15 @@ class AuthProvider {
     postLogoutRedirectUri: any
     postConnectRedirectUri: any
   }
-  cryptoProvider: msal.CryptoProvider
+  cryptoProvider: CryptoProvider
 
   constructor(config: any) {
     this.config = config
-    this.cryptoProvider = new msal.CryptoProvider()
+    this.cryptoProvider = new CryptoProvider()
   }
 
   getMsalInstance() {
-    return new msal.ConfidentialClientApplication(this.config.msalConfig)
+    return new ConfidentialClientApplication(this.config.msalConfig)
   }
 
   async login(req, res, next, options = {} as any) {
@@ -135,7 +145,7 @@ class AuthProvider {
 
     const authCodeUrlRequest = {
       redirectUri: this.config.redirectUri,
-      responseMode: msal.ResponseMode.FORM_POST, // recommended for confidential clients
+      responseMode: ResponseMode.FORM_POST, // recommended for confidential clients
       codeChallenge: challenge,
       codeChallengeMethod: 'S256',
       ...authCodeUrlRequestParams,
@@ -336,7 +346,7 @@ class AuthProvider {
 
     const authCodeUrlRequest = {
       redirectUri: this.config.redirectConnectUri,
-      responseMode: msal.ResponseMode.FORM_POST, // recommended for confidential clients
+      responseMode: ResponseMode.FORM_POST, // recommended for confidential clients
       codeChallenge: challenge,
       codeChallengeMethod: 'S256',
       ...authCodeUrlRequestParams,
@@ -476,7 +486,7 @@ class AuthProvider {
         payload: string
       }
 
-      if (error instanceof msal.InteractionRequiredAuthError) {
+      if (error instanceof InteractionRequiredAuthError) {
         const err = new CustomError(
           'InteractionRequiredAuthError occurred for given scopes',
         )
@@ -513,7 +523,7 @@ class AuthProvider {
         payload: string
       }
 
-      if (error instanceof msal.InteractionRequiredAuthError) {
+      if (error instanceof InteractionRequiredAuthError) {
         const err = new CustomError(
           'InteractionRequiredAuthError occurred for given scopes',
         )
