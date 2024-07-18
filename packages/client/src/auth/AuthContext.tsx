@@ -40,6 +40,7 @@ export const AuthProvider = ({ children, baseUrl }) => {
       const data = await response.json()
       if (data && data.authUrl) {
         setIsCloudConnected(true)
+        setIsFirstVisit(true) // Reset isFirstVisit on connect
         window.location.href = data.authUrl
       } else {
         throw new Error('Invalid response from server')
