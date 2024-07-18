@@ -32,13 +32,25 @@ spec:
             - name: {{ .Values.client.service.port.name  }}
               containerPort: {{ .Values.client.service.port.containerPort }}
               protocol: {{ .Values.client.service.port.protocol  }}
+
           envFrom:
+            {{- if .Values.client.configmap.name }}
             - configMapRef:
-                name: {{ include "cloud-carbon-footprint.fullname" . }}-client-config
+                name: {{ .Values.client.configmap.name }}
+            {{- end }}
+
+            {{- if and .Values.client.secrets (not (empty .Values.client.secrets.name)) }}
+            - secretRef:
+                name: {{ .Values.client.secrets.name }}
+            {{- end }}
+            
+
           resources:
             {{- toYaml .Values.client.deployment.resources | nindent 12 }}
           securityContext:
             {{- toYaml .Values.client.deployment.securityContext | nindent 12 }}
+          
+      {{- if .Values.client.configmap.nginxconfname }}
           volumeMounts:
             - name: config-volume
               mountPath:  /etc/nginx/nginx.conf
@@ -46,8 +58,10 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: {{ include "cloud-carbon-footprint.fullname" . }}-client
+            name: {{ .Values.client.configmap.nginxconfname }}
             defaultMode: 0755
+      {{- end }}
+
       {{- with .Values.api.deployment.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}

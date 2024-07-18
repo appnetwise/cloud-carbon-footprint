@@ -1,6 +1,10 @@
 client:
   configmap:
     resolver: ""
+    name: name-test1
+  #  nginxconfname: name-test2
+  secrets:
+    name: name-test3
 
   deployment:
     replicaCount: 2
@@ -68,7 +72,8 @@ client:
 
 api:
   # See https://github.com/cloud-carbon-footprint/cloud-carbon-footprint/blob/trunk/packages/api/.env.template for available variables
-  configmap: {}
+  configmap:
+    name: name-test-api
   # Example
   #  AWS_USE_BILLING_DATA=true
   #  AWS_ATHENA_DB_NAME=your-athena-db-name
@@ -77,6 +82,9 @@ api:
   #  AWS_ATHENA_QUERY_RESULT_LOCATION=s3://your-athena-query-results-location
   #  AWS_BILLING_ACCOUNT_ID=your-billing-account-id
   #  AWS_BILLING_ACCOUNT_NAME=your-billing-account-name
+
+  secrets:
+    name: name-test-api
 
   deployment:
     replicaCount: 2
@@ -132,3 +140,7 @@ api:
   pdb:
     enabled: true
     minAvailable: 1
+
+
+# secrets:
+#   name: test-secret-name
