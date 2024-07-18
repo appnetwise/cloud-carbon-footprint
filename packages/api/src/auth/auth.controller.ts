@@ -10,17 +10,9 @@ import {
   REDIRECT_CONNECT_URI,
 } from '../authConfig'
 
-import AuthProvider from './auth.provider'
+import { authProvider } from './auth.provider'
 import { ResponseType } from '@microsoft/microsoft-graph-client'
 import { handleAnyClaimsChallenge, setClaims } from '../utils/claimUtils'
-const authProvider = new AuthProvider({
-  msalConfig: msalConfig,
-  redirectUri: REDIRECT_URI,
-  redirectConnectUri: REDIRECT_CONNECT_URI,
-  postLoginRedirectUri: POST_LOGIN_REDIRECT_URI,
-  postLogoutRedirectUri: POST_LOGOUT_REDIRECT_URI,
-  postConnectRedirectUri: POST_CONNECT_REDIRECT_URI,
-})
 
 class AuthController {
   constructor() {}

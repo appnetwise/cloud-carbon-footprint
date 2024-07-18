@@ -1,11 +1,17 @@
 import msal from '@azure/msal-node'
 import axios from 'axios'
 import {
+  msalConfig,
+  REDIRECT_URI,
+  POST_LOGIN_REDIRECT_URI,
+  POST_LOGOUT_REDIRECT_URI,
   AZURE_SERVICES_ENDPOINT,
   CONNECT_STATE_COOKIE_NAME,
   GRAPH_ME_ENDPOINT,
   SESSION_COOKIE_NAME,
   STATE_COOKIE_NAME,
+  POST_CONNECT_REDIRECT_URI,
+  REDIRECT_CONNECT_URI,
 } from '../authConfig'
 import { getClaims } from '../utils/claimUtils'
 import { BaseUser } from '../users/user'
@@ -501,11 +507,6 @@ class AuthProvider {
         acquireTokenRequest,
       )
 
-      req.session.tokenCache = msalInstance.getTokenCache().serialize()
-      req.session.accessToken = tokenResponse.accessToken
-      req.session.idToken = tokenResponse.idToken
-      req.session.account = tokenResponse.account
-
       return tokenResponse
     } catch (error) {
       class CustomError extends Error {
@@ -518,6 +519,16 @@ class AuthProvider {
         )
         err.payload = options.scopes.join(' ')
         err.name = 'InteractionRequiredAuthError'
+        // update the user info in the session account
+        req.session.account.user.isCloudConnected = false
+        const userId = req.session?.account?.user?.id
+        const user: any = await userService.getUserById(userId)
+        if (user && user.cloudConnections && user.cloudConnections.azure) {
+          user.cloudConnections.azure = {
+            connected: false, // disconnect the user
+          }
+          await userService.updateUser(user.id, user)
+        }
         throw err
       } else {
         throw error
@@ -579,4 +590,11 @@ class AuthProvider {
   }
 }
 
-export default AuthProvider
+export const authProvider = new AuthProvider({
+  msalConfig: msalConfig,
+  redirectUri: REDIRECT_URI,
+  redirectConnectUri: REDIRECT_CONNECT_URI,
+  postLoginRedirectUri: POST_LOGIN_REDIRECT_URI,
+  postLogoutRedirectUri: POST_LOGOUT_REDIRECT_URI,
+  postConnectRedirectUri: POST_CONNECT_REDIRECT_URI,
+})
