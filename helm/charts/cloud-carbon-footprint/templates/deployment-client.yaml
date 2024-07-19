@@ -21,11 +21,9 @@ spec:
       app.kubernetes.io/component: client
   template:
     metadata:
-      annotations:
-        checksum/config: {{ include (print .Template.BasePath "/configmap-api.yaml") . | sha256sum }}
-        {{- with .Values.client.pods.podAnnotations }}
-        {{ toYaml . | nindent 8 }}
-        {{- end }}
+      {{- with .Values.client.pods.podAnnotations }}
+      annotations:  {{ toYaml . | nindent 8 }}
+      {{- end }}
       labels:
         {{- include "cloud-carbon-footprint.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: client
