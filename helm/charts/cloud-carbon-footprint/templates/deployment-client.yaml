@@ -43,7 +43,7 @@ spec:
                 name: {{ .Values.client.configmap.name }}
             {{- end }}
 
-            {{- if and .Values.client.secrets (not (empty .Values.client.secrets.name)) }}
+            {{- if .Values.client.secrets.name }}
             - secretRef:
                 name: {{ .Values.client.secrets.name }}
             {{- end }}
