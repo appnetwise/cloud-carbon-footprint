@@ -38,15 +38,15 @@ spec:
               protocol: TCP
 
           envFrom:
-          {{- if and .Values.api.configmap (not (empty .Values.api.configmap.name)) }}          
+          {{- if .Values.api.configmap -}}        
             - configMapRef:
-                name: {{ .Values.api.configmap.name }}
-          {{- end }}
+                name: {{- .Values.api.configmap.name -}}
+          {{- end -}}
 
-          {{- if and .Values.api.secrets (not (empty .Values.api.secrets.name)) }}
+          {{- if .Values.api.secrets -}}        
             - secretRef:
-                name: {{ .Values.api.secrets.name }}
-          {{- end }}
+                name: {{- .Values.api.secrets.name -}}
+          {{- end -}}
 
           resources:
             {{- toYaml .Values.api.deployment.resources | nindent 12 }}

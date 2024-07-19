@@ -38,17 +38,15 @@ spec:
               protocol: {{ .Values.client.service.port.protocol  }}
 
           envFrom:
-            {{- if .Values.client.configmap.name }}
+            {{- if .Values.client.configmap }}
             - configMapRef:
-                name: {{ .Values.client.configmap.name }}
-            {{- end }}
-
-            {{- if .Values.client.secrets.name }}
+                name: {{- .Values.client.configmap.name -}}
+            {{- end -}}
+            {{- if .Values.client.secrets -}}
             - secretRef:
-                name: {{ .Values.client.secrets.name }}
-            {{- end }}
-            
-
+                name: {{- .Values.client.secrets.name -}}
+            {{- end -}}
+        
           resources:
             {{- toYaml .Values.client.deployment.resources | nindent 12 }}
           securityContext:
