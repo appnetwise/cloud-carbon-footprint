@@ -36,7 +36,7 @@ spec:
             - name: {{ .Values.client.service.port.name  }}
               containerPort: {{ .Values.client.service.port.containerPort }}
               protocol: {{ .Values.client.service.port.protocol  }}
-          {{- with .Values.pods.envFrom }}
+          {{- with .Values.client.pods.envFrom }}
           envFrom: {{ toYaml . | nindent 12 }}
           {{- end }}
           resources:

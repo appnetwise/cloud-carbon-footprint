@@ -36,7 +36,7 @@ spec:
             - name: http
               containerPort: 4000
               protocol: TCP
-          {{- with .Values.pods.envFrom }}
+          {{- with .Values.api.pods.envFrom }}
           envFrom: {{ toYaml . | nindent 12 }}
           {{- end }}
           resources:
