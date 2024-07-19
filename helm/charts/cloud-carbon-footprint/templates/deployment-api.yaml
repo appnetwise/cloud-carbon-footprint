@@ -4,7 +4,15 @@ metadata:
   name: {{ include "cloud-carbon-footprint.fullname" . }}-api
   labels:
     {{- include "cloud-carbon-footprint.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ include "app.name" . }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: {{ include "app.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/component: api
+  {{- with .Values.api.deployment.annotations }}
+  annotations: {{ toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.api.deployment.replicaCount }}
   selector:
@@ -15,6 +23,9 @@ spec:
     metadata:
       annotations:
         checksum/config: {{ include (print .Template.BasePath "/configmap-api.yaml") . | sha256sum }}
+        {{- with .Values.api.pods.podAnnotations }}
+        {{ toYaml . | nindent 8 }}
+        {{- end }}
       labels:
         {{- include "cloud-carbon-footprint.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: api
