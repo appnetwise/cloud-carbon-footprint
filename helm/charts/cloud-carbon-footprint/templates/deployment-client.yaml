@@ -36,17 +36,9 @@ spec:
             - name: {{ .Values.client.service.port.name  }}
               containerPort: {{ .Values.client.service.port.containerPort }}
               protocol: {{ .Values.client.service.port.protocol  }}
-
-          envFrom:
-            {{- if .Values.client.configmap }}
-            - configMapRef:
-                name: {{- .Values.client.configmap.name -}}
-            {{- end -}}
-            {{- if .Values.client.secrets -}}
-            - secretRef:
-                name: {{- .Values.client.secrets.name -}}
-            {{- end -}}
-        
+          {{- with .Values.pods.envFrom }}
+          envFrom: {{ toYaml . | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.client.deployment.resources | nindent 12 }}
           securityContext:

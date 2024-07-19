@@ -36,18 +36,9 @@ spec:
             - name: http
               containerPort: 4000
               protocol: TCP
-
-          envFrom:
-          {{- if .Values.api.configmap -}}        
-            - configMapRef:
-                name: {{- .Values.api.configmap.name -}}
-          {{- end -}}
-
-          {{- if .Values.api.secrets -}}        
-            - secretRef:
-                name: {{- .Values.api.secrets.name -}}
-          {{- end -}}
-
+          {{- with .Values.pods.envFrom }}
+          envFrom: {{ toYaml . | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.api.deployment.resources | nindent 12 }}
           securityContext:
