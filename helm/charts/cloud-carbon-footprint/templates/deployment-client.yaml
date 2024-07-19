@@ -3,9 +3,6 @@ kind: Deployment
 metadata:
   name: {{ include "cloud-carbon-footprint.fullname" . }}-client
   labels:
-    app.kubernetes.io/version: {{ .Chart.AppVersion }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
     {{- include "cloud-carbon-footprint.labels" . | nindent 4 }}
     app.kubernetes.io/component: client
   {{- with .Values.client.deployment.annotations }}
