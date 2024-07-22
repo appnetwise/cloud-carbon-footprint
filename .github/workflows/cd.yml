@@ -20,6 +20,10 @@ on:
         required: true
         default: latest
         type: string
+      run-id:
+        description: 'CI Run ID to take artifacts from'
+        required: true
+        type: number
 
   workflow_run:
     workflows: ["CI"]
@@ -27,6 +31,20 @@ on:
     branches: [dev]
 
 jobs:
+  Manual:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    strategy:
+      fail-fast: true
+      matrix:
+        target: [ dev, qa, prod ]
+    uses: ./.github/workflows/deployment.yml
+    with:
+      target-env: ${{ matrix.target }}
+      REGISTRY_URL: ${{ inputs.REGISTRY_URL }}
+      RELEASE: ${{ inputs.RELEASE }}
+      ACR_VERSION: ${{ inputs.acr_version }}
+      run-id: ${{ inputs.run-id }}
+    secrets: inherit
   Deployment:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     strategy:

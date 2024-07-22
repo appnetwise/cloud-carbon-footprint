@@ -1,5 +1,17 @@
 name: CI
 on:
+  push:
+    branches:
+      - '**'
+    paths-ignore:
+      - 'microsite/**'
+      - '.github/workflows/**'
+  pull_request:
+    branches: [dev]
+    types: [closed]
+    paths-ignore:
+      - 'microsite/**'
+      - '.github/workflows/**'
   workflow_dispatch:
     inputs:
       REGISTRY_URL:
@@ -10,17 +22,6 @@ on:
         options:
           - anwapplication.azurecr.io
       
-  push:
-    branches: ['*']
-    paths-ignore:
-      - 'microsite/**'
-      - '.github/workflows/**'
-  pull_request:
-    branches: [dev]
-    types: [closed]
-    paths-ignore:
-      - 'microsite/**'
-      - '.github/workflows/**'
 
 concurrency: 
   group: ${{ github.workflow }}-${{ github.ref }}
