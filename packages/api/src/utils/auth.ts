@@ -114,7 +114,7 @@ export const authSession = (req, res, next) => {
       return getPublicKey(kid)
         .then(async (publicKey) => {
           return await verifyToken(accessToken, publicKey, false)
-        }) 
+        })
         .catch((error) => {
           authLogger.error(`Error in auth middleware: `, error)
         })
@@ -137,17 +137,20 @@ export const cloudAccessTokenValidator = (req, res, next) => {
     return
   }
 
-  verifyTokenForCloudAccess(accessToken)
-    .then((verifiedToken) => {
-      authLogger.info('Token verified successfully!')
-      authLogger.info(
-        `Verified token payload: ${JSON.stringify(verifiedToken, null, 2)}`,
-      )
-
+  verifyTokenExpiryForCloudAccess(accessToken)
+    .then((verifiedAcessToken) => {
       if (!req.user) {
         req.user = {}
       }
-      req.user.token = accessToken
+      authLogger.info(
+        `Cloud Access Token Payload: ${JSON.stringify(
+          jwt.decode(verifiedAcessToken),
+          null,
+          2,
+        )}`,
+      )
+
+      req.user.token = verifiedAcessToken
       next() // Continue to the next middleware
     })
     .catch((error) => {
@@ -155,64 +158,63 @@ export const cloudAccessTokenValidator = (req, res, next) => {
       res.status(403).send('Failed to authenticate token')
     })
 
-  // Define a new async function for token verification
-  async function verifyTokenForCloudAccess(
+  // If the token has not expired, Returns the same token if its valid and verified successfully
+  // If the token has expired, Returns the new access token if it can be acquired silently
+  // Returns an error if the token is invalid and cannot be acquired silently
+  async function verifyTokenExpiryForCloudAccess(
     accessToken: string,
-  ): Promise<JwtPayload | void> {
+  ): Promise<string> {
     try {
       // Decode the token without verification to get the header
       const decodedToken = jwt.decode(accessToken, { complete: true })
       if (!decodedToken || typeof decodedToken === 'string') {
         authLogger.warn('Invalid token structure')
-        res.status(400).send('Invalid token structure')
-        return
+        throw new Error('Invalid token structure')
       }
 
-      // Retrieve the RSA public key
+      // Retrieve the public key
       const kid = decodedToken.header.kid
       if (!kid) {
-        res.status(400).send('No "kid" found in token header')
-        return
+        authLogger.warn('No "kid" found in token header')
+        throw new Error('No "kid" found in token header')
       }
       authLogger.info(`Using kid from token: ${kid}`)
 
-      // Attempt RS256 verification
+      // Attempt verification
       return getPublicKey(kid)
-        .then(async (rsaPublicKey) => {
-          return await verifyToken(accessToken, rsaPublicKey, true)
+        .then(async (publicKey) => {
+          try {
+            await verifyToken(accessToken, publicKey, true)
+            authLogger.info(`Token verified successfully!`)
+            return accessToken
+          } catch (error) {
+            authLogger.info(
+              `Error in auth middleware, attempting to acquire new access token siliently`,
+            )
+            if (error.name === 'TokenExpiredError') {
+              // acquire token silently
+              const accessToken =
+                await authProvider.acquireTokenForConsumptionMgmt(
+                  req,
+                  res,
+                  next,
+                  { scopes: [AZURE_SERVICES_ENDPOINT] },
+                )
+              authLogger.info('Acquired token silently!')
+              return accessToken
+            } else {
+              authLogger.warn(
+                'Attempt to acquire token silently failed, user is disconnected from the cloud!',
+              )
+              throw error
+            }
+          }
         })
-        .catch(handleVerifyTokenError)
+        .catch(async (error) => {
+          throw error
+        })
     } catch (error) {
-      handleVerifyTokenError(error)
-    }
-  }
-
-  async function handleVerifyTokenError(error: any) {
-    authLogger.error(`Error in auth middleware: `, error)
-    if (error.name === 'TokenExpiredError') {
-      // acquire token silently
-      try {
-        const tokenResponse = await authProvider.acquireTokenForConsumptionMgmt(
-          req,
-          res,
-          next,
-          { scopes: [AZURE_SERVICES_ENDPOINT] },
-        )
-        req.session.accessTokenToCloud = tokenResponse.accessToken
-        if (!req.user) {
-          req.user = {}
-        }
-        req.user.token = accessToken
-        next()
-      } catch (error) {
-        // res.status(401).send('Token has expired')
-        authLogger.error(
-          `Error acquiring token silently `,
-          new Error('Failed to acquire token silently'),
-        )
-      }
-    } else {
-      res.status(403).send('Failed to authenticate token')
+      throw error
     }
   }
 }
