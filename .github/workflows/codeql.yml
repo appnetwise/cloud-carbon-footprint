@@ -15,7 +15,7 @@ on:
   push:
     branches: [ "**" ]
   pull_request:
-    branches: [ "dev" ]
+    branches: [ "main" ]
   schedule:
     - cron: '15 4 * * 3'
 
