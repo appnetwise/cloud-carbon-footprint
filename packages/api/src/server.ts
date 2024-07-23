@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === 'production') {
 import express from 'express'
 import helmet from 'helmet'
 import cookieParser from 'cookie-parser'
-import cors, { CorsOptions } from 'cors'
+import cors from 'cors'
 import { createRouter } from './api'
 import { userRouter } from './users/user.router'
 import { Logger, configLoader } from '@cloud-carbon-footprint/common'
@@ -24,19 +24,11 @@ import {
   SESSION_COLLECTION_NAME,
 } from './authConfig'
 import session from 'express-session'
-import csrf from 'lusca'
+import { csrf } from 'lusca'
 import connectMongoDBSession from 'connect-mongodb-session'
 
-const port = process.env.PORT || 4000
-
-const httpApp = express()
-httpApp.use(helmet())
-httpApp.use(express.json())
-httpApp.use(cookieParser())
-httpApp.use(express.urlencoded({ extended: false }))
-// httpApp.use(express.static(path.join(__dirname, 'client/build')));
-
 const serverLogger = new Logger('Server')
+const port = process.env.PORT || 4000
 const MongoDBStore = connectMongoDBSession(session)
 const mongoOptions = {
   uri: process.env.MONGODB_URI,
@@ -45,10 +37,16 @@ const mongoOptions = {
 }
 const mongoStore = new MongoDBStore(mongoOptions)
 
-// Catch errors, if any
+// initialize the mongo store and log errors, if any
 mongoStore.on('error', function (error) {
   serverLogger.error(`error connecting to mongo store ${mongoOptions}`, error)
 })
+
+// Establish Mongo Connection if cache method selected
+if (configLoader()?.CACHE_MODE === 'MONGODB') {
+  MongoDbCacheManager.createDbConnection()
+}
+
 const isProd = process.env.NODE_ENV === 'production'
 const sessionConfig = {
   name: SESSION_COOKIE_NAME,
@@ -65,10 +63,21 @@ const sessionConfig = {
   store: mongoStore,
 }
 
-if (process.env.NODE_ENV === 'production') {
-  httpApp.set('trust proxy', 1) // trust first proxy e.g. App Service
+// Enable CORS for all routes
+const corsOptions = {
+  origin: '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  preflightContinue: false,
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
+// Create an express application
+const httpApp = express()
+httpApp.use(helmet())
+httpApp.use(express.json())
+httpApp.use(cookieParser())
+httpApp.use(express.urlencoded({ extended: false }))
 httpApp.use(session(sessionConfig))
 httpApp.use(
   csrf({
@@ -78,44 +87,18 @@ httpApp.use(
     ],
   }),
 )
-
-// Enable CORS for all routes
-const corsOptions = {
-  origin: '*',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  preflightContinue: false,
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
 httpApp.use(cors(corsOptions))
-
-// Establish Mongo Connection if cache method selected
-if (configLoader()?.CACHE_MODE === 'MONGODB') {
-  MongoDbCacheManager.createDbConnection()
-}
-
-if (process.env.ENABLE_CORS) {
-  const corsOptions: CorsOptions = {
-    optionsSuccessStatus: 200,
-  }
-
-  if (process.env.CORS_ALLOW_ORIGIN) {
-    serverLogger.info(
-      'Allowing CORS requests from origin(s) ' + process.env.CORS_ALLOW_ORIGIN,
-    )
-    corsOptions.origin = process.env.CORS_ALLOW_ORIGIN.split(',')
-  }
-
-  httpApp.use(cors(corsOptions))
-}
 
 // controllers(routers)
 httpApp.use('/api', createRouter())
 httpApp.use('/api/auth', authRouter())
 httpApp.use('/api/users', userRouter)
-// httpApp.use('/api/connect', connectRouter)
 
-// Connect to MongoDB
+if (process.env.NODE_ENV === 'production') {
+  httpApp.set('trust proxy', 1) // trust first proxy e.g. App Service
+}
+
+// Connect to MongoDB and start the server
 AppDataSource.initialize()
   .then(async () => {
     httpApp.listen(port, () => {
