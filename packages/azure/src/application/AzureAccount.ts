@@ -65,13 +65,24 @@ export default class AzureAccount extends CloudProviderAccount {
     }
   }
 
-  public async initializeAccountForTenant(tenantId: string, accessToken?: string): Promise<void> {
+  public async initializeAccountForTenant(
+    tenantId: string,
+    accessToken?: string,
+  ): Promise<void> {
     try {
-      this.logger.info(`Initializing Azure account for tenant: ${tenantId} with accessToken: ${accessToken}`)
-      this.credentials = await AzureCredentialsProvider.createCredentialForTenant(tenantId, accessToken);
+      this.logger.info(
+        `Initializing Azure account for tenant: ${tenantId} with accessToken: ${accessToken}`,
+      )
+      this.credentials =
+        await AzureCredentialsProvider.createCredentialForTenant(
+          tenantId,
+          accessToken,
+        )
       this.subscriptionClient = new SubscriptionClient(this.credentials)
     } catch (e) {
-      throw new Error(`Azure initializeAccount failed for tenant: ${tenantId}. Reason: ${e.message}`)
+      throw new Error(
+        `Azure initializeAccount failed for tenant: ${tenantId}. Reason: ${e.message}`,
+      )
     }
   }
 
@@ -101,7 +112,7 @@ export default class AzureAccount extends CloudProviderAccount {
     endDate: Date,
     grouping: GroupBy,
     subscriptionIds: string[],
-    tenantId?: string,  
+    tenantId?: string,
   ): Promise<EstimationResult[]> {
     const AZURE = configLoader().AZURE
     const subscriptions = await this.getSubscriptions(subscriptionIds, tenantId)
@@ -137,7 +148,9 @@ export default class AzureAccount extends CloudProviderAccount {
     const AZURE = configLoader().AZURE
     const defaultAzureSubscriptionIds = subscriptionIds.length
       ? subscriptionIds
-      : tenantId ? AzureCredentialsProvider.getDefaultSubscriptionIdsForTenant(tenantId) : AZURE.SUBSCRIPTIONS
+      : tenantId
+      ? AzureCredentialsProvider.getDefaultSubscriptionIdsForTenant(tenantId)
+      : AZURE.SUBSCRIPTIONS
 
     const getSubscriptions = async (): Promise<Subscription[]> => {
       const subscriptions = []
