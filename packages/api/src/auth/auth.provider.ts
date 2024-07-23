@@ -7,7 +7,6 @@ import {
   CryptoProvider,
   ConfidentialClientApplication,
   ResponseMode,
-  InteractionRequiredAuthError,
 } from '@azure/msal-node'
 import axios from 'axios'
 import {
@@ -417,9 +416,7 @@ class AuthProvider {
         }
         user.cloudConnections.azure = {
           connected: true,
-          scopes: decodedToken.scp.split(' '),
           account: tokenResponse.account,
-          code: req.body.code,
           accessToken: tokenResponse.accessToken,
         }
         await userService.updateUser(user.id, user)
@@ -459,53 +456,20 @@ class AuthProvider {
     })
   }
 
-  async acquireToken(req, res, next, options = {} as any) {
+  async acquireTokenForConsumptionMgmt(
+    req,
+    res,
+    next,
+    options = {} as any,
+  ): Promise<string> {
     const msalInstance = this.getMsalInstance()
 
     try {
       msalInstance.getTokenCache().deserialize(req.session.tokenCache)
-
-      const tokenResponse = await msalInstance.acquireTokenSilent({
-        account: req.session.account,
-        scopes: options.scopes || [],
-        claims: getClaims(
-          req.session,
-          this.config.msalConfig.auth.clientId,
-          GRAPH_ME_ENDPOINT,
-        ),
-      })
-
-      req.session.tokenCache = msalInstance.getTokenCache().serialize()
-      req.session.accessToken = tokenResponse.accessToken
-      req.session.idToken = tokenResponse.idToken
-      req.session.account = tokenResponse.account
-
-      return tokenResponse
-    } catch (error) {
-      class CustomError extends Error {
-        payload: string
-      }
-
-      if (error instanceof InteractionRequiredAuthError) {
-        const err = new CustomError(
-          'InteractionRequiredAuthError occurred for given scopes',
-        )
-        err.payload = options.scopes.join(' ')
-        err.name = 'InteractionRequiredAuthError'
-        throw err
-      } else {
-        throw error
-      }
-    }
-  }
-
-  async acquireTokenForConsumptionMgmt(req, res, next, options = {} as any) {
-    const msalInstance = this.getMsalInstance()
-
-    try {
-      msalInstance.getTokenCache().deserialize(req.session.tokenCache)
+      const userId = req.session?.account?.user?.id
+      const user: any = await userService.getUserById(userId)
       const acquireTokenRequest = {
-        account: req.session.account,
+        account: user.cloudConnections.azure.account,
         scopes: options.scopes || [],
         claims: getClaims(
           req.session,
@@ -516,32 +480,35 @@ class AuthProvider {
       const tokenResponse = await msalInstance.acquireTokenSilent(
         acquireTokenRequest,
       )
-
-      return tokenResponse
-    } catch (error) {
-      class CustomError extends Error {
-        payload: string
+      // update the new token in the session
+      req.session.accessTokenToCloud = tokenResponse.accessToken
+      if (user) {
+        // update the token response in the database
+        user.cloudConnections.azure.accessToken = tokenResponse.accessToken
+        user.cloudConnections.azure.account = tokenResponse.account
+        await userService.updateUser(user.id, user)
       }
 
-      if (error instanceof InteractionRequiredAuthError) {
-        const err = new CustomError(
-          'InteractionRequiredAuthError occurred for given scopes',
-        )
-        err.payload = options.scopes.join(' ')
-        err.name = 'InteractionRequiredAuthError'
-        // update the user info in the session account
-        req.session.account.user.isCloudConnected = false
-        const userId = req.session?.account?.user?.id
-        const user: any = await userService.getUserById(userId)
-        if (user && user.cloudConnections && user.cloudConnections.azure) {
-          user.cloudConnections.azure = {
-            connected: false, // disconnect the user
-          }
-          await userService.updateUser(user.id, user)
+      return tokenResponse.accessToken
+    } catch (error) {
+      // disconnect the user if the token cannot be acquired silently
+      await disconnectUser()
+      throw error
+    }
+
+    async function disconnectUser() {
+      // disconnect the user from the session
+      req.session.account.user.isCloudConnected = false
+      req.session.accessTokenToCloud = null
+
+      // disconnect the user from the database
+      const userId = req.session?.account?.user?.id
+      const user: any = await userService.getUserById(userId)
+      if (user && user.cloudConnections && user.cloudConnections.azure) {
+        user.cloudConnections.azure = {
+          connected: false, // disconnect the user
         }
-        throw err
-      } else {
-        throw error
+        await userService.updateUser(user.id, user)
       }
     }
   }
