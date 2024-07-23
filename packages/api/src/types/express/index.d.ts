@@ -1,9 +1,9 @@
-import { User } from '../../users/user';
+import { User } from '../../users/user'
 
 declare global {
   namespace Express {
     interface Request {
-      user?: User;
+      user?: User
     }
   }
 }

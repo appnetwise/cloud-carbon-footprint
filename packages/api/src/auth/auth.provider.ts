@@ -442,7 +442,7 @@ class AuthProvider {
     }
   }
 
-  async logout(req, res, next) {
+  async logout(req, res) {
     /**
      * Construct a logout URI and redirect the user to end the
      * session with Azure AD. For more information, visit:
@@ -458,8 +458,6 @@ class AuthProvider {
 
   async acquireTokenForConsumptionMgmt(
     req,
-    res,
-    next,
     options = {} as any,
   ): Promise<string> {
     const msalInstance = this.getMsalInstance()
@@ -513,7 +511,7 @@ class AuthProvider {
     }
   }
 
-  isAuthenticated(req, res, next) {
+  isAuthenticated(req) {
     if (req.session && req.session.isAuthenticated) {
       return true
     }
@@ -521,8 +519,8 @@ class AuthProvider {
     return false
   }
 
-  getAccount(req, res, next) {
-    if (this.isAuthenticated(req, res, next)) {
+  getAccount(req) {
+    if (this.isAuthenticated(req)) {
       return req.session.account
     }
 

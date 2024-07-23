@@ -2,7 +2,7 @@
  * © 2023 Thoughtworks, Inc.
  */
 
-import express, { raw } from 'express'
+import express from 'express'
 
 import {
   App,
@@ -20,8 +20,8 @@ import {
   RecommendationsRequestValidationError,
 } from '@cloud-carbon-footprint/common'
 import getGraphClient from './utils/graphClient'
+import jwt from 'jsonwebtoken'
 
-const jwt = require('jsonwebtoken')
 const apiLogger = new Logger('api')
 const X_TENANT_ID = 'x-tenant-id'
 
@@ -55,7 +55,16 @@ export const FootprintApiMiddleware = async function (
     accessToken: token,
   }
   if (token && !rawRequest.tenantId) {
-    rawRequest.tenantId = jwt.decode(token).tid
+    const decodedToken = jwt.decode(token)
+    if (
+      decodedToken &&
+      typeof decodedToken === 'object' &&
+      'tid' in decodedToken
+    ) {
+      rawRequest.tenantId = decodedToken.tid
+    } else {
+      throw new Error('Tenant ID (tid) not found in token')
+    }
   }
 
   apiLogger.info(`Footprint API request started.`)
@@ -117,15 +126,23 @@ export const RecommendationsApiMiddleware = async function (
   req: express.Request,
   res: express.Response,
 ): Promise<void> {
+  const token = req.user?.token || req.headers.authorization?.split(' ')[1]
   const rawRequest: RecommendationsRawRequest = {
     awsRecommendationTarget: req.query.awsRecommendationTarget?.toString(),
     tenantId: req.headers[X_TENANT_ID]?.toString(),
+    accessToken: token,
   }
-  const user = req.user
-  const token = req.user?.token || req.headers.authorization?.split(' ')[1]
   if (token && !rawRequest.tenantId) {
-    rawRequest.tenantId = jwt.decode(token)?.tid
-    rawRequest.accessToken = token
+    const decodedToken = jwt.decode(token)
+    if (
+      decodedToken &&
+      typeof decodedToken === 'object' &&
+      'tid' in decodedToken
+    ) {
+      rawRequest.tenantId = decodedToken.tid
+    } else {
+      throw new Error('Tenant ID (tid) not found in token')
+    }
   }
 
   apiLogger.info(

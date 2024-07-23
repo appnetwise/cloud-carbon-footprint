@@ -24,10 +24,11 @@ import {
   SESSION_COLLECTION_NAME,
 } from './authConfig'
 import session from 'express-session'
+import csrf from 'lusca'
+import connectMongoDBSession from 'connect-mongodb-session'
 
 const port = process.env.PORT || 4000
 
-const csrf = require('lusca').csrf
 const httpApp = express()
 httpApp.use(helmet())
 httpApp.use(express.json())
@@ -36,7 +37,7 @@ httpApp.use(express.urlencoded({ extended: false }))
 // httpApp.use(express.static(path.join(__dirname, 'client/build')));
 
 const serverLogger = new Logger('Server')
-const MongoDBStore = require('connect-mongodb-session')(session)
+const MongoDBStore = connectMongoDBSession(session)
 const mongoOptions = {
   uri: process.env.MONGODB_URI,
   databaseName: process.env.MONGODB_DATABASE,
@@ -48,7 +49,7 @@ const mongoStore = new MongoDBStore(mongoOptions)
 mongoStore.on('error', function (error) {
   serverLogger.error(`error connecting to mongo store ${mongoOptions}`, error)
 })
-
+const isProd = process.env.NODE_ENV === 'production'
 const sessionConfig = {
   name: SESSION_COOKIE_NAME,
   secret: process.env.SESSION_COOKIE_SECRET, // replace with your own secret
@@ -56,9 +57,9 @@ const sessionConfig = {
   saveUninitialized: false,
   rolling: true,
   cookie: {
-    sameSite: 'Strict',
+    sameSite: isProd ? 'none' : 'Strict',
     httpOnly: true,
-    secure: false, // set this to true on production
+    secure: isProd, // set this to true on production
     maxAge: 30 * 60 * 1000, // Session expires after 30 minutes of inactivity
   },
   store: mongoStore,
@@ -66,8 +67,6 @@ const sessionConfig = {
 
 if (process.env.NODE_ENV === 'production') {
   httpApp.set('trust proxy', 1) // trust first proxy e.g. App Service
-  sessionConfig.cookie.secure = true // serve secure cookies on production
-  sessionConfig.cookie.sameSite = 'none' // serve secure cookies on production  
 }
 
 httpApp.use(session(sessionConfig))

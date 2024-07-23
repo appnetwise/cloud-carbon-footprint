@@ -1,12 +1,10 @@
 import { UserEntity } from './entity/user.entity'
 import { BaseUser, User } from './user'
 import * as userService from './user.service'
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
 
 class UserController {
-  constructor() {}
-
-  public async getAllUsers(req, res, next) {
+  public async getAllUsers(req, res) {
     try {
       const users: UserEntity[] = await userService.getAllUsers()
       return res.status(200).send(users)
@@ -15,7 +13,7 @@ class UserController {
     }
   }
 
-  public async getUserById(req, res, next) {
+  public async getUserById(req, res) {
     try {
       const id: string = req.params.id
       const user: UserEntity = await userService.getUserById(id)
@@ -27,12 +25,21 @@ class UserController {
     }
   }
 
-  public async createUser(req, res, next) {
+  public async createUser(req, res) {
     try {
-      let user: BaseUser = req.body
+      const user: BaseUser = req.body
       const token = req.headers.authorization?.split(' ')[1]
       if (token) {
-        user.tenantId = jwt.decode(token).tid
+        const decodedToken = jwt.decode(token)
+        if (
+          decodedToken &&
+          typeof decodedToken === 'object' &&
+          'tid' in decodedToken
+        ) {
+          user.tenantId = decodedToken.tid
+        } else {
+          throw new Error('Tenant ID (tid) not found in token')
+        }
       }
       const newUser = await userService.createUser(user)
       return res.status(201).json(newUser)
@@ -41,7 +48,7 @@ class UserController {
     }
   }
 
-  public async updateUser(req, res, next) {
+  public async updateUser(req, res) {
     try {
       const id: string = req.params.id
       const userUpdate: User = req.body
@@ -57,7 +64,7 @@ class UserController {
     }
   }
 
-  public async removeUser(req, res, next) {
+  public async removeUser(req, res) {
     try {
       const id: string = req.params.id
       const isUserRemoved = await userService.removeUser(id)

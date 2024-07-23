@@ -9,7 +9,6 @@ import {
 
 @Entity({ name: 'users' })
 export class UserEntity {
-  
   @ObjectIdColumn()
   id: ObjectId
 
@@ -40,20 +39,20 @@ export class UserEntity {
   @UpdateDateColumn()
   updatedAt?: Date
 
-  @Column("simple-json")
+  @Column('simple-json')
   cloudConnections?: {
-      azure: {
-          connected: boolean;
-          scopes: string[];
-          account?: any,
-          accessToken?: string;
-          code?: string;  
-      };
-      aws: {
-          // Similar structure
-      };
-      gcp: {
-          // Similar structure
-      };
-  };
+    azure: {
+      connected: boolean
+      scopes: string[]
+      account?: any
+      accessToken?: string
+      code?: string
+    }
+    aws: {
+      // Similar structure
+    }
+    gcp: {
+      // Similar structure
+    }
+  }
 }

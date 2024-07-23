@@ -42,7 +42,7 @@ function getPublicKey(kid: string): Promise<string> {
 function verifyToken(
   token: string,
   secretOrPublicKey: string,
-  useJwtVerifier: boolean = true,
+  useJwtVerifier = true,
   verifyOptions?: VerifyOptions,
 ): Promise<JwtPayload> {
   return new Promise((resolve, reject) => {
@@ -61,7 +61,7 @@ function verifyToken(
 }
 
 export const authSession = (req, res, next) => {
-  if (!isAuthenticated(req, res, next)) {
+  if (!isAuthenticated(req)) {
     authLogger.warn(`Session not found or has expired`)
     res.status(401).send('Session not found or has expired')
     return
@@ -125,7 +125,7 @@ export const authSession = (req, res, next) => {
 }
 
 export const cloudAccessTokenValidator = (req, res, next) => {
-  if (!isAuthenticated(req, res, next)) {
+  if (!isAuthenticated(req)) {
     authLogger.warn(`Session not found or has expired`)
     res.status(401).send('Session not found or has expired')
     return
@@ -194,12 +194,9 @@ export const cloudAccessTokenValidator = (req, res, next) => {
             if (error.name === 'TokenExpiredError') {
               // acquire token silently
               const accessToken =
-                await authProvider.acquireTokenForConsumptionMgmt(
-                  req,
-                  res,
-                  next,
-                  { scopes: [AZURE_SERVICES_ENDPOINT] },
-                )
+                await authProvider.acquireTokenForConsumptionMgmt(req, {
+                  scopes: [AZURE_SERVICES_ENDPOINT],
+                })
               authLogger.info('Acquired token silently!')
               return accessToken
             } else {
@@ -219,7 +216,7 @@ export const cloudAccessTokenValidator = (req, res, next) => {
   }
 }
 
-function isAuthenticated(req, res, next) {
+function isAuthenticated(req) {
   if (req.session && req.session.isAuthenticated) {
     return true
   }

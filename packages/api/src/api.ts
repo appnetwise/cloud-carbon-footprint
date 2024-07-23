@@ -161,7 +161,11 @@ export const createRouter = (config?: CCFConfig) => {
    *       401:
    *         description: Unauthorized
    */
-  router.get('/regions/emissions-factors', cloudAccessTokenValidator, EmissionsApiMiddleware)
+  router.get(
+    '/regions/emissions-factors',
+    cloudAccessTokenValidator,
+    EmissionsApiMiddleware,
+  )
 
   /**
    * @openapi
@@ -195,7 +199,11 @@ export const createRouter = (config?: CCFConfig) => {
    *       401:
    *         description: Unauthorized
    */
-  router.get('/recommendations', cloudAccessTokenValidator, RecommendationsApiMiddleware)
+  router.get(
+    '/recommendations',
+    cloudAccessTokenValidator,
+    RecommendationsApiMiddleware,
+  )
 
   /**
    * @openapi

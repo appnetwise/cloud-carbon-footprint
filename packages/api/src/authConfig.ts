@@ -1,6 +1,3 @@
-const msal = require('@azure/msal-node')
-const fs = require('fs')
-
 export const REDIRECT_URI = process.env.MSAL_REDIRECT_URI
 export const REDIRECT_CONNECT_URI = process.env.MSAL_REDIRECT_CONNECT_URI
 export const POST_LOGIN_REDIRECT_URI = process.env.MSAL_POST_LOGIN_REDIRECT_URI

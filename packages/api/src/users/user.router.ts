@@ -2,7 +2,7 @@
  * Required External Modules and Interfaces
  */
 
-import express, { Request, Response } from 'express'
+import express from 'express'
 import { authSession } from '../utils/auth'
 import { userController } from './user.controller'
 
