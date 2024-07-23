@@ -24,10 +24,11 @@ import {
   SESSION_COLLECTION_NAME,
 } from './authConfig'
 import session from 'express-session'
+import csrf from 'lusca'
+import connectMongoDBSession from 'connect-mongodb-session'
 
 const port = process.env.PORT || 4000
 
-const csrf = require('lusca').csrf
 const httpApp = express()
 httpApp.use(helmet())
 httpApp.use(express.json())
@@ -36,7 +37,7 @@ httpApp.use(express.urlencoded({ extended: false }))
 // httpApp.use(express.static(path.join(__dirname, 'client/build')));
 
 const serverLogger = new Logger('Server')
-const MongoDBStore = require('connect-mongodb-session')(session)
+const MongoDBStore = connectMongoDBSession(session)
 const mongoOptions = {
   uri: process.env.MONGODB_URI,
   databaseName: process.env.MONGODB_DATABASE,
