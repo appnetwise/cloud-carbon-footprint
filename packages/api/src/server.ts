@@ -48,7 +48,7 @@ const mongoStore = new MongoDBStore(mongoOptions)
 mongoStore.on('error', function (error) {
   serverLogger.error(`error connecting to mongo store ${mongoOptions}`, error)
 })
-
+const isProd = process.env.NODE_ENV === 'production'
 const sessionConfig = {
   name: SESSION_COOKIE_NAME,
   secret: process.env.SESSION_COOKIE_SECRET, // replace with your own secret
@@ -56,9 +56,9 @@ const sessionConfig = {
   saveUninitialized: false,
   rolling: true,
   cookie: {
-    sameSite: 'Strict',
+    sameSite: isProd ? 'none' : 'Strict',
     httpOnly: true,
-    secure: false, // set this to true on production
+    secure: isProd, // set this to true on production
     maxAge: 30 * 60 * 1000, // Session expires after 30 minutes of inactivity
   },
   store: mongoStore,
@@ -66,8 +66,6 @@ const sessionConfig = {
 
 if (process.env.NODE_ENV === 'production') {
   httpApp.set('trust proxy', 1) // trust first proxy e.g. App Service
-  sessionConfig.cookie.secure = true // serve secure cookies on production
-  sessionConfig.cookie.sameSite = 'none' // serve secure cookies on production  
 }
 
 httpApp.use(session(sessionConfig))
