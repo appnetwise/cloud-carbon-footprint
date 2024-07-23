@@ -75,7 +75,7 @@ export default class AzureCredentialsProvider {
     const clientId = configLoader().AZURE.authentication.clientId
     const clientSecret = configLoader().AZURE.authentication.clientSecret
     const certificatePath = config.AZURE_AUTH_CERT_PATH
-    const authMode = accessToken ? "ACCESS_TOKEN": config.AZURE_AUTH_MODE;
+    const authMode = accessToken ? 'ACCESS_TOKEN' : config.AZURE_AUTH_MODE
     switch (authMode) {
       case 'GCP':
         const clientIdFromGoogle = await this.getGoogleSecret(clientId)
@@ -100,9 +100,12 @@ export default class AzureCredentialsProvider {
       case 'MANAGED_IDENTITY':
         return new DefaultAzureCredential()
       case 'ACCESS_TOKEN':
-          return {
-            getToken: async () => ({ token: accessToken, expiresOnTimestamp: Date.now() + 60 * 60 * 1000 })
-          };
+        return {
+          getToken: async () => ({
+            token: accessToken,
+            expiresOnTimestamp: Date.now() + 60 * 60 * 1000,
+          }),
+        }
       default:
         return new ClientSecretCredential(tenantId, clientId, clientSecret)
     }

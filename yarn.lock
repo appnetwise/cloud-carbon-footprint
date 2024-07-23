@@ -2503,7 +2503,7 @@ __metadata:
   resolution: "@cloud-carbon-footprint/api@workspace:packages/api"
   dependencies:
     "@azure/msal-node": ^2.7.0
-    "@cloud-carbon-footprint/app": ^1.8.2
+    "@cloud-carbon-footprint/app": ^1.8.3
     "@cloud-carbon-footprint/common": ^1.15.0
     "@microsoft/microsoft-graph-client": ^3.0.7
     "@types/cors": ^2.8.12
@@ -2553,7 +2553,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@cloud-carbon-footprint/app@^1.8.2, @cloud-carbon-footprint/app@workspace:packages/app":
+"@cloud-carbon-footprint/app@^1.8.3, @cloud-carbon-footprint/app@workspace:packages/app":
   version: 0.0.0-use.local
   resolution: "@cloud-carbon-footprint/app@workspace:packages/app"
   dependencies:

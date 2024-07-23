@@ -115,7 +115,7 @@ export default class App {
     if (AZURE?.INCLUDE_ESTIMATES && AZURE?.USE_BILLING_DATA) {
       appLogger.info('Starting Azure Estimations')
       const azureAccount = new AzureAccount()
-      if(tenantId) {
+      if (tenantId) {
         await azureAccount.initializeAccountForTenant(tenantId, accessToken)
       } else {
         await azureAccount.initializeAccount()
@@ -241,8 +241,11 @@ export default class App {
     const AzureRecommendations: RecommendationResult[][] = []
     if (AZURE?.USE_BILLING_DATA) {
       const azureAccount = new AzureAccount()
-      if(tenantId) {
-        await azureAccount.initializeAccountForTenant(tenantId, request.accessToken)
+      if (tenantId) {
+        await azureAccount.initializeAccountForTenant(
+          tenantId,
+          request.accessToken,
+        )
       } else {
         await azureAccount.initializeAccount()
       }

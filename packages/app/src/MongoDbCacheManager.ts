@@ -103,7 +103,9 @@ export default class MongoDbCacheManager extends CacheManager {
     try {
       // Specify a database to query
 
-      const collectionName = request.tenantId ? `${request.tenantId}-estimates-by-${grouping}` : `estimates-by-${grouping}`
+      const collectionName = request.tenantId
+        ? `${request.tenantId}-estimates-by-${grouping}`
+        : `estimates-by-${grouping}`
       const database = MongoDbCacheManager.mongoClient.db(this.mongoDbName)
 
       const estimates = await this.loadEstimates(
@@ -127,7 +129,9 @@ export default class MongoDbCacheManager extends CacheManager {
     tenantId?: string,
   ): Promise<void> {
     try {
-      const collectionName = tenantId ? `${tenantId}-estimates-by-${grouping}` : `estimates-by-${grouping}`
+      const collectionName = tenantId
+        ? `${tenantId}-estimates-by-${grouping}`
+        : `estimates-by-${grouping}`
       const database = MongoDbCacheManager.mongoClient.db(this.mongoDbName)
       const collection = database.collection(collectionName)
 
@@ -163,7 +167,9 @@ export default class MongoDbCacheManager extends CacheManager {
     }
 
     try {
-      const collectionName = request.tenantId ? `${request.tenantId}-estimates-by-${grouping}` : `estimates-by-${grouping}`
+      const collectionName = request.tenantId
+        ? `${request.tenantId}-estimates-by-${grouping}`
+        : `estimates-by-${grouping}`
       const database = MongoDbCacheManager.mongoClient.db(this.mongoDbName)
 
       const aggResult: any = await new Promise((resolve, reject) => {
