@@ -45,10 +45,10 @@
     "@cloud-carbon-footprint/core": "^0.17.3",
     "@google-cloud/bigquery": "^5.9.3",
     "@google-cloud/compute": "^3.9.0",
-    "@google-cloud/monitoring": "^2.3.5",
-    "@google-cloud/recommender": "^4.2.5",
-    "@google-cloud/resource-manager": "^3.0.0",
-    "google-gax": "^2.29.0",
+    "@google-cloud/monitoring": "^3.0.0",
+    "@google-cloud/recommender": "^5.0.0",
+    "@google-cloud/resource-manager": "^4.0.0",
+    "google-gax": "^3.1.4",
     "moment": "^2.29.1"
   },
   "devDependencies": {
