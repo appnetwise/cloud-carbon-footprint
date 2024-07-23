@@ -6,12 +6,12 @@ on:
     paths-ignore:
       - 'microsite/**'
       - '.github/workflows/**'
-  pull_request:
-    branches: [main]
-    types: [closed]
-    paths-ignore:
-      - 'microsite/**'
-      - '.github/workflows/**'
+  # pull_request:
+  #   branches: [main]
+  #   types: [closed]
+  #   paths-ignore:
+  #     - 'microsite/**'
+  #     - '.github/workflows/**'
   workflow_dispatch:
     inputs:
       REGISTRY_URL:
