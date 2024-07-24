@@ -66,33 +66,41 @@ export default class MongoDbCacheManager extends CacheManager {
         ? 'isoWeek'
         : (request.groupBy as moment.unitOfTime.StartOf)
     const startDate = new Date(
-      moment.utc(request.startDate).startOf(unitOfTime) as unknown as Date,
+      moment.utc(request.startDate).startOf(unitOfTime).toDate(),
     )
     const endDate = new Date(request.endDate)
 
     const filters = this.createAggregationFilters(request, startDate, endDate)
     const aggregationStages = this.createAggregationStages(request, filters)
 
-    return new Promise(function (resolve, reject) {
-      db.listCollections({ name: collectionName }).next(
-        async (err: Error, collectionInfo: any) => {
-          if (err) reject(err)
-          if (collectionInfo) {
-            const estimates = db.collection(collectionName)
+    try {
+      const collections = await db
+        .listCollections({ name: collectionName })
+        .toArray()
 
-            resolve(
-              estimates
-                .aggregate(aggregationStages, { allowDiskUse: true })
-                .toArray() as EstimationResult[],
-            )
-          } else {
-            // The collection does not exist - so we can create it
-            db.createCollection(collectionName)
-            resolve([])
-          }
-        },
-      )
-    })
+      if (collections.length > 0) {
+        const estimates = db.collection(collectionName)
+
+        // Set a reasonable timeout for the aggregation
+        const maxTimeMS = 30000 // 30 seconds, adjust as needed
+
+        const result = await estimates
+          .aggregate(aggregationStages, {
+            allowDiskUse: true,
+            maxTimeMS: maxTimeMS,
+          })
+          .toArray()
+
+        return result as EstimationResult[]
+      } else {
+        // The collection does not exist - so we create it
+        await db.createCollection(collectionName)
+        return []
+      }
+    } catch (error) {
+      console.error('Error in loadEstimates:', error)
+      throw error
+    }
   }
 
   async getEstimates(
@@ -175,19 +183,19 @@ export default class MongoDbCacheManager extends CacheManager {
       const aggResult: any = await new Promise((resolve, reject) => {
         database
           .listCollections({ name: collectionName })
-          .next(async (err: Error, collectionInfo: any) => {
-            if (err) reject(err)
-
+          .next()
+          .then(async (collectionInfo: any) => {
             if (!collectionInfo) {
               resolve([{ dates: [] }])
+              return
             }
 
             const estimates = database.collection(collectionName)
-            await estimates.countDocuments((err, count) => {
-              if (!err && count === 0) {
-                resolve([{ dates: [] }])
-              }
-            })
+            const count = await estimates.countDocuments()
+            if (count === 0) {
+              resolve([{ dates: [] }])
+              return
+            }
 
             let addToSet: unknown = {
               $dateToString: {
@@ -208,24 +216,25 @@ export default class MongoDbCacheManager extends CacheManager {
               }
             }
 
-            resolve(
-              await estimates
-                .aggregate(
-                  [
-                    {
-                      $group: {
-                        _id: null,
-                        dates: {
-                          $addToSet: addToSet,
-                        },
+            const result = await estimates
+              .aggregate(
+                [
+                  {
+                    $group: {
+                      _id: null,
+                      dates: {
+                        $addToSet: addToSet,
                       },
                     },
-                  ],
-                  { allowDiskUse: true },
-                )
-                .toArray(),
-            )
+                  },
+                ],
+                { allowDiskUse: true },
+              )
+              .toArray()
+
+            resolve(result)
           })
+          .catch(reject)
       })
 
       const cachedDates = aggResult[0].dates
@@ -246,7 +255,6 @@ export default class MongoDbCacheManager extends CacheManager {
       return []
     }
   }
-
   private createAggregationFilters(
     request: EstimationRequest,
     startDate: Date,

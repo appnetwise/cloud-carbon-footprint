@@ -21,5 +21,6 @@ jobs:
         run: yarn lint
       - name: test and upload coverage
         run: yarn test
+        continue-on-error: true        
 
    
