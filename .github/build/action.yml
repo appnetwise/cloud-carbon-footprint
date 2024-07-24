@@ -38,8 +38,6 @@ runs:
         shell: bash
         if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
-          echo "Setting NPM Token"
-          sed -i "s,%NPM_AUTH_TOKEN%,$NPM_AUTH_TOKEN,g" .yarnrc.yml
           yarn install
         env:
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
