@@ -1,17 +1,17 @@
 version: 2
 registries:
-  azure-artifact:
+  npm-devops:
     type: npm-registry
     url: https://pkgs.dev.azure.com/Appnetwise/anw_application/_packaging/Cloud-Carbon-Footprint/npm/registry/
-    username: "Appnetwise" 
-    token: ${{ secrets.NPM_TOKEN }}
+    username: Appnetwise
+    password: ${{ secrets.NPM_TOKEN }}
 updates:
-  - package-ecosystem: npm
-    directory: '/'
-    schedule:
-      interval: daily
+  - package-ecosystem: "npm"
+    directory: "/"
     registries:
-      - azure-artifact
+      - npm-devops
+    schedule:
+      interval: "daily"
     open-pull-requests-limit: 10
     target-branch: "dependabot-fixes"
     labels:
