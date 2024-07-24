@@ -144,7 +144,7 @@ jobs:
         cat .yarnrc.yml
         cp .yarnrc.yml packages/api/.yarnrc.yml
         cp -r .yarn packages/api/.yarn
-        docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-client:$client packages/client
+        docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-client:$client --build-arg NPM_PAT_TOKEN=$NPM_PAT_TOKEN packages/client
         docker build -t ${{ steps.acr.outputs.acr_url}}/ccf-api:$api packages/api
         ccf_client="$(docker image ls --format {{.Repository}}:{{.Tag}} | grep ccf-client)"
         ccf_api="$(docker image ls --format {{.Repository}}:{{.Tag}} | grep ccf-api)"
@@ -156,6 +156,7 @@ jobs:
         cp *.tar.gz /tmp/_images
       env:
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        NPM_PAT_TOKEN: ${{ secrets.NPM_PAT_TOKEN }}
     - uses: actions/upload-artifact@v4
       name: Upload docker images
       with:
