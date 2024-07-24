@@ -1,6 +1,6 @@
 {
   "name": "@cloud-carbon-footprint/gcp",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "license": "Apache-2.0",
   "description": "The core logic to get cloud usage data and estimate energy and carbon emissions from Google Cloud Platform.",
   "main": "src/index.ts",
