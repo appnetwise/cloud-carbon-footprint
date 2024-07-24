@@ -74,8 +74,8 @@
   },
   "dependencies": {
     "@azure/msal-node": "^2.9.2",
-    "@cloud-carbon-footprint/app": "^1.8.3",
-    "@cloud-carbon-footprint/common": "^1.15.0",
+    "@cloud-carbon-footprint/app": "^1.8.4",
+    "@cloud-carbon-footprint/common": "^1.15.1",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "@types/express": "^4.17.12",
     "axios": "^1.6.8",
