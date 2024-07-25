@@ -5,6 +5,9 @@ metadata:
   labels:
     {{- include "cloud-carbon-footprint.labels" . | nindent 4 }}
     app.kubernetes.io/component: client
+  {{- with .Values.client.deployment.annotations }}
+  annotations: {{ toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.client.deployment.replicaCount }}
   selector:
@@ -13,8 +16,9 @@ spec:
       app.kubernetes.io/component: client
   template:
     metadata:
-      annotations:
-        checksum/config: {{ include (print .Template.BasePath "/configmap-api.yaml") . | sha256sum }}
+      {{- with .Values.client.pods.podAnnotations }}
+      annotations:  {{ toYaml . | nindent 8 }}
+      {{- end }}
       labels:
         {{- include "cloud-carbon-footprint.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: client
@@ -32,13 +36,15 @@ spec:
             - name: {{ .Values.client.service.port.name  }}
               containerPort: {{ .Values.client.service.port.containerPort }}
               protocol: {{ .Values.client.service.port.protocol  }}
-          envFrom:
-            - configMapRef:
-                name: {{ include "cloud-carbon-footprint.fullname" . }}-client-config
+          {{- with .Values.client.pods.envFrom }}
+          envFrom: {{ toYaml . | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.client.deployment.resources | nindent 12 }}
           securityContext:
             {{- toYaml .Values.client.deployment.securityContext | nindent 12 }}
+          
+      {{- if .Values.client.configmap.nginxconfname }}
           volumeMounts:
             - name: config-volume
               mountPath:  /etc/nginx/nginx.conf
@@ -46,8 +52,10 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: {{ include "cloud-carbon-footprint.fullname" . }}-client
+            name: {{ .Values.client.configmap.nginxconfname }}
             defaultMode: 0755
+      {{- end }}
+
       {{- with .Values.api.deployment.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
