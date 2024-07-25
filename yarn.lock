@@ -2480,13 +2480,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cloud-carbon-footprint/ali@^0.1.3, @cloud-carbon-footprint/ali@workspace:packages/ali":
+"@cloud-carbon-footprint/ali@^0.1.5, @cloud-carbon-footprint/ali@workspace:packages/ali":
   version: 0.0.0-use.local
   resolution: "@cloud-carbon-footprint/ali@workspace:packages/ali"
   dependencies:
     "@alicloud/bssopenapi20171214": ^1.0.14
-    "@cloud-carbon-footprint/common": ^1.13.1
-    "@cloud-carbon-footprint/core": ^0.17.3
+    "@cloud-carbon-footprint/common": ^1.15.1
+    "@cloud-carbon-footprint/core": ^0.17.4
     "@google-cloud/iam-credentials": ^3.3.0
     "@types/jest": ^27.4.0
     "@types/jest-when": ^3.5.0
@@ -2570,16 +2570,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@cloud-carbon-footprint/app@^1.8.3, @cloud-carbon-footprint/app@^1.8.4, @cloud-carbon-footprint/app@workspace:packages/app":
+"@cloud-carbon-footprint/app@^1.8.4, @cloud-carbon-footprint/app@workspace:packages/app":
   version: 0.0.0-use.local
   resolution: "@cloud-carbon-footprint/app@workspace:packages/app"
   dependencies:
-    "@cloud-carbon-footprint/ali": ^0.1.3
-    "@cloud-carbon-footprint/aws": ^0.16.0
-    "@cloud-carbon-footprint/azure": ^1.7.0
-    "@cloud-carbon-footprint/common": ^1.15.0
-    "@cloud-carbon-footprint/gcp": ^0.15.0
-    "@cloud-carbon-footprint/on-premise": ^0.1.1
+    "@cloud-carbon-footprint/ali": ^0.1.5
+    "@cloud-carbon-footprint/aws": ^0.16.1
+    "@cloud-carbon-footprint/azure": ^1.8.4
+    "@cloud-carbon-footprint/common": ^1.15.1
+    "@cloud-carbon-footprint/gcp": ^0.15.1
+    "@cloud-carbon-footprint/on-premise": ^0.1.2
     "@google-cloud/storage": ^5.16.1
     "@sovpro/delimited-stream": ^1.1.0
     "@types/jest": ^27.4.0
@@ -2604,12 +2604,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@cloud-carbon-footprint/aws@^0.16.0, @cloud-carbon-footprint/aws@workspace:packages/aws":
+"@cloud-carbon-footprint/aws@^0.16.1, @cloud-carbon-footprint/aws@workspace:packages/aws":
   version: 0.0.0-use.local
   resolution: "@cloud-carbon-footprint/aws@workspace:packages/aws"
   dependencies:
-    "@cloud-carbon-footprint/common": ^1.15.0
-    "@cloud-carbon-footprint/core": ^0.17.3
+    "@cloud-carbon-footprint/common": ^1.15.1
+    "@cloud-carbon-footprint/core": ^0.17.4
     "@google-cloud/iam-credentials": ^3.3.0
     "@types/jest": ^27.4.0
     "@types/jest-when": ^3.5.0
@@ -2640,7 +2640,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@cloud-carbon-footprint/azure@^1.7.0, @cloud-carbon-footprint/azure@workspace:packages/azure":
+"@cloud-carbon-footprint/azure@^1.8.4, @cloud-carbon-footprint/azure@workspace:packages/azure":
   version: 0.0.0-use.local
   resolution: "@cloud-carbon-footprint/azure@workspace:packages/azure"
   dependencies:
@@ -2650,8 +2650,8 @@ __metadata:
     "@azure/identity": ^4.2.1
     "@azure/ms-rest-js": ^2.7.0
     "@azure/ms-rest-nodeauth": ^3.1.1
-    "@cloud-carbon-footprint/common": ^1.14.0
-    "@cloud-carbon-footprint/core": ^0.17.3
+    "@cloud-carbon-footprint/common": ^1.15.1
+    "@cloud-carbon-footprint/core": ^0.17.4
     "@google-cloud/secret-manager": ^5.6.0
     "@types/jest": ^27.4.0
     "@types/jest-when": ^3.5.0
@@ -2684,8 +2684,8 @@ __metadata:
   dependencies:
     "@azure/arm-consumption": ^9.2.0
     "@azure/arm-resources-subscriptions": ^2.0.2
-    "@cloud-carbon-footprint/app": ^1.8.3
-    "@cloud-carbon-footprint/common": ^1.15.0
+    "@cloud-carbon-footprint/app": ^1.8.4
+    "@cloud-carbon-footprint/common": ^1.15.1
     "@types/cli-table": ^0.3.0
     "@types/jest": ^27.4.0
     "@types/jest-when": ^3.5.0
@@ -2789,11 +2789,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@cloud-carbon-footprint/common@^1.10.0, @cloud-carbon-footprint/common@^1.13.1, @cloud-carbon-footprint/common@^1.14.0, @cloud-carbon-footprint/common@^1.15.0, @cloud-carbon-footprint/common@^1.15.1, @cloud-carbon-footprint/common@^1.8.0, @cloud-carbon-footprint/common@workspace:packages/common":
+"@cloud-carbon-footprint/common@^1.15.1, @cloud-carbon-footprint/common@workspace:packages/common":
   version: 0.0.0-use.local
   resolution: "@cloud-carbon-footprint/common@workspace:packages/common"
   dependencies:
-    "@google-cloud/logging-winston": ^4.1.1
+    "@google-cloud/logging-winston": ^5.3.0
     "@types/jest": ^27.4.0
     "@types/node": ^17.0.8
     "@typescript-eslint/eslint-plugin": ^5.9.0
@@ -2817,11 +2817,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@cloud-carbon-footprint/core@^0.17.0, @cloud-carbon-footprint/core@^0.17.3, @cloud-carbon-footprint/core@workspace:packages/core":
+"@cloud-carbon-footprint/core@^0.17.4, @cloud-carbon-footprint/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@cloud-carbon-footprint/core@workspace:packages/core"
   dependencies:
-    "@cloud-carbon-footprint/common": ^1.10.0
+    "@cloud-carbon-footprint/common": ^1.15.1
     "@types/jest": ^27.4.0
     "@types/jest-when": ^3.5.0
     "@types/node": ^17.0.8
@@ -2880,14 +2880,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@cloud-carbon-footprint/gcp@^0.15.0, @cloud-carbon-footprint/gcp@workspace:packages/gcp":
+"@cloud-carbon-footprint/gcp@^0.15.1, @cloud-carbon-footprint/gcp@workspace:packages/gcp":
   version: 0.0.0-use.local
   resolution: "@cloud-carbon-footprint/gcp@workspace:packages/gcp"
   dependencies:
-    "@cloud-carbon-footprint/common": ^1.15.0
-    "@cloud-carbon-footprint/core": ^0.17.3
+    "@cloud-carbon-footprint/common": ^1.15.1
+    "@cloud-carbon-footprint/core": ^0.17.4
     "@google-cloud/bigquery": ^5.9.3
-    "@google-cloud/compute": ^3.9.0
+    "@google-cloud/compute": ^4.7.0
     "@google-cloud/monitoring": ^4.0.0
     "@google-cloud/recommender": ^6.0.0
     "@google-cloud/resource-manager": ^5.3.0
@@ -2936,12 +2936,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@cloud-carbon-footprint/on-premise@^0.1.1, @cloud-carbon-footprint/on-premise@workspace:packages/on-premise":
+"@cloud-carbon-footprint/on-premise@^0.1.2, @cloud-carbon-footprint/on-premise@workspace:packages/on-premise":
   version: 0.0.0-use.local
   resolution: "@cloud-carbon-footprint/on-premise@workspace:packages/on-premise"
   dependencies:
-    "@cloud-carbon-footprint/common": ^1.8.0
-    "@cloud-carbon-footprint/core": ^0.17.0
+    "@cloud-carbon-footprint/common": ^1.15.1
+    "@cloud-carbon-footprint/core": ^0.17.4
     "@types/jest": ^27.4.0
     "@types/jest-when": ^3.5.0
     "@types/node": ^17.0.8
@@ -3452,7 +3452,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@google-cloud/common@npm:^3.4.1, @google-cloud/common@npm:^3.9.0":
+"@google-cloud/common@npm:^3.9.0":
   version: 3.10.0
   resolution: "@google-cloud/common@npm:3.10.0"
   dependencies:
@@ -3469,12 +3469,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@google-cloud/compute@npm:^3.9.0":
-  version: 3.9.0
-  resolution: "@google-cloud/compute@npm:3.9.0"
+"@google-cloud/common@npm:^4.0.0":
+  version: 4.0.3
+  resolution: "@google-cloud/common@npm:4.0.3"
   dependencies:
-    google-gax: "npm:^3.5.2"
-  checksum: 3607c400a1e7cd4fcd5219ed7b11e15654be83a4d7138f4bc1139eff1d6cc61986aa4dd9bd4920f673104f9a0ba25e9085373a9953a1a225dca61e69152f9c8d
+    "@google-cloud/projectify": ^3.0.0
+    "@google-cloud/promisify": ^3.0.0
+    arrify: ^2.0.1
+    duplexify: ^4.1.1
+    ent: ^2.2.0
+    extend: ^3.0.2
+    google-auth-library: ^8.0.2
+    retry-request: ^5.0.0
+    teeny-request: ^8.0.0
+  checksum: 2660da8da2295f2792a7eaa08579d3c76274b58c5d5cd652f7e242f8e593948f753925790340029db383144780b35e7ae09c3088ddbffe3dcfab950e5850de89
+  languageName: node
+  linkType: hard
+
+"@google-cloud/compute@npm:^4.7.0":
+  version: 4.7.0
+  resolution: "@google-cloud/compute@npm:4.7.0"
+  dependencies:
+    google-gax: ^4.0.3
+  checksum: 82356c8fb10e1521e4d68af8cb3017ed61298b75c5d4ebfa7d4b115d6fbf27b3d24c5e4ff5276f637416cba01a3d535f4cba41332b794147a676f944fb25e143
   languageName: node
   linkType: hard
 
@@ -3487,40 +3504,40 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@google-cloud/logging-winston@npm:^4.1.1":
-  version: 4.2.4
-  resolution: "@google-cloud/logging-winston@npm:4.2.4"
+"@google-cloud/logging-winston@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@google-cloud/logging-winston@npm:5.3.0"
   dependencies:
-    "@google-cloud/logging": "npm:^9.6.9"
-    google-auth-library: "npm:^7.0.0"
-    lodash.mapvalues: "npm:^4.6.0"
-    winston-transport: "npm:^4.3.0"
+    "@google-cloud/logging": ^10.2.2
+    google-auth-library: ^8.0.2
+    lodash.mapvalues: ^4.6.0
+    winston-transport: ^4.3.0
   peerDependencies:
     winston: ">=3.2.1"
-  checksum: ef23554ac2816d2f87dbc43796910e6c412d8242ecae1ab8cffb9124399f05f66a18a363c68b78e160eb74ee80aaf784efe77eda0b8cae75f03a670b7b32d77b
+  checksum: c108a2097c4ddb49c44105ff4458520b0ba10fb56a3905629277216a89edfe5eec43ae2dcee45b69ebaa4c4b94d57f22ebfc0037b68cb22e043347a3fc87e9d4
   languageName: node
   linkType: hard
 
-"@google-cloud/logging@npm:^9.6.9":
-  version: 9.9.0
-  resolution: "@google-cloud/logging@npm:9.9.0"
+"@google-cloud/logging@npm:^10.2.2":
+  version: 10.5.0
+  resolution: "@google-cloud/logging@npm:10.5.0"
   dependencies:
-    "@google-cloud/common": "npm:^3.4.1"
-    "@google-cloud/paginator": "npm:^3.0.0"
-    "@google-cloud/projectify": "npm:^2.0.0"
-    "@google-cloud/promisify": "npm:^2.0.0"
-    arrify: "npm:^2.0.1"
-    dot-prop: "npm:^6.0.0"
-    eventid: "npm:^2.0.0"
-    extend: "npm:^3.0.2"
-    gcp-metadata: "npm:^4.0.0"
-    google-auth-library: "npm:^7.0.0"
-    google-gax: "npm:^2.24.1"
-    on-finished: "npm:^2.3.0"
-    pumpify: "npm:^2.0.1"
-    stream-events: "npm:^1.0.5"
-    uuid: "npm:^8.0.0"
-  checksum: 50291efccea1bcf571ac50f014278533dfcdf1651636e0521fe1df76ade60a926b7c86ab141f611010211c6b8b03a7931fa8b05120af586d7dd04e7804619f6a
+    "@google-cloud/common": ^4.0.0
+    "@google-cloud/paginator": ^4.0.0
+    "@google-cloud/projectify": ^3.0.0
+    "@google-cloud/promisify": ^3.0.0
+    arrify: ^2.0.1
+    dot-prop: ^6.0.0
+    eventid: ^2.0.0
+    extend: ^3.0.2
+    gcp-metadata: ^4.0.0
+    google-auth-library: ^8.0.2
+    google-gax: ^3.5.8
+    on-finished: ^2.3.0
+    pumpify: ^2.0.1
+    stream-events: ^1.0.5
+    uuid: ^9.0.0
+  checksum: 8847fbe7acffa599137cc470d453e9b1fada8875e9ceefb03b4523b0aeba8491e74690390f6bbd672d402b7bf0de638d34c92dfcab8fd7b9e0a89421b8887770
   languageName: node
   linkType: hard
 
@@ -3543,6 +3560,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@google-cloud/paginator@npm:^4.0.0":
+  version: 4.0.1
+  resolution: "@google-cloud/paginator@npm:4.0.1"
+  dependencies:
+    arrify: ^2.0.0
+    extend: ^3.0.2
+  checksum: 40ecfb59512ddbb76ca377cb96b61673d8d210397723dcaac41d8a553264bf0c09d3754db25dd3c476f8d85941b5017cc158b4e81c8c6a054aea020c32a1e4ba
+  languageName: node
+  linkType: hard
+
 "@google-cloud/projectify@npm:^2.0.0":
   version: 2.1.1
   resolution: "@google-cloud/projectify@npm:2.1.1"
@@ -3550,10 +3577,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@google-cloud/projectify@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@google-cloud/projectify@npm:3.0.0"
+  checksum: 4fa7ad689422b0b9c152fb00260e54e39d81678f9c51518bdb34bc57ee00604524fcdd5837fa97eb2f8ff4811afee3f345b1b0993bc4a2fa1b803bdd6554839a
+  languageName: node
+  linkType: hard
+
 "@google-cloud/promisify@npm:^2.0.0":
   version: 2.0.4
   resolution: "@google-cloud/promisify@npm:2.0.4"
   checksum: 51a9fb6c43e5342d995435b3660afe8d7a498ed65e6f5fef6492cc2ac2b494c1ec89e8f220b8a8e23f1c90334b7db5169c292f0a317e971d57366426a2420247
+  languageName: node
+  linkType: hard
+
+"@google-cloud/promisify@npm:^3.0.0":
+  version: 3.0.1
+  resolution: "@google-cloud/promisify@npm:3.0.1"
+  checksum: 44b4de760425d6ea328f6208c46219cfcc44383b4015c67a6b18b55b8fee5b754a11f80ed481a7d779bc471950b2b856dce51e36e8004b0d2f73a93e50d756ce
   languageName: node
   linkType: hard
 
@@ -3625,7 +3666,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@grpc/proto-loader@npm:^0.6.12, @grpc/proto-loader@npm:^0.6.4":
+"@grpc/proto-loader@npm:^0.6.4":
   version: 0.6.13
   resolution: "@grpc/proto-loader@npm:0.6.13"
   dependencies:
@@ -13491,52 +13532,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"google-gax@npm:^2.24.1":
-  version: 2.30.5
-  resolution: "google-gax@npm:2.30.5"
+"google-gax@npm:^3.5.8":
+  version: 3.6.1
+  resolution: "google-gax@npm:3.6.1"
   dependencies:
-    "@grpc/grpc-js": "npm:~1.6.0"
-    "@grpc/proto-loader": "npm:^0.6.12"
-    "@types/long": "npm:^4.0.0"
-    abort-controller: "npm:^3.0.0"
-    duplexify: "npm:^4.0.0"
-    fast-text-encoding: "npm:^1.0.3"
-    google-auth-library: "npm:^7.14.0"
-    is-stream-ended: "npm:^0.1.4"
-    node-fetch: "npm:^2.6.1"
-    object-hash: "npm:^3.0.0"
-    proto3-json-serializer: "npm:^0.1.8"
-    protobufjs: "npm:6.11.3"
-    retry-request: "npm:^4.0.0"
-  bin:
-    compileProtos: build/tools/compileProtos.js
-  checksum: e9c931a5b77fd5e4f9fcd6aaf6e265fcba499738e18bf5fd482b7e3a2e9f33e4a020eeb079d7c09e960a9a42eab982b6fc1142709a339b6cfe8319011c365238
-  languageName: node
-  linkType: hard
-
-"google-gax@npm:^3.5.2":
-  version: 3.6.0
-  resolution: "google-gax@npm:3.6.0"
-  dependencies:
-    "@grpc/grpc-js": "npm:~1.8.0"
-    "@grpc/proto-loader": "npm:^0.7.0"
-    "@types/long": "npm:^4.0.0"
-    "@types/rimraf": "npm:^3.0.2"
-    abort-controller: "npm:^3.0.0"
-    duplexify: "npm:^4.0.0"
-    fast-text-encoding: "npm:^1.0.3"
-    google-auth-library: "npm:^8.0.2"
-    is-stream-ended: "npm:^0.1.4"
-    node-fetch: "npm:^2.6.1"
-    object-hash: "npm:^3.0.0"
-    proto3-json-serializer: "npm:^1.0.0"
-    protobufjs: "npm:7.2.3"
-    protobufjs-cli: "npm:1.1.1"
-    retry-request: "npm:^5.0.0"
+    "@grpc/grpc-js": ~1.8.0
+    "@grpc/proto-loader": ^0.7.0
+    "@types/long": ^4.0.0
+    "@types/rimraf": ^3.0.2
+    abort-controller: ^3.0.0
+    duplexify: ^4.0.0
+    fast-text-encoding: ^1.0.3
+    google-auth-library: ^8.0.2
+    is-stream-ended: ^0.1.4
+    node-fetch: ^2.6.1
+    object-hash: ^3.0.0
+    proto3-json-serializer: ^1.0.0
+    protobufjs: 7.2.4
+    protobufjs-cli: 1.1.1
+    retry-request: ^5.0.0
   bin:
     compileProtos: build/tools/compileProtos.js
     minifyProtoJson: build/tools/minify.js
-  checksum: 4c7b1b5a278ffda3eaa92e7f25a9e0ea2d0a76aca704aca4baee4fe9d109916e97e83062ad751006ed93ac675a7fd74028061204fa9ed92833a853e6657a71a1
+  checksum: 16e5fb211d75c6a4cb4d2e62adba7bbf41d160feba74fe39435a70fc31ef8ebc740af4527a2897abab39a1806d131792b2a761da432ae1b916198c9c43aab36e
   languageName: node
   linkType: hard
 
@@ -20361,15 +20379,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"proto3-json-serializer@npm:^0.1.8":
-  version: 0.1.9
-  resolution: "proto3-json-serializer@npm:0.1.9"
-  dependencies:
-    protobufjs: "npm:^6.11.2"
-  checksum: 1693bcfd23d2183f48913f6aa6dbb3b6355f383283e73c4dfe4085c7fc9839eb7656d214dd047d704800d09e607de1ef8c0e87636264eb4c4a71a380532fc1f4
-  languageName: node
-  linkType: hard
-
 "proto3-json-serializer@npm:^1.0.0":
   version: 1.1.0
   resolution: "proto3-json-serializer@npm:1.1.0"
@@ -20411,7 +20420,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"protobufjs@npm:6.11.3, protobufjs@npm:^6.11.2, protobufjs@npm:^6.11.3":
+"protobufjs@npm:7.2.4":
+  version: 7.2.4
+  resolution: "protobufjs@npm:7.2.4"
+  dependencies:
+    "@protobufjs/aspromise": ^1.1.2
+    "@protobufjs/base64": ^1.1.2
+    "@protobufjs/codegen": ^2.0.4
+    "@protobufjs/eventemitter": ^1.1.0
+    "@protobufjs/fetch": ^1.1.0
+    "@protobufjs/float": ^1.0.2
+    "@protobufjs/inquire": ^1.1.0
+    "@protobufjs/path": ^1.1.2
+    "@protobufjs/pool": ^1.1.0
+    "@protobufjs/utf8": ^1.1.0
+    "@types/node": ">=13.7.0"
+    long: ^5.0.0
+  checksum: a952cdf2a5e5250c16ae651b570849b6f5b20a5475c3eef63ffb290ad239aa2916adfc1cc676f7fc93c69f48113df268761c0c246f7f023118c85bdd1a170044
+  languageName: node
+  linkType: hard
+
+"protobufjs@npm:^6.11.3":
   version: 6.11.3
   resolution: "protobufjs@npm:6.11.3"
   dependencies:
@@ -20435,7 +20464,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"protobufjs@npm:7.2.3, protobufjs@npm:^7.0.0":
+"protobufjs@npm:^7.0.0":
   version: 7.2.3
   resolution: "protobufjs@npm:7.2.3"
   dependencies:
@@ -21781,7 +21810,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"retry-request@npm:^4.0.0, retry-request@npm:^4.2.2":
+"retry-request@npm:^4.2.2":
   version: 4.2.2
   resolution: "retry-request@npm:4.2.2"
   dependencies:
@@ -23653,6 +23682,19 @@ __metadata:
     stream-events: "npm:^1.0.5"
     uuid: "npm:^8.0.0"
   checksum: 26d096799eac7ef98b2777db277f5d5b2e9739eaaed8f4cd333d3ce7281f1396e172c1fd17404af702d2c372fe104e5f4cc430618c80eae8ac8b4b036e527d88
+  languageName: node
+  linkType: hard
+
+"teeny-request@npm:^8.0.0":
+  version: 8.0.3
+  resolution: "teeny-request@npm:8.0.3"
+  dependencies:
+    http-proxy-agent: ^5.0.0
+    https-proxy-agent: ^5.0.0
+    node-fetch: ^2.6.1
+    stream-events: ^1.0.5
+    uuid: ^9.0.0
+  checksum: 6682a14df3708068db147c91af5f2b2e097e2e53c03dddaef40f6f974297f2da9e6112c615af9fbc84a1685c6846b8a9e485771d1a350aa25e9ff5fcf63dd821
   languageName: node
   linkType: hard
 
