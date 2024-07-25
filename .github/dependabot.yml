@@ -16,14 +16,3 @@ updates:
     target-branch: "dependabot-fixes"
     labels:
       - dependencies
-  - package-ecosystem: "npm"
-    directory: "/microsite"
-    registries:
-      - npm-devops
-    schedule:
-      interval: "daily"
-    ignore:
-      - dependency-name: "*"
-    target-branch: "dependabot-fixes"
-    labels:
-      - dependencies
