@@ -41,8 +41,8 @@
     "lint:fix": "eslint '*/**/*.ts' --quiet --fix"
   },
   "dependencies": {
-    "@cloud-carbon-footprint/common": "^1.15.0",
-    "@cloud-carbon-footprint/core": "^0.17.3",
+    "@cloud-carbon-footprint/common": "^1.15.1",
+    "@cloud-carbon-footprint/core": "^0.17.4",
     "@google-cloud/iam-credentials": "^3.3.0",
     "aws-sdk": "^2.1354.0",
     "aws-sdk-mock": "^5.1.0",

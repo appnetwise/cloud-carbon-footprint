@@ -288,3 +288,4 @@ packages/create-app/ccf-app
 .yarnrc.yml
 
 *.pem
+.snyk
