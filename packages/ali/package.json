@@ -42,8 +42,8 @@
   },
   "dependencies": {
     "@alicloud/bssopenapi20171214": "^1.0.14",
-    "@cloud-carbon-footprint/common": "^1.13.1",
-    "@cloud-carbon-footprint/core": "^0.17.3",
+    "@cloud-carbon-footprint/common": "^1.15.1",
+    "@cloud-carbon-footprint/core": "^0.17.4",
     "@google-cloud/iam-credentials": "^3.3.0",
     "csvtojson": "^2.0.10",
     "moment": "^2.29.1",
