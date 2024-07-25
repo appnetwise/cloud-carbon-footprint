@@ -5,6 +5,9 @@ metadata:
   labels:
     {{- include "cloud-carbon-footprint.labels" . | nindent 4 }}
     app.kubernetes.io/component: api
+  {{- with .Values.api.deployment.annotations }}
+  annotations: {{ toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.api.deployment.replicaCount }}
   selector:
@@ -13,8 +16,9 @@ spec:
       app.kubernetes.io/component: api
   template:
     metadata:
-      annotations:
-        checksum/config: {{ include (print .Template.BasePath "/configmap-api.yaml") . | sha256sum }}
+      {{- with .Values.api.pods.podAnnotations }}
+      annotations: {{ toYaml . | nindent 8 }}
+      {{- end }}
       labels:
         {{- include "cloud-carbon-footprint.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: api
@@ -32,9 +36,9 @@ spec:
             - name: http
               containerPort: 4000
               protocol: TCP
-          envFrom:
-            - configMapRef:
-                name: {{ include "cloud-carbon-footprint.fullname" . }}-api
+          {{- with .Values.api.pods.envFrom }}
+          envFrom: {{ toYaml . | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.api.deployment.resources | nindent 12 }}
           securityContext:
@@ -51,3 +55,4 @@ spec:
       topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      
