@@ -25,6 +25,30 @@ class UserController {
     }
   }
 
+  public async getUserByExternalId(req, res) {
+    try {
+      const externalId: string = req.params.externalId
+      const user: UserEntity = await userService.getUserByExternalId(externalId)
+      return user
+        ? res.status(200).send(user)
+        : res.status(404).send('user not found')
+    } catch (e) {
+      return res.status(500).send(e.message)
+    }
+  }
+
+  public async checkUserExistsByExternalId(req, res) {
+    try {
+      const externalId: string = req.params.externalId
+      const user: UserEntity = await userService.getUserByExternalId(externalId)
+      return user && user.externalId === externalId
+        ? res.status(200).send(true)
+        : res.status(200).send(false)
+    } catch (e) {
+      return res.status(500).send(e.message)
+    }
+  }
+
   public async createUser(req, res) {
     try {
       const user: BaseUser = req.body

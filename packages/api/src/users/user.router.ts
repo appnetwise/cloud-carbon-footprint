@@ -3,7 +3,6 @@
  */
 
 import express from 'express'
-import { authSession } from '../utils/auth'
 import { userController } from './user.controller'
 
 /**
@@ -16,36 +15,7 @@ import { userController } from './user.controller'
  *       bearerFormat: JWT
  */
 export const userRouter = express.Router()
-userRouter.use(authSession)
 // userRouter.use(auth)
-
-/**
- * @openapi
- * paths:
- *  /api/users/:
- *      get:
- *          summary: Returns all users
- *          description: Returns all users
- *          tags: [Users]
- *          security:
- *          - bearerAuth: []
- *          produces:
- *          - application/json
- *      responses:
- *       200:
- *         description: Success
- *         content:
- *           application/json:
- *            schema:
- *              type: object
- *              items:
- *                $ref: '#/components/schemas/UserResponse'
- *       401:
- *         description: Unauthorized
- *       500:
- *        description: Internal Server Error
- */
-userRouter.get('/', userController.getAllUsers)
 
 /**
  * @openapi
@@ -79,6 +49,69 @@ userRouter.get('/', userController.getAllUsers)
  *        description: Internal Server Error
  */
 userRouter.get('/:id', userController.getUserById)
+
+/**
+ * @openapi
+ * paths:
+ *  /api/users/external/{externalId}:
+ *      get:
+ *          summary: Returns the user data with the given external ID
+ *          description: Returns the user data with the given external ID
+ *          tags: [Users]
+ *          security:
+ *          - bearerAuth: []
+ *          produces:
+ *          - application/json
+ *          parameters:
+ *          -   in: path
+ *              name: externalId
+ *              required: true
+ *              description: External ID of the user to get
+ *      responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              items:
+ *                $ref: '#/components/schemas/UserResponse'
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *        description: Internal Server Error
+ */
+userRouter.get('/external/:externalId', userController.getUserByExternalId)
+
+/**
+ * @openapi
+ * paths:
+ *  /api/users/external/{externalId}/exists:
+ *      get:
+ *          summary: Returns true/false if the user exists with the given external ID
+ *          description: Returns true/false if the user exists with the given external ID
+ *          tags: [Users]
+ *          security:
+ *          - bearerAuth: []
+ *          produces:
+ *          - application/json
+ *          parameters:
+ *          -   in: path
+ *              name: externalId
+ *              required: true
+ *              description: External ID of the user to get
+ *      responses:
+ *       200:
+ *         description: Success
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *        description: Internal Server Error
+ */
+userRouter.get(
+  '/external/:externalId/exists',
+  userController.checkUserExistsByExternalId,
+)
 
 /**
  * @openapi
