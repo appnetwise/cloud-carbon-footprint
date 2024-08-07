@@ -17,14 +17,8 @@ import { MongoDbCacheManager } from '@cloud-carbon-footprint/app'
 import swaggerDocs from './utils/swagger'
 import { AppDataSource } from './data-source'
 import { authRouter } from './auth/auth.router'
-import {
-  SESSION_COOKIE_NAME,
-  REDIRECT_URI,
-  REDIRECT_CONNECT_URI,
-  SESSION_COLLECTION_NAME,
-} from './authConfig'
+import { SESSION_COOKIE_NAME, SESSION_COLLECTION_NAME } from './authConfig'
 import session from 'express-session'
-import { csrf } from 'lusca'
 import connectMongoDBSession from 'connect-mongodb-session'
 
 const serverLogger = new Logger('Server')
@@ -79,14 +73,14 @@ httpApp.use(express.json())
 httpApp.use(cookieParser())
 httpApp.use(express.urlencoded({ extended: false }))
 httpApp.use(session(sessionConfig))
-httpApp.use(
-  csrf({
-    blocklist: [
-      new URL(REDIRECT_URI).pathname,
-      new URL(REDIRECT_CONNECT_URI).pathname,
-    ],
-  }),
-)
+// httpApp.use(
+//   csrf({
+//     blocklist: [
+//       new URL(REDIRECT_URI).pathname,
+//       new URL(REDIRECT_CONNECT_URI).pathname,
+//     ],
+//   }),
+// )
 httpApp.use(cors(corsOptions))
 
 // controllers(routers)

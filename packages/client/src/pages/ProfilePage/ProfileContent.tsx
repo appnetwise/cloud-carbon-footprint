@@ -3,23 +3,24 @@ import loadConfig from 'src/ConfigLoader'
 import { ProfileData } from './ProfileData'
 import useGetUserProfile from 'src/utils/hooks/GetUserProfileHook'
 import { useAuth } from 'src/auth/AuthContext'
+import useGetUserProfileId from 'src/utils/hooks/GetUserProfileId'
 
 interface ProfileContentProps {
   config?: ClientConfig
 }
 
 const ProfileContent = ({ config = loadConfig() }: ProfileContentProps) => {
-  const { account } = useAuth()
+  const { user } = useAuth()
 
-  if (account === null) {
+  if (user === null) {
     return null
   }
+  console.log('user', user)
+
+  const { id } = useGetUserProfileId(user?.externalId, config.BASE_URL)
 
   // Move the hook call outside the conditional rendering
-  const { userProfile, loading, error } = useGetUserProfile(
-    account.user.id,
-    config.BASE_URL,
-  )
+  const { userProfile, loading, error } = useGetUserProfile(id, config.BASE_URL)
 
   if (loading) {
     return <div>Loading...</div>

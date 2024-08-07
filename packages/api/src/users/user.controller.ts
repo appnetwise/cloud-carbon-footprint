@@ -58,11 +58,11 @@ class UserController {
         if (
           decodedToken &&
           typeof decodedToken === 'object' &&
-          'tid' in decodedToken
+          'sid' in decodedToken
         ) {
-          user.tenantId = decodedToken.tid
+          user.tenantId = decodedToken?.sid
         } else {
-          throw new Error('Tenant ID (tid) not found in token')
+          throw new Error('Tenant ID (sid) not found in token')
         }
       }
       const newUser = await userService.createUser(user)

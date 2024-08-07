@@ -13,9 +13,9 @@ import { useFootprintData } from './utils/hooks'
 import LoadingMessage from './common/LoadingMessage'
 import EmissionsMetricsPage from './pages/EmissionsMetricsPage'
 import RecommendationsPage from './pages/RecommendationsPage'
-import ProtectedRoute from './protected/ProtectedRoute'
 import { useAuth } from './auth/AuthContext'
 import ProfilePage from './pages/ProfilePage/ProfilePage'
+import ProtectedRoute from './protected/ProtectedRoute'
 
 interface AppProps {
   config?: ClientConfig
@@ -92,37 +92,30 @@ function Pages({
   }))
 
   const classes = useStyles()
+  console.log(isAuthenticated)
   return (
     <>
       <HeaderBar />
       <Container maxWidth={false} className={classes.appContainer}>
         <Routes>
-          <Route
-            path="/"
-            element={
-              isAuthenticated ? <Navigate to="/home" replace /> : <LoginPage />
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              isAuthenticated ? <Navigate to="/home" replace /> : <LoginPage />
-            }
-          />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route
             path="/home"
             element={
               <ProtectedRoute
-                element={<HomePage />}
                 isAuthenticated={isAuthenticated}
                 isLoading={isLoading}
-              />
+                element={<HomePage />}
+              ></ProtectedRoute>
             }
           />
           <Route
             path="/dashboard"
             element={
               <ProtectedRoute
+                isAuthenticated={isAuthenticated}
+                isLoading={isLoading}
                 element={
                   <EmissionsMetricsPage
                     config={config}
@@ -130,15 +123,15 @@ function Pages({
                     footprint={footprint}
                   />
                 }
-                isAuthenticated={isAuthenticated}
-                isLoading={isLoading}
-              />
+              ></ProtectedRoute>
             }
           />
           <Route
             path="/recommendations"
             element={
               <ProtectedRoute
+                isAuthenticated={isAuthenticated}
+                isLoading={isLoading}
                 element={
                   <RecommendationsPage
                     config={config}
@@ -146,19 +139,17 @@ function Pages({
                     footprint={footprint}
                   />
                 }
-                isAuthenticated={isAuthenticated}
-                isLoading={isLoading}
-              />
+              ></ProtectedRoute>
             }
           />
           <Route
             path="/profile"
             element={
               <ProtectedRoute
-                element={<ProfilePage />}
                 isAuthenticated={isAuthenticated}
                 isLoading={isLoading}
-              />
+                element={<ProfilePage />}
+              ></ProtectedRoute>
             }
           />
 

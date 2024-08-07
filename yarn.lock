@@ -2768,6 +2768,7 @@ __metadata:
     immer: ^9.0.2
     jest: ^27.4.7
     json-server: ^0.17.0
+    keycloak-js: ^25.0.2
     lint-staged: ^12.1.7
     mockdate: ^3.0.5
     moment: ^2.29.1
@@ -15898,6 +15899,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"js-sha256@npm:^0.11.0":
+  version: 0.11.0
+  resolution: "js-sha256@npm:0.11.0"
+  checksum: 742d34a0c6eb15247309f1c74889b5a51df01a96e4307375b420fbe973f2f25585012b4d3c8fa52a1b18546153d12587e6463bb725dc1bc58686da03e892c334
+  languageName: node
+  linkType: hard
+
 "js-tokens@npm:^3.0.0":
   version: 3.0.2
   resolution: "js-tokens@npm:3.0.2"
@@ -16411,6 +16419,23 @@ __metadata:
     jwa: "npm:^2.0.0"
     safe-buffer: "npm:^5.0.1"
   checksum: d68d07aa6d1b8cb35c363a9bd2b48f15064d342a5d9dc18a250dbbce8dc06bd7e4792516c50baa16b8d14f61167c19e851fd7f66b59ecc68b7f6a013759765f7
+  languageName: node
+  linkType: hard
+
+"jwt-decode@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "jwt-decode@npm:4.0.0"
+  checksum: 390e2edcb31a92e86c8cbdd1edeea4c0d62acd371f8a8f0a8878e499390c0ecf4c658b365c4e941e4ef37d0170e4ca650aaa49f99a45c0b9695a235b210154b0
+  languageName: node
+  linkType: hard
+
+"keycloak-js@npm:^25.0.2":
+  version: 25.0.2
+  resolution: "keycloak-js@npm:25.0.2"
+  dependencies:
+    js-sha256: ^0.11.0
+    jwt-decode: ^4.0.0
+  checksum: 32a8a5817daa751ae0efa8f85c81fb46aaba25bcd91847b56e026f202b795d93821e442c3519342c6e0444897ce21f875dd6e3216d8eff26bdb0221bdb9be3e5
   languageName: node
   linkType: hard
 

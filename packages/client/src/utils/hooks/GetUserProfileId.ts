@@ -1,21 +1,22 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import { getKeycloakToken } from '../auth/keyCloakUtil'
+import { useAuth } from 'src/auth/AuthContext'
+import { useProfile } from 'src/auth/ProfileContext'
 
-const useCheckUserExists = (externalId, baseUrl) => {
-  const [userExists, setUserExists] = useState(null)
+const useGetUserProfileId = (externalId, baseUrl) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const { token } = useAuth()
+  const { id, setId } = useProfile()
 
   useEffect(() => {
-    const checkUserExists = async () => {
+    const getUserProfile = async () => {
       setLoading(true)
       setError(null)
 
       try {
-        const token = await getKeycloakToken()
         const response = await axios.get(
-          `${baseUrl}/users/external/${externalId}/exists`,
+          `${baseUrl}/users/external/${externalId}`,
           {
             headers: {
               Authorization: 'Bearer ' + token,
@@ -23,7 +24,7 @@ const useCheckUserExists = (externalId, baseUrl) => {
           },
         )
         const data = await response.data
-        setUserExists(data)
+        setId(data.id)
       } catch (error) {
         setError(error.message)
       } finally {
@@ -32,11 +33,11 @@ const useCheckUserExists = (externalId, baseUrl) => {
     }
 
     if (externalId) {
-      checkUserExists()
+      getUserProfile()
     }
   }, [externalId])
 
-  return { userExists, loading, error }
+  return { id, loading, error }
 }
 
-export default useCheckUserExists
+export default useGetUserProfileId

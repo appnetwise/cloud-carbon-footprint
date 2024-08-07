@@ -19,7 +19,7 @@ const HeaderBar = (): ReactElement => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
-  const { logout, isAuthenticated, account, isCloudConnected } = useAuth()
+  const { logout, isAuthenticated, user, isCloudConnected } = useAuth()
   const navigate = useNavigate()
   const isHomeActive =
     location.pathname === '/home' || location.pathname === '/'
@@ -96,7 +96,7 @@ const HeaderBar = (): ReactElement => {
               </NavLink>
               <IconButton edge="end" color="inherit" onClick={handleMenuOpen}>
                 <Avatar alt="User Profile" className={classes.avtar} />
-                {account.name}
+                {user.nickName}
               </IconButton>
               <Menu
                 anchorEl={anchorEl}
