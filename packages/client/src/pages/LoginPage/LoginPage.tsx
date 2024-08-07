@@ -1,4 +1,4 @@
-import { Button, Typography } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 import useStyles from './loginPageStyles'
 import { useAuth } from 'src/auth/AuthContext'
 
@@ -9,24 +9,12 @@ const LoginPage = () => {
     <div className={classes.root}>
       <div className={classes.leftPanel}></div>
       <div className={classes.rightPanel}>
-        <Typography variant="h4" gutterBottom>
-          Sign In
-        </Typography>
+        <h2>Cloud Carbon Footprint</h2>
+        <h3>Hello! Let's Get Started</h3>
 
         <Button variant="text" className={classes.loginButton} onClick={login}>
-          <img
-            className={classes.icon}
-            src={'microsoft_logo.svg'}
-            alt="Microsoft Logo"
-          />
-          Sign in with Microsoft
+          Sign in
         </Button>
-        <div className={classes.signUpSection}>
-          <Typography variant="body1">OR</Typography>
-          <Button variant="text" className={classes.loginButton}>
-            Sign Up
-          </Button>
-        </div>
       </div>
     </div>
   )
