@@ -1,0 +1,7 @@
+services:
+  mongodb:
+    image: mongo:latest
+    environment:
+      - MONGODB_DATABASE="ccf"
+    ports:
+      - 27017:27017
