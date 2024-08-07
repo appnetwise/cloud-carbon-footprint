@@ -4,17 +4,21 @@ import { useProfile } from 'src/auth/ProfileContext'
 import { getKeycloakToken } from '../auth/keyCloakUtil'
 
 const useGetUserProfileId = (externalId, baseUrl) => {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const { id, setId } = useProfile()
 
   useEffect(() => {
     const getUserProfile = async () => {
+      if (id) {
+        return // Skip the call if id is already set
+      }
+
       setLoading(true)
       setError(null)
-      const token = await getKeycloakToken()
 
       try {
+        const token = await getKeycloakToken()
         const response = await axios.get(
           `${baseUrl}/users/external/${externalId}`,
           {
@@ -35,7 +39,7 @@ const useGetUserProfileId = (externalId, baseUrl) => {
     if (externalId) {
       getUserProfile()
     }
-  }, [externalId])
+  }, [externalId, id])
 
   return { id, loading, error }
 }
