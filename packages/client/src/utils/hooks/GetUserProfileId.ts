@@ -1,18 +1,18 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import { useAuth } from 'src/auth/AuthContext'
 import { useProfile } from 'src/auth/ProfileContext'
+import { getKeycloakToken } from '../auth/keyCloakUtil'
 
 const useGetUserProfileId = (externalId, baseUrl) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const { token } = useAuth()
   const { id, setId } = useProfile()
 
   useEffect(() => {
     const getUserProfile = async () => {
       setLoading(true)
       setError(null)
+      const token = await getKeycloakToken()
 
       try {
         const response = await axios.get(
