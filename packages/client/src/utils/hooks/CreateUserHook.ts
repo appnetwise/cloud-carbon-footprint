@@ -1,15 +1,11 @@
 import { useState, useCallback } from 'react'
 import axios from 'axios'
-import { useAuth } from 'src/auth/AuthContext'
 import { getKeycloakToken } from '../auth/keyCloakUtil'
 
 const useCreateUser = (baseUrl, isProfileLoaded) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [data, setData] = useState(null)
-
-  const auth = useAuth()
-  console.log(auth) // Log the entire auth object
 
   // Then destructure only the properties you need
   // const { token } = auth || {}

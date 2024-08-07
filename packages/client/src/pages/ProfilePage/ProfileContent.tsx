@@ -15,7 +15,6 @@ const ProfileContent = ({ config = loadConfig() }: ProfileContentProps) => {
   if (user === null) {
     return null
   }
-  console.log('user', user)
 
   const { id } = useGetUserProfileId(user?.externalId, config.BASE_URL)
 

@@ -37,7 +37,6 @@ export const AuthProvider = ({ children, baseUrl }) => {
   const getAccount = useCallback(async () => {
     const response = await fetch(`${baseUrl}/auth/account`)
     const data = await response.json()
-    console.log(data)
     setIsAuthenticated(data ? true : false)
     setIsCloudConnected(data?.user.isCloudConnected || false)
     setAccount(data)
@@ -45,10 +44,8 @@ export const AuthProvider = ({ children, baseUrl }) => {
   }, [baseUrl])
 
   const updateUserInfo = useCallback(() => {
-    console.log(keycloak)
     if (keycloak.tokenParsed) {
       const tokenParsed = keycloak.tokenParsed as KeycloakTokenParsed
-      console.log(tokenParsed)
       const userInfo = {
         externalId: tokenParsed.sub,
         email: tokenParsed.email,
@@ -58,7 +55,6 @@ export const AuthProvider = ({ children, baseUrl }) => {
       } as User
       setUser(userInfo)
       setToken(keycloak.token)
-      console.log(keycloak.token)
     }
   }, [])
 

@@ -22,7 +22,6 @@ interface AppProps {
 }
 
 export function App({ config = loadConfig() }: AppProps): ReactElement {
-  console.log(config)
   const [errorMessage, setErrorMessage] = useState<string>('')
   const { isAuthenticated, isLoading } = useAuth()
   const navigate = useNavigate()
@@ -92,7 +91,6 @@ function Pages({
   }))
 
   const classes = useStyles()
-  console.log(isAuthenticated)
   return (
     <>
       <HeaderBar />
