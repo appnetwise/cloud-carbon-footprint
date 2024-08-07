@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from 'src/auth/AuthContext'
+import { getKeycloakToken } from '../auth/keyCloakUtil'
 
 const useConnectToCloud = () => {
   const [loading, setLoading] = useState(false)
@@ -8,8 +9,14 @@ const useConnectToCloud = () => {
 
   const handleConnectToCloud = async () => {
     setLoading(true)
+    setError(null) // Reset error state before starting a new request
     try {
-      await connectToCloud()
+      const token = await getKeycloakToken()
+      if (token) {
+        await connectToCloud(token)
+      } else {
+        throw new Error('Failed to retrieve token')
+      }
     } catch (error) {
       setError(error.message)
     } finally {

@@ -15,7 +15,6 @@ export const AuthProvider = ({ children, baseUrl }) => {
   const [isCloudConnected, setIsCloudConnected] = useState(false)
   const [isFirstVisit, setIsFirstVisit] = useState(true) // New state for first visit
   const [user, setUser] = useState<User>()
-  const [token, setToken] = useState<string | null>(null)
   const { userExists } = useCheckUserExists(user?.externalId, baseUrl)
   const { createUser } = useCreateUser(baseUrl, !!user)
 
@@ -54,7 +53,6 @@ export const AuthProvider = ({ children, baseUrl }) => {
         nickName: tokenParsed.name,
       } as User
       setUser(userInfo)
-      setToken(keycloak.token)
     }
   }, [])
 
@@ -100,22 +98,28 @@ export const AuthProvider = ({ children, baseUrl }) => {
     }
   }, [isAuthenticated, user, userExists, createUser])
 
-  const connectToCloud = useCallback(async () => {
-    try {
-      const response = await fetch(`${baseUrl}/auth/connect`)
-      const data = await response.json()
-      if (data && data.authUrl) {
-        setIsCloudConnected(true)
-        setIsFirstVisit(true) // Reset isFirstVisit on connect
-        window.location.href = data.authUrl
-      } else {
-        throw new Error('Invalid response from server')
+  const connectToCloud = useCallback(
+    async (token) => {
+      try {
+        const response = await fetch(`${baseUrl}/auth/connect`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        const data = await response.json()
+        if (data && data.authUrl) {
+          setIsCloudConnected(true)
+          setIsFirstVisit(true) // Reset isFirstVisit on connect
+          window.location.href = data.authUrl
+        } else {
+          throw new Error('Invalid response from server')
+        }
+      } catch (error) {
+        console.error('Failed to connect to cloud', error)
       }
-    } catch (error) {
-      console.error('Failed to connect to cloud', error)
-    }
-  }, [baseUrl])
-
+    },
+    [baseUrl],
+  )
   return (
     <AuthContext.Provider
       value={{
@@ -125,8 +129,6 @@ export const AuthProvider = ({ children, baseUrl }) => {
         isCloudConnected,
         isFirstVisit,
         user,
-        token,
-        setToken,
         setIsFirstVisit,
         setIsCloudConnected,
         login,
