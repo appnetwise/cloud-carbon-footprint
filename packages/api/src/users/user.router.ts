@@ -3,6 +3,7 @@
  */
 
 import express from 'express'
+import { auth } from '../utils/keycloak.auth'
 import { userController } from './user.controller'
 
 /**
@@ -15,7 +16,7 @@ import { userController } from './user.controller'
  *       bearerFormat: JWT
  */
 export const userRouter = express.Router()
-// userRouter.use(auth)
+userRouter.use(auth)
 
 /**
  * @openapi
@@ -49,6 +50,75 @@ export const userRouter = express.Router()
  *        description: Internal Server Error
  */
 userRouter.get('/:id', userController.getUserById)
+
+/**
+ * @openapi
+ * paths:
+ *  /api/users/{id}:
+ *      get:
+ *          summary: Returns the user data with the given ID
+ *          description: Returns the user data with the given ID
+ *          tags: [Users]
+ *          security:
+ *          - bearerAuth: []
+ *          produces:
+ *          - application/json
+ *          parameters:
+ *          -   in: path
+ *              name: id
+ *              required: true
+ *              description: ID of the user to get
+ *      responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              items:
+ *                $ref: '#/components/schemas/UserResponse'
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *        description: Internal Server Error
+ */
+userRouter.get('/:id/profile', userController.getUserProfileById)
+
+/**
+ * @openapi
+ * paths:
+ *  /api/users/{id}:
+ *      get:
+ *          summary: Returns the user data with the given ID
+ *          description: Returns the user data with the given ID
+ *          tags: [Users]
+ *          security:
+ *          - bearerAuth: []
+ *          produces:
+ *          - application/json
+ *          parameters:
+ *          -   in: path
+ *              name: id
+ *              required: true
+ *              description: ID of the user to get
+ *      responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              items:
+ *                $ref: '#/components/schemas/UserResponse'
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *        description: Internal Server Error
+ */
+userRouter.get(
+  '/:id/cloud-connect-info',
+  userController.getUserCloudConnectionInfoById,
+)
 
 /**
  * @openapi

@@ -25,6 +25,46 @@ class UserController {
     }
   }
 
+  public async getUserProfileById(req, res) {
+    try {
+      const id: string = req.params.id
+      const user: UserEntity = await userService.getUserById(id)
+      return user
+        ? res.status(200).send({
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            nickName: user.nickName,
+          })
+        : res.status(404).send('user not found')
+    } catch (e) {
+      return res.status(500).send('Error retrieving user')
+    }
+  }
+
+  public async getUserCloudConnectionInfoById(req, res) {
+    try {
+      const id: string = req.params.id
+      const user: UserEntity = await userService.getUserById(id)
+      if (!user) {
+        res.status(404).send('user not found')
+      } else {
+        const cloudConnectionInfo = {
+          id: user.id,
+          azure: user.cloudConnections
+            ? user.cloudConnections.azure.connected
+            : false,
+          aws: false,
+          google: false,
+        }
+        res.status(200).send(cloudConnectionInfo)
+      }
+    } catch (e) {
+      return res.status(500).send('Error retrieving user')
+    }
+  }
+
   public async getUserByExternalId(req, res) {
     try {
       const externalId: string = req.params.externalId
