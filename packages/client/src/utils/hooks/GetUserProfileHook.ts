@@ -14,7 +14,7 @@ const useGetUserProfile = (id, baseUrl) => {
       const token = await getKeycloakToken()
 
       try {
-        const response = await axios.get(`${baseUrl}/users/${id}`, {
+        const response = await axios.get(`${baseUrl}/users/${id}/profile`, {
           headers: {
             Authorization: 'Bearer ' + token,
           },

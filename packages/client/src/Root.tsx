@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { CssBaseline, ThemeProvider } from '@material-ui/core'
 import { App } from './App'
 import { AuthProvider } from './auth/AuthContext'
-import { ProfileProvider } from './auth/ProfileContext'
+import AuthMiddleware from './auth/AuthMiddleware'
 
 export function Root() {
   const theme = useMemo(() => defaultTheme(), [])
@@ -16,9 +16,9 @@ export function Root() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AuthProvider baseUrl={config.BASE_URL}>
-          <ProfileProvider>
+          <AuthMiddleware>
             <App config={config} />
-          </ProfileProvider>
+          </AuthMiddleware>
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>

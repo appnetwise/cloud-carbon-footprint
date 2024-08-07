@@ -1,7 +1,15 @@
+import axios from 'axios'
 import { KeycloakTokenParsed } from 'keycloak-js'
-import React, { useState, useEffect, useContext, useCallback } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+  useRef,
+} from 'react'
 import { User } from 'src/types/User'
 import keycloak from 'src/utils/auth/keycloakConfig'
+import { getKeycloakToken } from 'src/utils/auth/keyCloakUtil'
 import useCheckUserExists from 'src/utils/hooks/CheckUserHook'
 import useCreateUser from 'src/utils/hooks/CreateUserHook'
 
@@ -15,8 +23,66 @@ export const AuthProvider = ({ children, baseUrl }) => {
   const [isCloudConnected, setIsCloudConnected] = useState(false)
   const [isFirstVisit, setIsFirstVisit] = useState(true) // New state for first visit
   const [user, setUser] = useState<User>()
+  const [userId, setUserId] = useState(null)
   const { userExists } = useCheckUserExists(user?.externalId, baseUrl)
   const { createUser } = useCreateUser(baseUrl, !!user)
+  const keycloakInitialized = useRef(false) // Ref to track initialization state
+
+  const getUserProfileId = useCallback(
+    async (externalId) => {
+      if (userId) {
+        return // Skip the call if userId is already set
+      }
+
+      try {
+        const token = await getKeycloakToken()
+        const response = await axios.get(
+          `${baseUrl}/users/external/${externalId}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + token,
+            },
+          },
+        )
+        const data = response.data
+        setUserId(data.id)
+        setIsCloudConnected(data?.cloudConnections?.azure.connected || false)
+      } catch (error) {
+        console.error('Error fetching user ID:', error)
+      }
+    },
+    [baseUrl, userId],
+  )
+
+  const getAccount = useCallback(async () => {
+    if (!userId) {
+      console.log('Waiting for user ID...')
+      return
+    }
+
+    try {
+      const token = await getKeycloakToken()
+      const response = await axios.get(
+        `${baseUrl}/users/${userId}/cloud-connect-info`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        },
+      )
+      const data = response.data
+      setIsAuthenticated(data ? true : false)
+      setIsCloudConnected(data?.azure || false)
+      setAccount(data)
+    } catch (error) {
+      console.error('Failed to fetch account information', error)
+      setIsAuthenticated(false)
+      setIsCloudConnected(false)
+      setAccount(null)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [baseUrl, userId])
 
   const initOptions = {
     onLoad: 'login-required',
@@ -33,15 +99,6 @@ export const AuthProvider = ({ children, baseUrl }) => {
     })
   }, [])
 
-  const getAccount = useCallback(async () => {
-    const response = await fetch(`${baseUrl}/auth/account`)
-    const data = await response.json()
-    setIsAuthenticated(data ? true : false)
-    setIsCloudConnected(data?.user.isCloudConnected || false)
-    setAccount(data)
-    setIsLoading(false)
-  }, [baseUrl])
-
   const updateUserInfo = useCallback(() => {
     if (keycloak.tokenParsed) {
       const tokenParsed = keycloak.tokenParsed as KeycloakTokenParsed
@@ -53,19 +110,23 @@ export const AuthProvider = ({ children, baseUrl }) => {
         nickName: tokenParsed.name,
       } as User
       setUser(userInfo)
+      getUserProfileId(tokenParsed.sub)
     }
-  }, [])
+  }, [getUserProfileId])
 
   useEffect(() => {
     const initKeycloak = async () => {
       try {
-        const authenticated = await keycloak.init({
-          onLoad: 'check-sso',
-          redirectUri: `${window.location.origin}/home`,
-        })
-        if (authenticated) {
-          updateUserInfo()
-          setIsAuthenticated(true)
+        if (!keycloakInitialized.current) {
+          keycloakInitialized.current = true
+          const authenticated = await keycloak.init({
+            onLoad: 'check-sso',
+            redirectUri: `${window.location.origin}/home`,
+          })
+          if (authenticated) {
+            updateUserInfo()
+            setIsAuthenticated(true)
+          }
         }
       } catch (error) {
         console.error('Failed to initialize Keycloak', error)
@@ -129,6 +190,8 @@ export const AuthProvider = ({ children, baseUrl }) => {
         isCloudConnected,
         isFirstVisit,
         user,
+        userId,
+        setUserId,
         setIsFirstVisit,
         setIsCloudConnected,
         login,
