@@ -8,9 +8,8 @@ import {
   FootprintApiMiddleware,
   EmissionsApiMiddleware,
   RecommendationsApiMiddleware,
-  ProfileDataApiMiddleware,
 } from './middleware'
-import { authSession, cloudAccessTokenValidator } from './utils/auth'
+import { cloudAccessTokenValidator } from './utils/auth'
 
 export const createRouter = (config?: CCFConfig) => {
   setConfig(config)
@@ -220,34 +219,6 @@ export const createRouter = (config?: CCFConfig) => {
   router.get('/healthz', (req: express.Request, res: express.Response) => {
     res.status(200).send('OK')
   })
-
-  /**
-   * @openapi
-   * /api/profile:
-   *
-   *  get:
-   *     tags: [Profile]
-   *     summary: Return the user profile data
-   *     description: Return the user profile data
-   *     security:
-   *     - bearerAuth: []
-   *     produces:
-   *       - application/json
-   *     responses:
-   *       200:
-   *         description: Success
-   *         content:
-   *           application/json:
-   *            schema:
-   *              type: object
-   *              items:
-   *                $ref: '#/components/schemas/ProfileResponse'
-   *       401:
-   *         description: Unauthorized
-   *       500:
-   *        description: Internal Server Error
-   */
-  router.get('/profile', authSession, ProfileDataApiMiddleware)
 
   return router
 }

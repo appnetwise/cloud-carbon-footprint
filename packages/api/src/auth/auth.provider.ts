@@ -14,12 +14,10 @@ import {
   REDIRECT_URI,
   POST_LOGIN_REDIRECT_URI,
   POST_LOGOUT_REDIRECT_URI,
-  AZURE_SERVICES_ENDPOINT,
   CONNECT_STATE_COOKIE_NAME,
   POST_CONNECT_REDIRECT_URI,
   REDIRECT_CONNECT_URI,
 } from '../authConfig'
-import { getClaims } from '../utils/claimUtils'
 import * as userService from '../users/user.service'
 
 class AuthProvider {
@@ -182,10 +180,6 @@ class AuthProvider {
         req.body,
       )
 
-      // req.session.accessToken = tokenResponse.accessToken
-      // req.session.account = tokenResponse.account
-      // req.session.isAuthenticated = true
-      // req.session.accessTokenToCloud = tokenResponse.accessToken
       const externalId = req.cookies[CONNECT_STATE_COOKIE_NAME].user.externalId
       // update the user info in the session account
       const user: any = await userService.getUserByExternalId(externalId)
@@ -200,12 +194,6 @@ class AuthProvider {
         }
         await userService.updateUser(user.id, user)
       }
-      // req.session.account.user = {
-      //   id: user.id.toString(),
-      //   name: user.nickName,
-      //   isCloudConnected: true,
-      // }
-
       const { redirectTo } = JSON.parse(
         this.cryptoProvider.base64Decode(req.body.state),
       )
@@ -228,17 +216,12 @@ class AuthProvider {
     const msalInstance = this.getMsalInstance()
 
     try {
-      msalInstance.getTokenCache().deserialize(req.session.tokenCache)
-      const userId = req.session?.account?.user?.id
+      // msalInstance.getTokenCache().deserialize(req.user.tokenCache)
+      const userId = req.user.id
       const user: any = await userService.getUserById(userId)
       const acquireTokenRequest = {
         account: user.cloudConnections.azure.account,
         scopes: options.scopes || [],
-        claims: getClaims(
-          req.session,
-          this.config.msalConfig.auth.clientId,
-          AZURE_SERVICES_ENDPOINT,
-        ),
       }
       const tokenResponse = await msalInstance.acquireTokenSilent(
         acquireTokenRequest,
@@ -260,12 +243,8 @@ class AuthProvider {
     }
 
     async function disconnectUser() {
-      // disconnect the user from the session
-      req.session.account.user.isCloudConnected = false
-      req.session.accessTokenToCloud = null
-
       // disconnect the user from the database
-      const userId = req.session?.account?.user?.id
+      const userId = req.user.id
       const user: any = await userService.getUserById(userId)
       if (user && user.cloudConnections && user.cloudConnections.azure) {
         user.cloudConnections.azure = {

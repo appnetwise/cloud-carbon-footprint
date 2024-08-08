@@ -13,7 +13,6 @@ export const auth = (req, res, next) => {
     res.status(401).send('Authorization header is required.')
     return
   }
-  authLogger.info('Verifying Authentication token received')
   const accessToken = authHeader.split(' ')[1]
 
   // Decode the token without verification to get the header
@@ -23,10 +22,7 @@ export const auth = (req, res, next) => {
     throw new Error('Invalid token structure')
   }
 
-  authLogger.info('Token verified successfully!')
-  authLogger.info(
-    `Verified token payload: ${JSON.stringify(decodedToken, null, 2)}`,
-  )
+  authLogger.info(`Token payload: ${JSON.stringify(decodedToken, null, 2)}`)
 
   if (!req.user) {
     req.user = {}
