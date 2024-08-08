@@ -1,4 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
+
 const useStyles = makeStyles((theme: Theme) => ({
   boxContainer: {
     padding: theme.spacing(3, 10),
@@ -20,27 +21,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     flexDirection: 'column',
   },
-  button: {
-    marginTop: 20,
-    width: '60%',
+  title: {
+    fontSize: '1.875rem', // Equivalent to text-3xl
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#0c7264',
+    marginBottom: theme.spacing(2), // Equivalent to space-y-6
   },
-  signUpSection: {
-    marginTop: 20,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '100%',
-  },
-  icon: {
-    marginRight: 10,
+  subtitle: {
+    fontSize: '1.25rem', // Equivalent to text-xl
+    textAlign: 'center',
+    marginBottom: theme.spacing(2), // Equivalent to space-y-6
   },
   loginButton: {
-    width: '60%',
+    width: '48%',
     marginTop: 20,
-    backgroundColor: '#0c7264',
+    backgroundColor: '#0c7264 !important', // Force the background color
     border: 'none',
     borderRadius: '5px',
-    color: '#fff',
+    color: 'white !important', // Force the text color
     display: 'flex',
     alignItems: 'center',
     fontSize: '16px',
@@ -51,8 +50,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: '.5s',
     zIndex: 1,
     '&:hover': {
-      backgroundColor: '#095a4d' /* Desired hover color */,
+      backgroundColor: '#095a4d', // Desired hover color
     },
+  },
+  signUpSection: {
+    marginTop: 20,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+  },
+  icon: {
+    marginRight: 10,
   },
 }))
 
