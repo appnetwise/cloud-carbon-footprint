@@ -8,7 +8,7 @@ import { RecommendationResult } from '@cloud-carbon-footprint/common'
 import { ServiceResult } from '../../Types'
 import { useAxiosErrorHandling } from '../../layout/ErrorPage'
 import { FootprintData } from './FootprintDataHook'
-import { useAuth } from 'src/auth/AuthContext'
+import { getKeycloakToken } from '../auth/keyCloakUtil'
 export interface UseRemoteRecommendationServiceParams {
   baseUrl: string | null
   onApiError?: (e: Error) => void
@@ -24,10 +24,10 @@ const useRemoteRecommendationsService = (
   const [loading, setLoading] = useState(true)
 
   const { error, setError } = useAxiosErrorHandling(params.onApiError)
-  const { token } = useAuth()
 
   useEffect(() => {
     const fetchRecommendations = async () => {
+      const token = await getKeycloakToken()
       if (!params.baseUrl) {
         setLoading(false)
         return

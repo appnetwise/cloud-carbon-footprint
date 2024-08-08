@@ -12,6 +12,7 @@ import { useAxiosErrorHandling } from '../../layout/ErrorPage'
 import { ServiceResult } from '../../Types'
 import moment from 'moment'
 import { useAuth } from 'src/auth/AuthContext'
+import { getKeycloakToken } from '../auth/keyCloakUtil'
 
 export interface UseRemoteFootprintServiceParams {
   baseUrl: string | null
@@ -41,6 +42,7 @@ const useRemoteFootprintService = (
 
   useEffect(() => {
     const fetchEstimates = async () => {
+      const token = await getKeycloakToken()
       if (!params.baseUrl || !enabled) {
         setLoading(false)
         return
@@ -64,6 +66,9 @@ const useRemoteFootprintService = (
               groupBy: params.groupBy,
               limit: params.limit,
               skip,
+            },
+            headers: {
+              Authorization: 'Bearer ' + token, //the token is a variable which holds the token
             },
           })
           lastDataLength = checkForLoopExit(
