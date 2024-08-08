@@ -25,7 +25,7 @@ export const AuthProvider = ({ children, baseUrl }) => {
   const [user, setUser] = useState<User>()
   const [userId, setUserId] = useState(null)
   const { userExists } = useCheckUserExists(user?.externalId, baseUrl)
-  const { createUser } = useCreateUser(baseUrl, !!user)
+  const { createUser, data: userCreated } = useCreateUser(baseUrl, !!user)
   const keycloakInitialized = useRef(false) // Ref to track initialization state
 
   const getUserProfileId = useCallback(
@@ -158,6 +158,13 @@ export const AuthProvider = ({ children, baseUrl }) => {
       createUser(userDetails)
     }
   }, [isAuthenticated, user, userExists, createUser])
+
+  useEffect(() => {
+    if (userCreated) {
+      console.log('User created:', userCreated)
+      setUserId(userCreated.id)
+    }
+  }, [userCreated])
 
   const connectToCloud = useCallback(
     async (token) => {
