@@ -8,6 +8,7 @@ import { EmissionRatioResult } from '@cloud-carbon-footprint/common'
 import { useAxiosErrorHandling } from '../../layout/ErrorPage'
 
 import { ServiceResult } from '../../Types'
+import { getKeycloakToken } from '../auth/keyCloakUtil'
 
 interface UseRemoteEmissionServiceParams {
   baseUrl: string | null
@@ -23,6 +24,7 @@ const useRemoteEmissionService = (
 
   useEffect(() => {
     const fetchEstimates = async () => {
+      const token = await getKeycloakToken()
       if (!params.baseUrl) {
         return
       }
@@ -34,6 +36,11 @@ const useRemoteEmissionService = (
       try {
         const res = await axios.get(
           `${params.baseUrl}/regions/emissions-factors`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + token, //the token is a variable which holds the token
+            },
+          },
         )
 
         if (_isMounted.current) {
