@@ -1,9 +1,6 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme: Theme) => ({
-  boxContainer: {
-    padding: theme.spacing(3, 10),
-  },
   root: {
     display: 'flex',
     height: '100vh',
@@ -20,48 +17,81 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
+    padding: theme.spacing(3, 5),
+    backgroundColor: '#ffffff', // Keeping the background white as per your request
   },
   title: {
-    fontSize: '1.875rem', // Equivalent to text-3xl
+    fontSize: '2rem',
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#0c7264',
-    marginBottom: theme.spacing(2), // Equivalent to space-y-6
+    marginBottom: theme.spacing(1),
   },
   subtitle: {
-    fontSize: '1.25rem', // Equivalent to text-xl
+    fontSize: '1.5rem',
     textAlign: 'center',
-    marginBottom: theme.spacing(2), // Equivalent to space-y-6
+    color: '#095a4d',
+    marginBottom: theme.spacing(2),
   },
-  loginButton: {
-    width: '48%',
-    marginTop: 20,
-    backgroundColor: '#0c7264 !important', // Force the background color
-    border: 'none',
-    borderRadius: '5px',
-    color: 'white !important', // Force the text color
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: '16px',
-    fontWeight: 500,
-    padding: '12px 25px',
-    position: 'relative',
+  tagline: {
+    fontSize: '1.25rem',
     textAlign: 'center',
-    transition: '.5s',
-    zIndex: 1,
-    '&:hover': {
-      backgroundColor: '#095a4d', // Desired hover color
+    color: '#0c7264',
+    marginBottom: theme.spacing(3),
+    fontWeight: 500,
+  },
+  description: {
+    fontSize: '1rem',
+    textAlign: 'center',
+    marginBottom: theme.spacing(3),
+    color: '#444',
+    maxWidth: '80%',
+  },
+  featuresList: {
+    listStyleType: 'none',
+    padding: 0,
+    marginBottom: theme.spacing(4),
+    textAlign: 'left',
+    color: '#444',
+    '& li': {
+      marginBottom: theme.spacing(1),
+      display: 'flex',
+      alignItems: 'center',
+      '& svg': {
+        marginRight: theme.spacing(1),
+        color: '#0c7264',
+      },
     },
   },
-  signUpSection: {
-    marginTop: 20,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '100%',
+  loginButton: {
+    width: '60%',
+    backgroundColor: '#0c7264 !important',
+    color: 'white !important',
+    fontSize: '1rem',
+    fontWeight: 600,
+    padding: '12px 25px',
+    borderRadius: '30px',
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      backgroundColor: '#095a4d !important',
+      transform: 'translateY(-2px)',
+      boxShadow: '0 4px 8px rgba(12, 114, 100, 0.2)',
+    },
   },
-  icon: {
-    marginRight: 10,
+  socialProof: {
+    marginTop: theme.spacing(3),
+    textAlign: 'center',
+    color: '#666',
+    fontSize: '0.9rem',
+  },
+  learnMore: {
+    marginTop: theme.spacing(2),
+    color: '#0c7264',
+    textDecoration: 'underline',
+    cursor: 'pointer',
+    '&:hover': {
+      color: '#095a4d',
+    },
   },
 }))
 
