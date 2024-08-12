@@ -140,8 +140,8 @@ fi
 env
 
 # Update Keycloak configuration
-"$KCADM_PATH" config credentials --server 'https://localhost:8443' --realm master --user admin --password admin --truststore '/opt/keycloak/conf/truststore.jks'
+#"$KCADM_PATH" config credentials --server 'http://localhost:8443' --realm master --user admin --password admin '
 
-"$KCADM_PATH" update realms/master -s loginTheme=$CUSTOM_THEME_NAME -s accountTheme=$CUSTOM_THEME_NAME -s adminTheme=$CUSTOM_THEME_NAME --truststore '/opt/keycloak/conf/truststore.jks'
+#$KCADM_PATH" update realms/master -s loginTheme=$CUSTOM_THEME_NAME -s accountTheme=$CUSTOM_THEME_NAME -s adminTheme=$CUSTOM_THEME_NAME --truststore '/opt/keycloak/conf/truststore.jks'
 
 echo "Keycloak theme update completed. Please restart the Keycloak service to apply changes."
