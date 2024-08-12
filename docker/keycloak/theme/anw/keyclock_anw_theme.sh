@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set variables
-KEYCLOAK_DIR="/opt/keycloak"
+KEYCLOAK_DIR="/tmp"
 CUSTOM_THEME_NAME="anw"
 
 # Check if the Keycloak directory exists
@@ -12,6 +12,15 @@ fi
 
 # Create directory structure
 mkdir -p "$KEYCLOAK_DIR/themes/$CUSTOM_THEME_NAME"/{account,admin,login}/{resources/{css,img},messages}
+
+for theme in account admin login; do
+    find . -type f -name "*.ico" | while read filename; do 
+        cp $filename "$KEYCLOAK_DIR/themes/$CUSTOM_THEME_NAME/$theme"/resources/img/
+    done
+    find . -type f -name "*.svg" | while read filename; do 
+        cp $filename "$KEYCLOAK_DIR/themes/$CUSTOM_THEME_NAME/$theme"/resources/img/
+    done 
+done
 
 # Create custom CSS files
 for theme in account admin login; do
@@ -129,15 +138,15 @@ cat << EOF > "$KEYCLOAK_DIR/themes/$CUSTOM_THEME_NAME/login/messages/messages_en
 loginAccountTitle=Let us go
 EOF
 
-# Find kcadm.sh location
-KCADM_PATH="$KEYCLOAK_DIR/bin/kcadm.sh"
-if [ ! -f "$KCADM_PATH" ]; then
-    echo "Error: Unable to find kcadm.sh at $KCADM_PATH"
-    exit 1
-fi
+# # Find kcadm.sh location
+# KCADM_PATH="$KEYCLOAK_DIR/bin/kcadm.sh"
+# if [ ! -f "$KCADM_PATH" ]; then
+#     echo "Error: Unable to find kcadm.sh at $KCADM_PATH"
+#     exit 1
+# fi
 
 # Print environment variables for debugging
-env
+#env
 
 # Update Keycloak configuration
 #"$KCADM_PATH" config credentials --server 'http://localhost:8443' --realm master --user admin --password admin '
