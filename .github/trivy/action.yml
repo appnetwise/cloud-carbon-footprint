@@ -1,0 +1,47 @@
+name: Trivy
+description: Use Trivy
+inputs:
+  trivy-version:
+    required: true
+    description: "Trivy Version"
+
+runs:
+    using: "composite"
+    steps:
+      - name: Set default value
+        id: path
+        shell: bash
+        run: |
+          path="./tools"
+          echo "::set-output name=tool_path::${path:-"./tools"}"
+      - name: Install Trivy
+        shell: bash
+        run: |
+          bash scripts/ci/install_trivy.sh -v  ${{ inputs.trivy-version }} -d ${{ steps.path.outputs.tool_path}} -t ./temp
+      - name: Trivy Scan
+        shell: bash
+        env:
+          TRIVY_CACHE_FOLDER: .trivycache/
+          TRIVY_TEMPLATE: ${{ steps.path.outputs.tool_path}}/trivy/contrib/junit.tpl
+          TRIVY_SEVERITY_LEVEL: CRITICAL
+        run: |
+          for targz in $(find .  -maxdepth 1 -type f -name "*.tar.gz")
+          do
+            gunzip $targz
+            docker load -q -i ${targz:0:-3}
+          done
+
+          for tag in $(cat tags.json | jq -r '.builds[].tag | split("@") | .[0]')
+          do
+            echo "=========================== $tag ==========================="
+
+            # Build report
+            ${{ steps.path.outputs.tool_path}}/trivy --cache-dir $TRIVY_CACHE_FOLDER image --exit-code 0 --no-progress --format template --template "@${TRIVY_TEMPLATE}" -o trivy-report.xml $tag
+
+            # Print report
+            ${{ steps.path.outputs.tool_path}}/trivy --cache-dir $TRIVY_CACHE_FOLDER image --exit-code 0 --no-progress $tag
+
+            # Fail on high and critical vulnerabilities
+            ${{ steps.path.outputs.tool_path}}/trivy --cache-dir $TRIVY_CACHE_FOLDER image --exit-code 1 --no-progress --severity $TRIVY_SEVERITY_LEVEL $tag
+          done
+

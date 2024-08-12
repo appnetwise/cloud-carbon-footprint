@@ -89,6 +89,9 @@ jobs:
           REACT_APP_MSAL_CLIENT_ID: "%REACT_APP_MSAL_CLIENT_ID%"
           REACT_APP_MSAL_REDIRECT_URI: "%REACT_APP_MSAL_REDIRECT_URI%" 
           REACT_APP_MSAL_POST_LOGOUT_REDIRECT_URI: "%REACT_APP_MSAL_POST_LOGOUT_REDIRECT_URI%"
+          REACT_APP_KEYCLOAK_URL: "%REACT_APP_KEYCLOAK_URL%"
+          REACT_APP_KEYCLOAK_REALM: "REACT_APP_KEYCLOAK_REALM"
+          REACT_APP_KEYCLOAK_CLIENT_ID: "REACT_APP_KEYCLOAK_CLIENT_ID"
       - name: build-workspace
         run: |
           yarn lerna run build:workspace
@@ -128,6 +131,9 @@ jobs:
         REACT_APP_MSAL_CLIENT_ID: "%REACT_APP_MSAL_CLIENT_ID%"
         REACT_APP_MSAL_REDIRECT_URI: "%REACT_APP_MSAL_REDIRECT_URI%" 
         REACT_APP_MSAL_POST_LOGOUT_REDIRECT_URI: "%REACT_APP_MSAL_POST_LOGOUT_REDIRECT_URI%"
+        REACT_APP_KEYCLOAK_URL: "%REACT_APP_KEYCLOAK_URL%"
+        REACT_APP_KEYCLOAK_REALM: "REACT_APP_KEYCLOAK_REALM"
+        REACT_APP_KEYCLOAK_CLIENT_ID: "REACT_APP_KEYCLOAK_CLIENT_ID"
     - name: Azure Container Registry Login
       uses: Azure/docker-login@v1
       with:
@@ -157,6 +163,9 @@ jobs:
       env:
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         NPM_PAT_TOKEN: ${{ secrets.NPM_PAT_TOKEN }}
+    # - uses: ./.github/trivy
+    #   with:
+    #     trivy-version: "latest"
     - uses: actions/upload-artifact@v4
       name: Upload docker images
       with:
